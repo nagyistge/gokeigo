@@ -60,7 +60,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         mEntries.add(new Entry("書く", "kaku"));
         mEntries.add(new Entry("来る", "kuru"));
 
-        mAdapter = new SearchAdapter(activity, mEntries); // TODO: do i have to getActivity twice??
+        mAdapter = new SearchAdapter(activity, mEntries);
         mRecyclerView.setAdapter(mAdapter);
     }
 
