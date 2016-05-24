@@ -28,6 +28,6 @@ public class SearchViewHolder extends RecyclerView.ViewHolder {
      */
     public void bind(Entry entry) {
         mWordInKanjiKanaTextView.setText(entry.getWordInKanjiKana());
-        mWordInRomajiTextView.setText(entry.getWordInRomaji());
+        mWordInRomajiTextView.setText(entry.getWordInLowerCaseRomaji());
     }
 }

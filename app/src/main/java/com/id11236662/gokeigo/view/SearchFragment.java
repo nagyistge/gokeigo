@@ -125,7 +125,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         final List<Entry> filteredEntryList = new ArrayList<>();
         for (Entry entry : entries) {
             final String kanjiKana = entry.getWordInKanjiKana();
-            final String romaji = entry.getWordInRomaji();
+            final String romaji = entry.getWordInLowerCaseRomaji();
             if (kanjiKana.contains(query) || romaji.contains(query)) {
                 filteredEntryList.add(entry);
             }

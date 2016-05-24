@@ -4,6 +4,9 @@ import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 
 import com.id11236662.gokeigo.util.Constants;
+import com.raizlabs.android.dbflow.sql.language.CursorResult;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.transaction.QueryTransaction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +47,7 @@ public class EntryManager {
     public void addEntry(String wordInKanjiKana, String wordInRomaji, String definition) {
         Entry entry = new Entry(wordInKanjiKana, wordInRomaji, Constants.Level.POLITE, definition);
         getEntries().add(entry);
-        entry.save();
+        entry.insert();
     }
 
     /**
@@ -52,7 +55,8 @@ public class EntryManager {
      */
     public List<Entry> getEntries() {
         if (mEntries == null) {
-            mEntries = Entry.count(Entry.class) > 0 ? Entry.listAll(Entry.class) : new ArrayList<Entry>();
+            // TODO: Make the transaction be Async
+            mEntries = SQLite.select().from(Entry.class).queryList();
         }
         return mEntries;
     }
