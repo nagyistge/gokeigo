@@ -7,8 +7,11 @@ import android.widget.TextView;
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.data.Entry;
 
+/**
+ * This ViewHolder sets the GUI elements of a row with the values of the Entry-type object
+ */
 public class SearchViewHolder extends RecyclerView.ViewHolder {
-    // This class "holds" all the GUI elements that we use in one row
+
     private final TextView mWordInKanjiKanaTextView;
     private final TextView mWordInRomajiTextView;
 
@@ -19,6 +22,10 @@ public class SearchViewHolder extends RecyclerView.ViewHolder {
         mWordInRomajiTextView = (TextView) itemView.findViewById(R.id.item_search_word_in_romaji);
     }
 
+    /**
+     * Sets the GUI elements of a row with the values of entry
+     * @param entry the object to bind to a View
+     */
     public void bind(Entry entry) {
         mWordInKanjiKanaTextView.setText(entry.getWordInKanjiKana());
         mWordInRomajiTextView.setText(entry.getWordInRomaji());

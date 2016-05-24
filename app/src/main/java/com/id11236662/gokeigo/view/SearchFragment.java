@@ -17,16 +17,21 @@ import android.view.ViewGroup;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.data.Entry;
+import com.id11236662.gokeigo.data.EntryManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * This fragment displays a Recycler View list and maintains a Entry Manager that manages entries
+ * in the application. Added a search action on to the toolbar and implemented query functionality
+ * on to it. The search is a filter type.
+ */
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     private RecyclerView mRecyclerView;
     private SearchAdapter mAdapter;
-    private List<Entry> mEntries; // TODO: something tells me the entry manager should handle this
+    private EntryManager mEntryManager;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -36,6 +41,12 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         return new SearchFragment();
     }
 
+    /**
+     * @param inflater used to inflate views in this fragment
+     * @param container this fragment
+     * @param savedInstanceState unused argument
+     * @return the view hierarchy associated with this fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,21 +57,24 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         return view;
     }
 
+    /**
+     * @param view returned result of onCreateView
+     * @param savedInstanceState unused argument
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Display the actions on the toolbar
         setHasOptionsMenu(true);
 
+        // Setup Recycler View
         FragmentActivity activity = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
 
-        mEntries = new ArrayList<>(); // TODO: replace with entry manager
-        mEntries.add(new Entry("見る", "miru"));
-        mEntries.add(new Entry("行く", "iku"));
-        mEntries.add(new Entry("書く", "kaku"));
-        mEntries.add(new Entry("来る", "kuru"));
-
-        mAdapter = new SearchAdapter(activity, mEntries);
+        // Create list of objects for the adapter to turn into views for the Recycler View
+        mEntryManager = EntryManager.getInstance();
+        mEntryManager.createDataIfNeeded();
+        mAdapter = new SearchAdapter(activity, mEntryManager.getEntries());
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -82,19 +96,30 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      */
     @Override
     public boolean onQueryTextChange(String query) {
-        final List<Entry> filteredEntryList = filter(mEntries, query);
+        final List<Entry> filteredEntryList = filter(mEntryManager.getEntries(), query);
         mAdapter.animateTo(filteredEntryList);
         // Ensure user can always see all items when searching for something
         mRecyclerView.scrollToPosition(0);
         return true;
     }
 
+    /**
+     * Called when the query text is submitted by the user. Does nothing special though.
+     * @param query the new content of the query text field.
+     * @return false, always.
+     */
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
-    private List<Entry> filter(List<Entry> entries, String query) {
+    /**
+     * Filters entries with the provided query string
+     * @param entries list of entries to filter through
+     * @param query the string to match with any part of the kanji/kana or romaji of every entry
+     * @return a list of entries that have been filtered
+     */
+    private static List<Entry> filter(List<Entry> entries, String query) {
         query = query.toLowerCase();
 
         final List<Entry> filteredEntryList = new ArrayList<>();

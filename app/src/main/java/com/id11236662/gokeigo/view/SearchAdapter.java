@@ -17,6 +17,7 @@ import java.util.List;
  * These Views are added, removed and moved around depending on the given list of Entries.
  */
 public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
+
     private final LayoutInflater mInflater;
     private List<Entry> mEntries;
 
