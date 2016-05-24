@@ -1,6 +1,9 @@
 package com.id11236662.gokeigo.data;
 
+import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
+
+import com.id11236662.gokeigo.util.Constants;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +19,7 @@ public class EntryManager {
     private List<Entry> mEntries;
 
     private EntryManager() {
+        // Hide constructor to ensure singleton pattern
     }
 
     public static EntryManager getInstance() {
@@ -25,23 +29,31 @@ public class EntryManager {
         return mInstance;
     }
 
-    // TODO: TEMP
-    public void addDummyData() {
-        addEntry("見る", "miru");
+    /**
+     * Create data if there's no data in the DB.
+     */
+    public void createDataIfNeeded() {
+        if (getEntries().size() == 0) {
+            addEntry("行く", "iku", "to go");
+            addEntry("書く", "kaku", "to write");
+            addEntry("来る", "kuru", "to come");
+            addEntry("見る", "miru", "to see, to watch");
+        }
     }
 
-    public void addEntry(String wordInKanjiKana, String wordInRomaji) {
-        Entry entry = new Entry(wordInKanjiKana, wordInRomaji);
+    public void addEntry(String wordInKanjiKana, String wordInRomaji, String definition) {
+        Entry entry = new Entry(wordInKanjiKana, wordInRomaji, Constants.Level.POLITE, definition);
         getEntries().add(entry);
-        //TODO: implement Sugar ORM later. entry.save();
+        entry.save();
     }
 
+    /**
+     * @return a list of Entries from the DB
+     */
     public List<Entry> getEntries() {
         if (mEntries == null) {
-            //TODO: implement Sugar ORM later. mEntries = Entry.listAll(Entry.class);
-            mEntries = new ArrayList<>(); // TODO: temp
+            mEntries = Entry.count(Entry.class) > 0 ? Entry.listAll(Entry.class) : new ArrayList<Entry>();
         }
         return mEntries;
     }
-
 }

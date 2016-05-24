@@ -23,7 +23,7 @@
             android:name=".view.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <meta-data android:name="DATABASE" android:value="gokeigo.db" />
-        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="VERSION" android:value="2" />
         <meta-data android:name="QUERY_LOG" android:value="true" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.id11236662.gokeigo.data" />
     </application>
