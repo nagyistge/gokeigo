@@ -1,5 +1,7 @@
 package com.id11236662.gokeigo.view;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,6 +10,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,14 +19,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.data.Entry;
-import com.id11236662.gokeigo.data.EntryManager;
+import com.id11236662.gokeigo.data.Word;
+import com.id11236662.gokeigo.data.WordsResponse;
+import com.id11236662.gokeigo.util.ApiClient;
+import com.id11236662.gokeigo.util.ApiInterface;
+import com.id11236662.gokeigo.util.Constants;
+import com.id11236662.gokeigo.util.MenuTint;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
- * This fragment displays a Recycler View list and maintains a Entry Manager that manages entries
+ * This fragment displays a Recycler View list and maintains a Word Manager that manages entries
  * in the application. Added a search action on to the toolbar and implemented query functionality
  * on to it. The search is a filter type.
  */
@@ -31,7 +42,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     private RecyclerView mRecyclerView;
     private SearchAdapter mAdapter;
-    private EntryManager mEntryManager;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -71,18 +81,33 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         FragmentActivity activity = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
 
-        // Create list of objects for the adapter to turn into views for the Recycler View
-        mEntryManager = EntryManager.getInstance();
-        mEntryManager.createDataIfNeeded();
-        mAdapter = new SearchAdapter(activity, mEntryManager.getEntries());
-        mRecyclerView.setAdapter(mAdapter);
+        ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
+        Call<WordsResponse> call = apiInterface.getWordDetails("miru");
+        call.enqueue(new Callback<WordsResponse>() {
+            @Override
+            public void onResponse(Call<WordsResponse> call, Response<WordsResponse> response) {
+                List<Word> words = response.body().getData();
+                mAdapter = new SearchAdapter(words, R.layout.item_search);
+                mRecyclerView.setAdapter(mAdapter);
+                Log.d(Constants.TAG, "Number of words received: " + words.size());
+            }
+
+            @Override
+            public void onFailure(Call<WordsResponse> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(Constants.TAG, t.toString());
+            }
+        });
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present
         inflater.inflate(R.menu.main, menu);
+        // Manually tint the search icon as it's provided separately from AppCompat
         final MenuItem item = menu.findItem(R.id.action_search);
+        MenuTint.colorMenuItem(item, Color.WHITE, null);
+        // Set QueryTextListener on search view
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
     }
@@ -96,11 +121,12 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      */
     @Override
     public boolean onQueryTextChange(String query) {
-        final List<Entry> filteredEntryList = filter(mEntryManager.getEntries(), query);
-        mAdapter.animateTo(filteredEntryList);
-        // Ensure user can always see all items when searching for something
-        mRecyclerView.scrollToPosition(0);
-        return true;
+//        final List<Word> filteredWordList = filter(mEntryManager.getEntries(), query);
+//        mAdapter.animateTo(filteredWordList);
+//        // Ensure user can always see all items when searching for something
+//        mRecyclerView.scrollToPosition(0);
+//        return true;
+        return false;
     }
 
     /**
@@ -119,17 +145,17 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      * @param query the string to match with any part of the kanji/kana or romaji of every entry
      * @return a list of entries that have been filtered
      */
-    private static List<Entry> filter(List<Entry> entries, String query) {
+    private static List<Word> filter(List<Word> entries, String query) {
         query = query.toLowerCase();
 
-        final List<Entry> filteredEntryList = new ArrayList<>();
-        for (Entry entry : entries) {
-            final String kanjiKana = entry.getWordInKanjiKana();
-            final String romaji = entry.getWordInLowerCaseRomaji();
-            if (kanjiKana.contains(query) || romaji.contains(query)) {
-                filteredEntryList.add(entry);
-            }
-        }
-        return filteredEntryList;
+        final List<Word> filteredWordList = new ArrayList<>();
+//        for (Word word : entries) {
+//            final String kanjiKana = word.getWordInKanjiKana();
+//            final String romaji = word.getWordInLowerCaseRomaji();
+//            if (kanjiKana.contains(query) || romaji.contains(query)) {
+//                filteredWordList.add(word);
+//            }
+//        }
+        return filteredWordList;
     }
 }

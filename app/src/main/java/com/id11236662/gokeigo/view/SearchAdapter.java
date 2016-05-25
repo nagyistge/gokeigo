@@ -6,24 +6,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.data.Entry;
+import com.id11236662.gokeigo.data.Word;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This adapter turns a list of Entry-type objects into Views for a RecyclerView.
- * These Views are added, removed and moved around depending on the given list of Entries.
+ * This adapter turns a list of Word-type objects into Views for a RecyclerView.
+ * These Views are added, removed and moved around depending on the given list of models.
  */
 public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
-    private final LayoutInflater mInflater;
-    private List<Entry> mEntries;
+    private List<Word> mModels;
+    private int mRowLayoutId;
 
-    public SearchAdapter(Context context, List<Entry> entries) {
-        mInflater = LayoutInflater.from(context);
-        mEntries = new ArrayList<>(entries);
+    public SearchAdapter(List<Word> models, int rowLayoutId) {
+        mModels = new ArrayList<>(models);
+        mRowLayoutId = rowLayoutId;
     }
 
     /**
@@ -33,19 +32,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
      */
     @Override
     public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View itemView = mInflater.inflate(R.layout.item_search, parent, false);
+        final View itemView = LayoutInflater.from(parent.getContext()).inflate(mRowLayoutId, parent, false);
         return new SearchViewHolder(itemView);
     }
 
     /**
-     * Binds the row with Entry-type object
+     * Binds the row with Word-type object
      * @param holder unused argument
      * @param position index of the row
      */
     @Override
     public void onBindViewHolder(SearchViewHolder holder, int position) {
-        final Entry entry = mEntries.get(position);
-        holder.bind(entry);
+        final Word word = mModels.get(position);
+        holder.bind(word);
     }
 
     /**
@@ -53,28 +52,28 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
      */
     @Override
     public int getItemCount() {
-        return mEntries.size();
+        return mModels.size();
     }
 
     /**
      * Removes, adds and moves around Views so they correspond to the objects in the list.
      * The order is important to keep track of indexes.
-     * @param filteredEntries list of Entries that have already been filtered
+     * @param filteredModels list of models that have already been filtered
      */
-    public void animateTo(List<Entry> filteredEntries) {
-        applyAndAnimateRemovals(filteredEntries);
-        applyAndAnimateAdditions(filteredEntries);
-        applyAndAnimateMovedItems(filteredEntries);
+    public void animateTo(List<Word> filteredModels) {
+        applyAndAnimateRemovals(filteredModels);
+        applyAndAnimateAdditions(filteredModels);
+        applyAndAnimateMovedItems(filteredModels);
     }
 
     /**
      * Removes the View if its object IS NOT in the filtered list
-     * @param filteredEntries list of Entries that have already been filtered
+     * @param filteredModels list of models that have already been filtered
      */
-    private void applyAndAnimateRemovals(List<Entry> filteredEntries) {
-        for (int i = mEntries.size() - 1; i >= 0; i--) {
-            final Entry entry = mEntries.get(i);
-            if (!filteredEntries.contains(entry)) {
+    private void applyAndAnimateRemovals(List<Word> filteredModels) {
+        for (int i = mModels.size() - 1; i >= 0; i--) {
+            final Word word = mModels.get(i);
+            if (!filteredModels.contains(word)) {
                 removeItem(i);
             }
         }
@@ -82,25 +81,25 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     /**
      * Adds the View if its object IS in the filtered list
-     * @param filteredEntries list of Entries that have already been filtered
+     * @param filteredModels list of models that have already been filtered
      */
-    private void applyAndAnimateAdditions(List<Entry> filteredEntries) {
-        for (int i = 0, count = filteredEntries.size(); i < count; i++) {
-            final Entry entry = filteredEntries.get(i);
-            if (!mEntries.contains(entry)) {
-                addItem(i, entry);
+    private void applyAndAnimateAdditions(List<Word> filteredModels) {
+        for (int i = 0, count = filteredModels.size(); i < count; i++) {
+            final Word word = filteredModels.get(i);
+            if (!mModels.contains(word)) {
+                addItem(i, word);
             }
         }
     }
 
     /**
      * Reorders the Views so they correspond with the originally ordered objects
-     * @param filteredEntries list of Entries that have already been filtered
+     * @param filteredModels list of models that have already been filtered
      */
-    private void applyAndAnimateMovedItems(List<Entry> filteredEntries) {
-        for (int toPosition = filteredEntries.size() - 1; toPosition >= 0; toPosition--) {
-            final Entry entry = filteredEntries.get(toPosition);
-            final int fromPosition = mEntries.indexOf(entry);
+    private void applyAndAnimateMovedItems(List<Word> filteredModels) {
+        for (int toPosition = filteredModels.size() - 1; toPosition >= 0; toPosition--) {
+            final Word word = filteredModels.get(toPosition);
+            final int fromPosition = mModels.indexOf(word);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
             }
@@ -112,7 +111,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
      * @param position index in the list
      */
     public void removeItem(int position) {
-        mEntries.remove(position);
+        mModels.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -120,8 +119,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
      * Adds the item from the list and notifies the Recycler View
      * @param position index in the list
      */
-    public void addItem(int position, Entry entry) {
-        mEntries.add(position, entry);
+    public void addItem(int position, Word word) {
+        mModels.add(position, word);
         notifyItemInserted(position);
     }
 
@@ -131,8 +130,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
      * @param toPosition new index in the list
      */
     public void moveItem(int fromPosition, int toPosition) {
-        final Entry model = mEntries.remove(fromPosition);
-        mEntries.add(toPosition, model);
+        final Word model = mModels.remove(fromPosition);
+        mModels.add(toPosition, model);
         notifyItemMoved(fromPosition, toPosition);
     }
 }

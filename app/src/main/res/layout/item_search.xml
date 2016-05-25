@@ -9,7 +9,7 @@
     android:paddingStart="10dp">
 
     <TextView
-        android:id="@+id/item_search_word_in_kanji_kana"
+        android:id="@+id/item_search_word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -17,7 +17,7 @@
         android:text="kanji/kana" />
 
     <TextView
-        android:id="@+id/item_search_word_in_romaji"
+        android:id="@+id/item_search_reading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

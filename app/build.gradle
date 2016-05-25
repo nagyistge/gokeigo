@@ -27,20 +27,27 @@ def dbflow_version = "3.0.0-beta6"
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:support-v4:23.4.0'
+    // material drawer
     compile('com.mikepenz:materialdrawer:5.2.6@aar') {
         transitive = true
     }
+    // DBFlow
     apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
     // use kapt for kotlin apt
     compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-
     // sql-cipher database encyrption (optional)
     compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${dbflow_version}"
-
-    // kotlin extensions
+    // kotlin extensions // TODO: Do I even need this?
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
+    // GSON
+    compile 'com.google.code.gson:gson:2.6.2'
+    // Retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    // Annotations
+    compile 'org.glassfish:javax.annotation:10.0-b28'
 }
