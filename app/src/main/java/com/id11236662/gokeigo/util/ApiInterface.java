@@ -1,6 +1,6 @@
 package com.id11236662.gokeigo.util;
 
-import com.id11236662.gokeigo.data.WordsResponse;
+import com.id11236662.gokeigo.data.EntriesResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -11,5 +11,5 @@ import retrofit2.http.Query;
  */
 public interface ApiInterface {
     @GET("words")
-    Call<WordsResponse> getWordDetails(@Query("keyword") String keyword);
+    Call<EntriesResponse> getEntries(@Query("keyword") String keyword);
 }

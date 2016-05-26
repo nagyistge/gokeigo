@@ -1,32 +1,38 @@
 package com.id11236662.gokeigo.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
-import com.id11236662.gokeigo.data.Word;
+import com.id11236662.gokeigo.R;
+import com.id11236662.gokeigo.data.Entry;
+import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This adapter turns a list of Word-type objects into Views for a RecyclerView.
- * These Views are added, removed and moved around depending on the given list of models.
+ * This adapter turns a list of Entry-type objects into Views for a RecyclerView.
+ * These Views are added, removed and moved around depending on the given list of objects.
  */
-public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
-    private List<Word> mModels;
+    private List<Entry> mEntries;
     private int mRowLayoutId;
 
-    public SearchAdapter(List<Word> models, int rowLayoutId) {
-        mModels = new ArrayList<>(models);
+    public SearchAdapter(List<Entry> entries, int rowLayoutId) {
+        mEntries = new ArrayList<>(entries);
         mRowLayoutId = rowLayoutId;
     }
 
     /**
-     * @param parent The RecyclerView
+     * @param parent   The RecyclerView
      * @param viewType unused argument
      * @return a SearchViewHolder inflated with the row layout xml
      */
@@ -37,14 +43,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     }
 
     /**
-     * Binds the row with Word-type object
-     * @param holder unused argument
+     * Binds the row with Entry-type object
+     *
+     * @param holder   unused argument
      * @param position index of the row
      */
     @Override
     public void onBindViewHolder(SearchViewHolder holder, int position) {
-        final Word word = mModels.get(position);
-        holder.bind(word);
+        final Entry entry = mEntries.get(position);
+        holder.bind(entry);
     }
 
     /**
@@ -52,28 +59,30 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
      */
     @Override
     public int getItemCount() {
-        return mModels.size();
+        return mEntries.size();
     }
 
     /**
      * Removes, adds and moves around Views so they correspond to the objects in the list.
      * The order is important to keep track of indexes.
-     * @param filteredModels list of models that have already been filtered
+     *
+     * @param filteredEntries list of objects that have already been filtered
      */
-    public void animateTo(List<Word> filteredModels) {
-        applyAndAnimateRemovals(filteredModels);
-        applyAndAnimateAdditions(filteredModels);
-        applyAndAnimateMovedItems(filteredModels);
+    public void animateTo(List<Entry> filteredEntries) {
+        applyAndAnimateRemovals(filteredEntries);
+        applyAndAnimateAdditions(filteredEntries);
+        applyAndAnimateMovedItems(filteredEntries);
     }
 
     /**
      * Removes the View if its object IS NOT in the filtered list
-     * @param filteredModels list of models that have already been filtered
+     *
+     * @param filteredEntries list of objects that have already been filtered
      */
-    private void applyAndAnimateRemovals(List<Word> filteredModels) {
-        for (int i = mModels.size() - 1; i >= 0; i--) {
-            final Word word = mModels.get(i);
-            if (!filteredModels.contains(word)) {
+    private void applyAndAnimateRemovals(List<Entry> filteredEntries) {
+        for (int i = mEntries.size() - 1; i >= 0; i--) {
+            final Entry entry = mEntries.get(i);
+            if (!filteredEntries.contains(entry)) {
                 removeItem(i);
             }
         }
@@ -81,25 +90,27 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     /**
      * Adds the View if its object IS in the filtered list
-     * @param filteredModels list of models that have already been filtered
+     *
+     * @param filteredEntries list of objects that have already been filtered
      */
-    private void applyAndAnimateAdditions(List<Word> filteredModels) {
-        for (int i = 0, count = filteredModels.size(); i < count; i++) {
-            final Word word = filteredModels.get(i);
-            if (!mModels.contains(word)) {
-                addItem(i, word);
+    private void applyAndAnimateAdditions(List<Entry> filteredEntries) {
+        for (int i = 0, count = filteredEntries.size(); i < count; i++) {
+            final Entry entry = filteredEntries.get(i);
+            if (!mEntries.contains(entry)) {
+                addItem(i, entry);
             }
         }
     }
 
     /**
      * Reorders the Views so they correspond with the originally ordered objects
-     * @param filteredModels list of models that have already been filtered
+     *
+     * @param filteredEntries list of objects that have already been filtered
      */
-    private void applyAndAnimateMovedItems(List<Word> filteredModels) {
-        for (int toPosition = filteredModels.size() - 1; toPosition >= 0; toPosition--) {
-            final Word word = filteredModels.get(toPosition);
-            final int fromPosition = mModels.indexOf(word);
+    private void applyAndAnimateMovedItems(List<Entry> filteredEntries) {
+        for (int toPosition = filteredEntries.size() - 1; toPosition >= 0; toPosition--) {
+            final Entry entry = filteredEntries.get(toPosition);
+            final int fromPosition = mEntries.indexOf(entry);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
             }
@@ -108,30 +119,109 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     /**
      * Removes the item from the list and notifies the Recycler View
+     *
      * @param position index in the list
      */
     public void removeItem(int position) {
-        mModels.remove(position);
+        mEntries.remove(position);
         notifyItemRemoved(position);
     }
 
     /**
      * Adds the item from the list and notifies the Recycler View
+     *
      * @param position index in the list
      */
-    public void addItem(int position, Word word) {
-        mModels.add(position, word);
+    public void addItem(int position, Entry entry) {
+        mEntries.add(position, entry);
         notifyItemInserted(position);
     }
 
     /**
      * Reorders the item in the list.
+     *
      * @param fromPosition old index in the list
-     * @param toPosition new index in the list
+     * @param toPosition   new index in the list
      */
     public void moveItem(int fromPosition, int toPosition) {
-        final Word model = mModels.remove(fromPosition);
-        mModels.add(toPosition, model);
+        final Entry entry = mEntries.remove(fromPosition);
+        mEntries.add(toPosition, entry);
         notifyItemMoved(fromPosition, toPosition);
+    }
+
+    /**
+     * This ViewHolder sets the GUI elements of a row with the values of the Entry-type object.
+     * Ensure it is static to avoid memory problems if more than one SearchViewHolder is created.
+     */
+    public static class SearchViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView mWordTextView;
+        private final TextView mReadingTextView;
+        private final TextView mDefinitionTextView;
+        private final TextView mCommonStatusTextView;
+
+        public SearchViewHolder(View itemView) {
+            super(itemView);
+            // Initialise all the GUI elements from the xml layout of the one row
+            mWordTextView = (TextView) itemView.findViewById(R.id.item_search_word);
+            mReadingTextView = (TextView) itemView.findViewById(R.id.item_search_reading);
+            mDefinitionTextView = (TextView) itemView.findViewById(R.id.item_search_definition);
+            mCommonStatusTextView = (TextView) itemView.findViewById(R.id.item_search_common_status);
+        }
+
+        /**
+         * Sets the GUI elements of a row with the values of entry
+         *
+         * @param entry the object to bind to a View
+         */
+        public void bind(Entry entry) {
+            // TODO: unit test this - for UI purposes :P
+            // JSON data does not provide a word if it's in wholly in katakana but it always
+            // provides a reading, so use that if there is no word provided.
+            String word = entry.getWord();
+            if (StringUtils.isNotNullOrEmpty(word)) {
+                mWordTextView.setText(word);
+                mReadingTextView.setText(entry.getReading());
+            } else {
+                mWordTextView.setText(entry.getReading());
+            }
+            mDefinitionTextView.setText(entry.getDefinition());
+            mCommonStatusTextView.setText(entry.getCommonStatus());
+        }
+    }
+
+    /**
+     * This ItemDecoration TODO
+     * Ensure it is static to avoid memory problems if more than one DividerItemDecoration is created. TODO??
+     */
+    public static class DividerItemDecoration extends RecyclerView.ItemDecoration {
+        private static final int[] ATTRS = new int[] { android.R.attr.listDivider };
+
+        private Drawable mDivider;
+
+        public DividerItemDecoration(Context context) {
+            final TypedArray styledAttributes = context.obtainStyledAttributes(ATTRS);
+            mDivider = styledAttributes.getDrawable(0);
+            styledAttributes.recycle();
+        }
+
+        @Override
+        public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            int left = parent.getPaddingLeft();
+            int right = parent.getWidth() - parent.getPaddingRight();
+
+            int childCount = parent.getChildCount();
+            for (int i =0; i < childCount; i++) {
+                View child = parent.getChildAt(i);
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+
+                int top = child.getBottom() + params.bottomMargin;
+                int bottom = top + mDivider.getIntrinsicHeight();
+
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(c);
+            }
+        }
     }
 }

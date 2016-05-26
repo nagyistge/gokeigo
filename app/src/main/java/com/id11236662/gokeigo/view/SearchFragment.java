@@ -1,6 +1,5 @@
 package com.id11236662.gokeigo.view;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,8 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.data.Word;
-import com.id11236662.gokeigo.data.WordsResponse;
+import com.id11236662.gokeigo.data.Entry;
+import com.id11236662.gokeigo.data.EntriesResponse;
 import com.id11236662.gokeigo.util.ApiClient;
 import com.id11236662.gokeigo.util.ApiInterface;
 import com.id11236662.gokeigo.util.Constants;
@@ -34,7 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * This fragment displays a Recycler View list and maintains a Word Manager that manages entries
+ * This fragment displays a Recycler View list and maintains a Entry Manager that manages entries
  * in the application. Added a search action on to the toolbar and implemented query functionality
  * on to it. The search is a filter type.
  */
@@ -64,6 +63,8 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
         // Initialise the recycler view field with the value before returning it
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_search_recycler_view);
+        // Add ItemDecoration to recycler view
+        mRecyclerView.addItemDecoration(new SearchAdapter.DividerItemDecoration(getActivity()));
         return view;
     }
 
@@ -82,18 +83,18 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
 
         ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-        Call<WordsResponse> call = apiInterface.getWordDetails("miru");
-        call.enqueue(new Callback<WordsResponse>() {
+        Call<EntriesResponse> call = apiInterface.getEntries("miru");
+        call.enqueue(new Callback<EntriesResponse>() {
             @Override
-            public void onResponse(Call<WordsResponse> call, Response<WordsResponse> response) {
-                List<Word> words = response.body().getData();
-                mAdapter = new SearchAdapter(words, R.layout.item_search);
+            public void onResponse(Call<EntriesResponse> call, Response<EntriesResponse> response) {
+                List<Entry> entries = response.body().getData();
+                mAdapter = new SearchAdapter(entries, R.layout.item_search);
                 mRecyclerView.setAdapter(mAdapter);
-                Log.d(Constants.TAG, "Number of words received: " + words.size());
+                Log.d(Constants.TAG, "Number of entries received: " + entries.size());
             }
 
             @Override
-            public void onFailure(Call<WordsResponse> call, Throwable t) {
+            public void onFailure(Call<EntriesResponse> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(Constants.TAG, t.toString());
             }
@@ -121,7 +122,8 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      */
     @Override
     public boolean onQueryTextChange(String query) {
-//        final List<Word> filteredWordList = filter(mEntryManager.getEntries(), query);
+        // TODO: Make async call when fetching information
+//        final List<Entry> filteredWordList = filter(mEntryManager.getEntries(), query);
 //        mAdapter.animateTo(filteredWordList);
 //        // Ensure user can always see all items when searching for something
 //        mRecyclerView.scrollToPosition(0);
@@ -136,6 +138,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      */
     @Override
     public boolean onQueryTextSubmit(String query) {
+        // TODO: Make async call when fetching information
         return false;
     }
 
@@ -145,17 +148,17 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      * @param query the string to match with any part of the kanji/kana or romaji of every entry
      * @return a list of entries that have been filtered
      */
-    private static List<Word> filter(List<Word> entries, String query) {
+    private static List<Entry> filter(List<Entry> entries, String query) {
         query = query.toLowerCase();
 
-        final List<Word> filteredWordList = new ArrayList<>();
-//        for (Word word : entries) {
+        final List<Entry> filteredEntryList = new ArrayList<>();
+//        for (Entry word : entries) {
 //            final String kanjiKana = word.getWordInKanjiKana();
 //            final String romaji = word.getWordInLowerCaseRomaji();
 //            if (kanjiKana.contains(query) || romaji.contains(query)) {
-//                filteredWordList.add(word);
+//                filteredEntryList.add(word);
 //            }
 //        }
-        return filteredWordList;
+        return filteredEntryList;
     }
 }

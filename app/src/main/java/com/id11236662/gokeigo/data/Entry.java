@@ -2,6 +2,7 @@ package com.id11236662.gokeigo.data;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.id11236662.gokeigo.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +10,11 @@ import java.util.List;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Word {
+public class Entry {
 
     @SerializedName("is_common")
     @Expose
-    private Boolean isCommon;
+    private boolean isCommon;
     @SerializedName("tags")
     @Expose
     private List<Object> tags = new ArrayList<Object>();
@@ -27,11 +28,11 @@ public class Word {
     @Expose
     private Attribution attribution;
 
-    public Boolean getIsCommon() {
+    public boolean getIsCommon() {
         return isCommon;
     }
 
-    public void setIsCommon(Boolean isCommon) {
+    public void setIsCommon(boolean isCommon) {
         this.isCommon = isCommon;
     }
 
@@ -68,7 +69,7 @@ public class Word {
     }
 
     /**
-     * Get the main japanese element
+     * Get the first japanese element
      * @return an element in the Japanese list if it's not empty
      */
     private Japanese getJapaneseMain() {
@@ -85,4 +86,20 @@ public class Word {
         return japanese != null ? japanese.getReading() : "";
     }
 
+    /**
+     * Get the first sense element
+     * @return an element in the Sense list if it's not empty
+     */
+    private Sense getSenseMain() {
+        return senses.size() > 0 ? senses.get(0) : null;
+    }
+
+    public String getDefinition() {
+        Sense sense = getSenseMain();
+        return sense != null ? StringUtils.join(sense.getEnglishDefinitions()) : "";
+    }
+
+    public String getCommonStatus() {
+        return isCommon ? "Common" : ""; //TODO: turn Common into resource string
+    }
 }

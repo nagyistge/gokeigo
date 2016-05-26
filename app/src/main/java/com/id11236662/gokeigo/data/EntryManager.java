@@ -10,7 +10,7 @@ import java.util.List;
  */
 //public class EntryManager {
 //    private static EntryManager mInstance = null;
-//    private List<Word> mEntries;
+//    private List<Entry> mEntries;
 //
 //    private EntryManager() {
 //        // Hide constructor to ensure singleton pattern
@@ -24,7 +24,7 @@ import java.util.List;
 //    }
 //
 //    public void addEntry(String wordInKanjiKana, String wordInRomaji, String definition) {
-//        Word word = new Word(wordInKanjiKana, wordInRomaji, Constants.Level.POLITE, definition);
+//        Entry word = new Entry(wordInKanjiKana, wordInRomaji, Constants.Level.POLITE, definition);
 //        getEntries().add(word);
 //        word.insert();
 //    }
@@ -32,10 +32,10 @@ import java.util.List;
 //    /**
 //     * @return a list of Entries from the DB via lazy loading
 //     */
-//    public List<Word> getEntries() {
+//    public List<Entry> getEntries() {
 //        if (mEntries == null) {
 //            // TODO: Make the transaction be Async
-//            mEntries = SQLite.select().from(Word.class).queryList();
+//            mEntries = SQLite.select().from(Entry.class).queryList();
 // TODO: DBFlow inserts literal value into the ModelAdapter for the table so Strings must be escaped before setting
 //        }
 //        return mEntries;
