@@ -74,4 +74,5 @@
 
     <!-- TODO: Custom strings -->
     <string name="message_searching">Searching</string>
+    <string name="title_activity_entry">EntryActivity</string>
 </resources>
