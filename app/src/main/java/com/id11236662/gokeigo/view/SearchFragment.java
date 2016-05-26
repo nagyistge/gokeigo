@@ -44,6 +44,7 @@ import retrofit2.Response;
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     private RecyclerView mRecyclerView;
+    private SearchAdapter mAdapter;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -82,9 +83,11 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Display the actions on the toolbar
         setHasOptionsMenu(true);
 
-        // Setup Recycler View
+        // Setup Recycler View and an adapter for it
         FragmentActivity activity = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        mAdapter = new SearchAdapter(new ArrayList<Entry>(), R.layout.item_search);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -173,8 +176,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 mProgressDialog.dismiss();
             }
             if (entries != null) {
-                SearchAdapter adapter = new SearchAdapter(entries, R.layout.item_search);
-                mRecyclerView.setAdapter(adapter);
+                mAdapter.animateTo(entries);
             } else {
                 // TODO: show message that no results were found
             }
