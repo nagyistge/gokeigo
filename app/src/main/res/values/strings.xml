@@ -71,4 +71,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_search">Search</string>
+
+    <!-- TODO: Custom strings -->
+    <string name="message_searching">Searching</string>
 </resources>
