@@ -1,11 +1,9 @@
 package com.id11236662.gokeigo.view;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.UserDictionary;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,10 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.data.Entry;
-import com.id11236662.gokeigo.data.EntriesResponse;
+import com.id11236662.gokeigo.controller.SearchAdapter;
+import com.id11236662.gokeigo.model.Entry;
+import com.id11236662.gokeigo.model.EntriesResponse;
 import com.id11236662.gokeigo.util.ApiClient;
 import com.id11236662.gokeigo.util.ApiInterface;
 import com.id11236662.gokeigo.util.Constants;
@@ -32,10 +32,9 @@ import com.id11236662.gokeigo.util.MenuTint;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * This fragment displays a Recycler View list.
@@ -43,6 +42,7 @@ import retrofit2.Response;
  */
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
+    private TextView mResultsTextView;
     private RecyclerView mRecyclerView;
     private SearchAdapter mAdapter;
 
@@ -54,7 +54,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         return new SearchFragment();
     }
 
-    /**
+    /** Initialise textview field and recycler view and set an item decoration to recycler view.
      * @param inflater           used to inflate views in this fragment
      * @param container          this fragment
      * @param savedInstanceState unused argument
@@ -62,13 +62,16 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Inflate the layout for this fragment.
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        // Initialise the recycler view field with the value before returning it
+        // Initialise the text view field
+        mResultsTextView = (TextView) view.findViewById(R.id.fragment_search_results_text_view);
+
+        // Initialise the recycler view field with the value before returning it.
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_search_recycler_view);
 
-        // Add ItemDecoration to recycler view
+        // Add ItemDecoration to recycler view.
         mRecyclerView.addItemDecoration(new SearchAdapter.DividerItemDecoration(getActivity()));
         return view;
     }
@@ -80,10 +83,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Display the actions on the toolbar
+        // Display the actions, which is just a search action, on the toolbar.
         setHasOptionsMenu(true);
 
-        // Setup Recycler View and an adapter for it
+        // Setup Recycler View and an adapter for it.
         FragmentActivity activity = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
         mAdapter = new SearchAdapter(new ArrayList<Entry>(), R.layout.item_search);
@@ -92,14 +95,14 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present
+        // Inflate the menu; this adds items to the action bar if it is present.
         inflater.inflate(R.menu.main, menu);
 
-        // Manually tint the search icon as it's provided separately from AppCompat
+        // Manually tint the search icon as it's provided separately from AppCompat.
         final MenuItem item = menu.findItem(R.id.action_search);
         MenuTint.colorMenuItem(item, Color.WHITE, null);
 
-        // Set QueryTextListener on search view
+        // Set QueryTextListener on search view.
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
     }
@@ -158,16 +161,16 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
             Call<EntriesResponse> call = apiInterface.getEntries(keyword);
             try {
-                return call.execute().body().getData();
+                return call.execute().body().getEntries();
             } catch (IOException e) {
                 Log.e(Constants.TAG, e.toString());
             }
-            return null;
+            return new ArrayList<>();
         }
 
         /**
-         * Dismiss the progress dialogue after execution and set the adapter on to recycler view.
-         *
+         * Dismiss the progress dialogue after execution. Show the entries in the list and how
+         * many there are.
          * @param entries list of entries returned by doInBackground()
          */
         @Override
@@ -175,11 +178,15 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             if (mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
-            if (entries != null) {
-                mAdapter.animateTo(entries);
-            } else {
-                // TODO: show message that no results were found
-            }
+
+            // Show the entries in the list.
+            mAdapter.animateTo(entries);
+
+            // Show how many entries were found.
+            int results = entries.size();
+            Locale currentLocale = Locale.ENGLISH; // TODO: Get from the preferences
+            mResultsTextView.setText(String.format(currentLocale,
+                    getString(R.string.message_entries_found), results));
         }
     }
 }
