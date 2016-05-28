@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity
                     .commit();
         }
 
-        // BEGIN TODO: creating navigation drawer from scratch
+        // Create navigation drawer from scratch -- most of it done by Android Studio
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -39,48 +39,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
-
-        // TODO: Add Settings menu item
-        // Intent intent = new Intent(this,SettingsActivity.class);
-        //startActivity(intent);
-        // END
-
-        // TODO: To do from scratch or use the MaterialDrawer? Seems pretty easy to use.
-//        final PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName(R.string.drawer_item_home);
-//        final PrimaryDrawerItem item2 = new PrimaryDrawerItem().withName(R.string.drawer_item_history);
-//        final PrimaryDrawerItem item3 = new PrimaryDrawerItem().withName(R.string.drawer_item_list);
-//        final PrimaryDrawerItem item4 = new PrimaryDrawerItem().withName(R.string.drawer_item_notes);
-//        final PrimaryDrawerItem item5 = new PrimaryDrawerItem().withName(R.string.drawer_item_quizzes);
-//
-//        //create the drawer and remember the `Drawer` result object
-//        Drawer result = new DrawerBuilder()
-//                .withActivity(this)
-//                .withToolbar(toolbar)
-//                .addDrawerItems(
-//                        item1,
-//                        item2,
-//                        item3,
-//                        item4,
-//                        item5
-//                )
-//                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-//                    /**
-//                     * @param view
-//                     * @param position
-//                     * @param drawerItem
-//                     * @return true if the event was consumed
-//                     */
-//                    @Override
-//                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-//                        boolean result = false;
-//                        if (drawerItem == item2) {
-//
-//                            result = true;
-//                        }
-//                        return result;
-//                    }
-//                })
-//                .build();
     }
 
     @Override
@@ -94,31 +52,42 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /**
+     * Called when an item in the navigation menu is selected.
+     *
+     * @param item The selected item
+     * @return true to display the item as the selected item
+     */
+    //@SuppressWarnings("StatementWithEmptyBody") TODO: Do i need to suppress this warning?
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Intent intent = null;
 
-        if (id == R.id.nav_camera) {
-            Intent intent = new Intent(this, EntryActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_send) {
-
+        switch (id) {
+            case R.id.nav_home:
+                // TODO: Temp - just to test the EntryActivity.
+                intent = new Intent(this, EntryActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_history:
+                break;
+            case R.id.nav_notes:
+                break;
+            case R.id.nav_starred:
+                break;
+            case R.id.nav_settings:
+                intent = new Intent(this, SettingsActivity.class);
+                break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        assert drawer != null;
-        drawer.closeDrawer(GravityCompat.START);
+        if (intent != null) {
+            startActivity(intent);
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            assert drawer != null;
+            drawer.closeDrawer(GravityCompat.START);
+        }
         return true;
     }
 }
