@@ -1,4 +1,4 @@
-package com.id11236662.gokeigo.view;
+package com.id11236662.gokeigo.controller;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.data.Entry;
+import com.id11236662.gokeigo.model.Entry;
 import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.ArrayList;
@@ -38,12 +38,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      */
     @Override
     public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View itemView = LayoutInflater.from(parent.getContext()).inflate(mRowLayoutId, parent, false);
+        final View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(mRowLayoutId, parent, false);
         return new SearchViewHolder(itemView);
     }
 
     /**
-     * Binds the row with Entry-type object
+     * Binds the row with Entry-type object.
      *
      * @param holder   unused argument
      * @param position index of the row
@@ -55,7 +56,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     /**
-     * @return the total number of items in the list
+     * @return the total number of items in the list.
      */
     @Override
     public int getItemCount() {
@@ -75,7 +76,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     /**
-     * Removes the View if its object IS NOT in the filtered list
+     * Removes the View if its object IS NOT in the filtered list.
      *
      * @param filteredEntries list of objects that have already been filtered
      */
@@ -89,7 +90,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     /**
-     * Adds the View if its object IS in the filtered list
+     * Adds the View if its object IS in the filtered list.
      *
      * @param filteredEntries list of objects that have already been filtered
      */
@@ -103,7 +104,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     /**
-     * Reorders the Views so they correspond with the originally ordered objects
+     * Reorders the Views so they correspond with the originally ordered objects.
      *
      * @param filteredEntries list of objects that have already been filtered
      */
@@ -118,7 +119,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     /**
-     * Removes the item from the list and notifies the Recycler View
+     * Removes the item from the list and notifies the Recycler View.
      *
      * @param position index in the list
      */
@@ -128,7 +129,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     /**
-     * Adds the item from the list and notifies the Recycler View
+     * Adds the item from the list and notifies the Recycler View.
      *
      * @param position index in the list
      */
@@ -176,8 +177,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
          */
         public void bind(Entry entry) {
             // TODO: unit test this - for UI purposes :P
-            // JSON data does not provide a word if it's in wholly in katakana but it always
-            // provides a reading, so use that if there is no word provided.
+            // jisho.org's JSON data does not provide a word if it's wholly in katakana but it
+            // always provides a reading, so use that if there is no word provided.
             String word = entry.getWord();
             if (StringUtils.isNotNullOrEmpty(word)) {
                 mWordTextView.setText(word);
@@ -191,11 +192,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     /**
-     * This ItemDecoration TODO
-     * Ensure it is static to avoid memory problems if more than one DividerItemDecoration is created. TODO??
+     * This ItemDecoration draws a generic line in-between items in a Recycler View.
+     * Ensure it is static to avoid memory problems if more than one DividerItemDecoration
+     * is created.
      */
     public static class DividerItemDecoration extends RecyclerView.ItemDecoration {
-        private static final int[] ATTRS = new int[] { android.R.attr.listDivider };
+        private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 
         private Drawable mDivider;
 
@@ -211,7 +213,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             int right = parent.getWidth() - parent.getPaddingRight();
 
             int childCount = parent.getChildCount();
-            for (int i =0; i < childCount; i++) {
+            for (int i = 0; i < childCount; i++) {
                 View child = parent.getChildAt(i);
 
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
