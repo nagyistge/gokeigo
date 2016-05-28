@@ -22,13 +22,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_entry_toolbar);
         setSupportActionBar(toolbar);
 
+        // Show the search fragment.
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_main_layout, SearchFragment.newInstance())
                     .commit();
         }
 
-        // Create navigation drawer from scratch -- most of it done by Android Studio
+        // Add/set listeners to the navigation drawer.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         assert drawer != null;
+        // If the drawer is open, close it. Else, actually go back.
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -58,18 +60,15 @@ public class MainActivity extends AppCompatActivity
      * @param item The selected item
      * @return true to display the item as the selected item
      */
-    //@SuppressWarnings("StatementWithEmptyBody") TODO: Do i need to suppress this warning?
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
         Intent intent = null;
+        int id = item.getItemId();
 
         switch (id) {
             case R.id.nav_home:
-                // TODO: Temp - just to test the EntryActivity.
-                intent = new Intent(this, EntryActivity.class);
-                startActivity(intent);
+                intent = new Intent(this, EntryActivity.class); // TODO: Temp - just to test the EntryActivity.
                 break;
             case R.id.nav_history:
                 break;
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
 
+        // If intent is null, do not start activity with it nor close the drawer.
         if (intent != null) {
             startActivity(intent);
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
