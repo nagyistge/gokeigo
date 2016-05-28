@@ -15,9 +15,6 @@ public class Entry {
     @SerializedName("is_common")
     @Expose
     private boolean isCommon;
-    @SerializedName("tags")
-    @Expose
-    private List<Object> tags = new ArrayList<Object>();
     @SerializedName("japanese")
     @Expose
     private List<Japanese> japanese = new ArrayList<Japanese>();
@@ -34,14 +31,6 @@ public class Entry {
 
     public void setIsCommon(boolean isCommon) {
         this.isCommon = isCommon;
-    }
-
-    public List<Object> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Object> tags) {
-        this.tags = tags;
     }
 
     public List<Japanese> getJapanese() {

@@ -23,25 +23,16 @@ public class Sense {
     private List<Link> links = new ArrayList<Link>();
     @SerializedName("tags")
     @Expose
-    private List<Object> tags = new ArrayList<Object>();
-    @SerializedName("restrictions")
-    @Expose
-    private List<Object> restrictions = new ArrayList<Object>();
+    private List<String> tags = new ArrayList<String>();
     @SerializedName("see_also")
     @Expose
-    private List<Object> seeAlso = new ArrayList<Object>();
-    @SerializedName("antonyms")
-    @Expose
-    private List<Object> antonyms = new ArrayList<Object>();
+    private List<String> seeAlso = new ArrayList<String>();
     @SerializedName("source")
     @Expose
-    private List<Object> source = new ArrayList<Object>();
+    private List<String> source = new ArrayList<String>();
     @SerializedName("info")
     @Expose
-    private List<Object> info = new ArrayList<Object>();
-    @SerializedName("sentences")
-    @Expose
-    private List<Object> sentences = new ArrayList<Object>();
+    private List<String> info = new ArrayList<String>();
 
     public List<String> getEnglishDefinitions() {
         return englishDefinitions;
@@ -67,60 +58,36 @@ public class Sense {
         this.links = links;
     }
 
-    public List<Object> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<Object> tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
-    public List<Object> getRestrictions() {
-        return restrictions;
-    }
-
-    public void setRestrictions(List<Object> restrictions) {
-        this.restrictions = restrictions;
-    }
-
-    public List<Object> getSeeAlso() {
+    public List<String> getSeeAlso() {
         return seeAlso;
     }
 
-    public void setSeeAlso(List<Object> seeAlso) {
+    public void setSeeAlso(List<String> seeAlso) {
         this.seeAlso = seeAlso;
     }
 
-    public List<Object> getAntonyms() {
-        return antonyms;
-    }
-
-    public void setAntonyms(List<Object> antonyms) {
-        this.antonyms = antonyms;
-    }
-
-    public List<Object> getSource() {
+    public List<String> getSource() {
         return source;
     }
 
-    public void setSource(List<Object> source) {
+    public void setSource(List<String> source) {
         this.source = source;
     }
 
-    public List<Object> getInfo() {
+    public List<String> getInfo() {
         return info;
     }
 
-    public void setInfo(List<Object> info) {
+    public void setInfo(List<String> info) {
         this.info = info;
-    }
-
-    public List<Object> getSentences() {
-        return sentences;
-    }
-
-    public void setSentences(List<Object> sentences) {
-        this.sentences = sentences;
     }
 
 }

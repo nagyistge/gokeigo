@@ -13,14 +13,14 @@ public class EntriesResponse {
 
     @SerializedName("data")
     @Expose
-    private List<Entry> data = new ArrayList<Entry>();
+    private List<Entry> entries = new ArrayList<Entry>();
 
-    public List<Entry> getData() {
-        return data;
+    public List<Entry> getEntries() {
+        return entries;
     }
 
-    public void setData(List<Entry> data) {
-        this.data = data;
+    public void setEntries(List<Entry> entries) {
+        this.entries = entries;
     }
 
 }

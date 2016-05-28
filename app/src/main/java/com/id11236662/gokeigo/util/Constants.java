@@ -5,9 +5,4 @@ package com.id11236662.gokeigo.util;
  */
 public class Constants {
     public static final String TAG = "MAD";
-    public static class Level {
-        public static final int RESPECTFUL = 1;
-        public static final int POLITE = 2;
-        public static final int HUMBLE = 3;
-    }
 }
