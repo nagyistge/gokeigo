@@ -1,6 +1,7 @@
 package com.id11236662.gokeigo.controller;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -8,10 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.Entry;
+import com.id11236662.gokeigo.view.EntryActivity;
 import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.ArrayList;
@@ -45,7 +48,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Binds the row with Entry-type object.
-     *
      * @param holder   unused argument
      * @param position index of the row
      */
@@ -66,7 +68,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     /**
      * Removes, adds and moves around Views so they correspond to the objects in the list.
      * The order is important to keep track of indexes.
-     *
      * @param filteredEntries list of objects that have already been filtered
      */
     public void animateTo(List<Entry> filteredEntries) {
@@ -77,7 +78,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Removes the View if its object IS NOT in the filtered list.
-     *
      * @param filteredEntries list of objects that have already been filtered
      */
     private void applyAndAnimateRemovals(List<Entry> filteredEntries) {
@@ -91,7 +91,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Adds the View if its object IS in the filtered list.
-     *
      * @param filteredEntries list of objects that have already been filtered
      */
     private void applyAndAnimateAdditions(List<Entry> filteredEntries) {
@@ -105,7 +104,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Reorders the Views so they correspond with the originally ordered objects.
-     *
      * @param filteredEntries list of objects that have already been filtered
      */
     private void applyAndAnimateMovedItems(List<Entry> filteredEntries) {
@@ -120,7 +118,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Removes the item from the list and notifies the Recycler View.
-     *
      * @param position index in the list
      */
     public void removeItem(int position) {
@@ -130,7 +127,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Adds the item from the list and notifies the Recycler View.
-     *
      * @param position index in the list
      */
     public void addItem(int position, Entry entry) {
@@ -140,7 +136,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Reorders the item in the list.
-     *
      * @param fromPosition old index in the list
      * @param toPosition   new index in the list
      */
@@ -160,22 +155,40 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         private final TextView mReadingTextView;
         private final TextView mDefinitionTextView;
         private final TextView mCommonStatusTextView;
+        private Entry mEntry = null;
 
-        public SearchViewHolder(View itemView) {
+        public SearchViewHolder(final View itemView) {
             super(itemView);
-            // Initialise all the GUI elements from the xml layout of the one row
+            // Initialise all the GUI elements from the xml layout of the one row.
             mWordTextView = (TextView) itemView.findViewById(R.id.item_search_word);
             mReadingTextView = (TextView) itemView.findViewById(R.id.item_search_reading);
             mDefinitionTextView = (TextView) itemView.findViewById(R.id.item_search_definition);
             mCommonStatusTextView = (TextView) itemView.findViewById(R.id.item_search_common_status);
+
+            // Set listener to the row.
+            RelativeLayout row = (RelativeLayout) itemView.findViewById(R.id.item_search);
+            row.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mEntry != null) {
+                        Context context = itemView.getContext();
+                        Intent intent = new Intent(context, EntryActivity.class);
+                        intent.putExtra("YAY", true);
+
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
 
         /**
-         * Sets the GUI elements of a row with the values of entry
-         *
+         * Sets the GUI elements of a row with the values of entry.
          * @param entry the object to bind to a View
          */
         public void bind(Entry entry) {
+            // Save the entry.
+            mEntry = entry;
+
             // TODO: unit test this - for UI purposes :P
             // jisho.org's JSON data does not provide a word if it's wholly in katakana but it
             // always provides a reading, so use that if there is no word provided.

@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.controller.TabAdapter;
+import com.id11236662.gokeigo.controller.EntryAdapter;
 
 public class EntryActivity extends AppCompatActivity {
 
@@ -35,7 +35,7 @@ public class EntryActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.content_entry_view_pager);
-        final TabAdapter adapter = new TabAdapter (getSupportFragmentManager(),
+        final EntryAdapter adapter = new EntryAdapter(getSupportFragmentManager(),
                 tabLayout.getTabCount());
         assert viewPager != null;
         viewPager.setAdapter(adapter);
@@ -44,7 +44,6 @@ public class EntryActivity extends AppCompatActivity {
 
             /**
              * Called when a tab enters the selected state.
-             *
              * @param tab The tab that was selected
              */
             @Override
@@ -54,7 +53,6 @@ public class EntryActivity extends AppCompatActivity {
 
             /**
              * Called when a tab exits the selected state.
-             *
              * @param tab The tab that was unselected
              */
             @Override
@@ -65,7 +63,6 @@ public class EntryActivity extends AppCompatActivity {
             /**
              * Called when a tab that is already selected is chosen again by the user. Some applications
              * may use this action to return to the top level of a category.
-             *
              * @param tab The tab that was reselected.
              */
             @Override

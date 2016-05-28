@@ -3,6 +3,7 @@ package com.id11236662.gokeigo.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -63,33 +64,40 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        Intent intent = null;
         int id = item.getItemId();
+        FragmentManager manager = getSupportFragmentManager();
 
+        // TODO: possibly refactor
         switch (id) {
             case R.id.nav_home:
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_main_layout, EntryFragment.newInstance())
-                        .commit(); // TODO: Temp - just to test the EntryFragment.
+                manager.beginTransaction()
+                        .replace(R.id.content_main_layout, new SearchFragment())
+                        .commit();
                 break;
             case R.id.nav_history:
+                manager.beginTransaction()
+                        .replace(R.id.content_main_layout, new HistoryFragment())
+                        .commit();
                 break;
             case R.id.nav_notes:
+                manager.beginTransaction()
+                    .replace(R.id.content_main_layout, new NotesFragment())
+                    .commit();
                 break;
             case R.id.nav_starred:
+                manager.beginTransaction()
+                        .replace(R.id.content_main_layout, new StarredFragment())
+                        .commit();
                 break;
             case R.id.nav_settings:
-                intent = new Intent(this, SettingsActivity.class);
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 break;
         }
 
-        // If intent is null, do not start activity with it nor close the drawer.
-        if (intent != null) {
-            startActivity(intent);
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            assert drawer != null;
-            drawer.closeDrawer(GravityCompat.START);
-        }
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        assert drawer != null;
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }

@@ -23,7 +23,7 @@
     <string name="pref_title_search_clear">Clear Recent Searches</string>
     <string name="pref_title_history_clear">Clear History</string>
 
-    <!-- Messages. -->
+    <!-- Messages -->
     <string name="message_searching">Searching</string>
     <string name="message_entries_found">Entries found: %d</string>
 

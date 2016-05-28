@@ -23,10 +23,10 @@ android {
 def dbflow_version = "3.0.0-beta6"
 // or dbflow_version = "develop-SNAPSHOT" for grabbing latest dependency in your project on the develop branch
 // or 10-digit short-hash of a specific commit. (Useful for bugs fixed in develop, but not in a release yet)
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'com.android.support:support-v4:23.4.0'
@@ -48,3 +48,4 @@ dependencies {
     // Annotations
     compile 'org.glassfish:javax.annotation:10.0-b28'
 }
+

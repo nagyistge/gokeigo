@@ -1,5 +1,8 @@
 package com.id11236662.gokeigo.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.id11236662.gokeigo.util.StringUtils;
@@ -10,7 +13,7 @@ import java.util.List;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Entry {
+public class Entry implements Parcelable {
 
     @SerializedName("is_common")
     @Expose
@@ -24,6 +27,10 @@ public class Entry {
     @SerializedName("attribution")
     @Expose
     private Attribution attribution;
+
+    public Entry(Parcel source) {
+        // TODO:
+    }
 
     public boolean getIsCommon() {
         return isCommon;
@@ -90,5 +97,27 @@ public class Entry {
 
     public String getCommonStatus() {
         return isCommon ? "Common" : ""; //TODO: turn Common into resource string
+    }
+
+    /**
+     * Describe the kinds of special objects contained in this Parcelable's
+     * marshalled representation.
+     * @return a bitmask indicating the set of special object types marshalled
+     * by the Parcelable.
+     */
+    @Override
+    public int describeContents() {
+        return 0; // TODO:
+    }
+
+    /**
+     * Flatten this object in to a Parcel.
+     * @param dest  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }
