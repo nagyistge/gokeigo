@@ -1,0 +1,32 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="pref_key_language"
+        android:title="@string/pref_language">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="pref_key_language_interface"
+            android:summary="@string/pref_summary_language_interface"
+            android:title="@string/pref_title_language_interface" />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_search"
+        android:title="@string/pref_search">
+
+        <Preference
+            android:key="pref_key_search_clear"
+            android:title="@string/pref_title_search_clear" />
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="pref_key_history"
+        android:title="@string/pref_history">
+
+        <Preference
+            android:key="pref_key_history_clear"
+            android:title="@string/pref_title_history_clear" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
