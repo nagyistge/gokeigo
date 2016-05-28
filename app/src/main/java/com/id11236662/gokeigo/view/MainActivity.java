@@ -68,7 +68,9 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             case R.id.nav_home:
-                intent = new Intent(this, EntryActivity.class); // TODO: Temp - just to test the EntryActivity.
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.content_main_layout, EntryFragment.newInstance())
+                        .commit(); // TODO: Temp - just to test the EntryFragment.
                 break;
             case R.id.nav_history:
                 break;

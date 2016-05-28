@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.id11236662.gokeigo.R;
+import com.id11236662.gokeigo.controller.TabAdapter;
 
 public class EntryActivity extends AppCompatActivity {
 
@@ -24,11 +25,12 @@ public class EntryActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        // Set up a tab for dictionary entry and a tab each for the 3 levels of keigo.
         TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_entry_tab_layout);
         assert tabLayout != null;
         // TODO: set them as resource strings
+        tabLayout.addTab(tabLayout.newTab().setText("Dictionary"));
         tabLayout.addTab(tabLayout.newTab().setText("Respectful"));
-        tabLayout.addTab(tabLayout.newTab().setText("Polite"));
         tabLayout.addTab(tabLayout.newTab().setText("Humble"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
