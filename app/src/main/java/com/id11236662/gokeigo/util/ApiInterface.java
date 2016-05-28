@@ -1,6 +1,6 @@
 package com.id11236662.gokeigo.util;
 
-import com.id11236662.gokeigo.data.EntriesResponse;
+import com.id11236662.gokeigo.model.EntriesResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
