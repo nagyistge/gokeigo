@@ -1,4 +1,4 @@
-package com.id11236662.gokeigo.data;
+package com.id11236662.gokeigo.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

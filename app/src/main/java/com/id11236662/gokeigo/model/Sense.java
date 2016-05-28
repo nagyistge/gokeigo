@@ -1,4 +1,4 @@
-package com.id11236662.gokeigo.data;
+package com.id11236662.gokeigo.model;
 
 
 import com.google.gson.annotations.Expose;
@@ -29,7 +29,7 @@ public class Sense {
     private List<String> seeAlso = new ArrayList<String>();
     @SerializedName("source")
     @Expose
-    private List<String> source = new ArrayList<String>();
+    private List<Object> source = new ArrayList<Object>();
     @SerializedName("info")
     @Expose
     private List<String> info = new ArrayList<String>();
@@ -74,11 +74,11 @@ public class Sense {
         this.seeAlso = seeAlso;
     }
 
-    public List<String> getSource() {
+    public List<Object> getSource() {
         return source;
     }
 
-    public void setSource(List<String> source) {
+    public void setSource(List<Object> source) {
         this.source = source;
     }
 
