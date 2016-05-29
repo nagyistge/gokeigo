@@ -1,27 +1,18 @@
 package com.id11236662.gokeigo.view;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.util.Constants;
-import com.id11236662.gokeigo.util.MenuTint;
-
-import java.util.zip.Inflater;
+import com.id11236662.gokeigo.util.ActivityConfigurator;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,17 +31,21 @@ public class MainActivity extends AppCompatActivity
                     .commit();
         }
 
-        // Add/set listeners to the navigation drawer.
+        // Add drawer listener to the navigation drawer.
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         assert drawer != null;
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Set navigation item selected listener to the navigation drawer.
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
+
+        // Lock the orientation to prevent losing search queries and notes.
+        ActivityConfigurator.lockOrientation(this);
     }
 
     @Override
@@ -91,8 +86,8 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_notes:
                 manager.beginTransaction()
-                    .replace(R.id.content_main_layout, new NotesFragment())
-                    .commit();
+                        .replace(R.id.content_main_layout, new NotesFragment())
+                        .commit();
                 break;
             case R.id.nav_starred:
                 manager.beginTransaction()

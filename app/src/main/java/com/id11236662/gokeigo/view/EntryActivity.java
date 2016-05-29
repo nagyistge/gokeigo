@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.controller.EntryAdapter;
+import com.id11236662.gokeigo.util.ActivityConfigurator;
 
 public class EntryActivity extends AppCompatActivity {
 
@@ -24,6 +25,9 @@ public class EntryActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // Lock the orientation to prevent losing search queries and notes.
+        ActivityConfigurator.lockOrientation(this);
 
         SetupTabLayout();
     }

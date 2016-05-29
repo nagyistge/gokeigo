@@ -7,6 +7,7 @@ import android.preference.PreferenceFragment;
 import android.view.MenuItem;
 
 import com.id11236662.gokeigo.R;
+import com.id11236662.gokeigo.util.ActivityConfigurator;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -33,6 +34,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // Lock the orientation to prevent losing search queries and notes.
+        ActivityConfigurator.lockOrientation(this);
     }
 
     /**

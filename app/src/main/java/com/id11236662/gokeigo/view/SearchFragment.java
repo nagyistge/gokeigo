@@ -45,8 +45,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     private TextView mResultsTextView;
     private RecyclerView mRecyclerView;
     private SearchAdapter mAdapter;
-    private SearchView mSearchView;
-    private String mSearchString;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -74,19 +72,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Add ItemDecoration to recycler view.
         mRecyclerView.addItemDecoration(new SearchAdapter.DividerItemDecoration(getActivity()));
 
-        // If saved something on outState, can recover them here.
-        if (savedInstanceState != null) {
-            mSearchString = savedInstanceState.getString(Constants.SEARCH_KEYWORD);
-        }
-
         return view;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mSearchString = mSearchView.getQuery().toString();
-        outState.putString(Constants.SEARCH_KEYWORD, mSearchString);
     }
 
     /**
@@ -117,14 +103,8 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Set QueryTextListener on search view.
         // TODO: make the searchview longer. it's so short on tablets
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        mSearchView.setOnQueryTextListener(this);
-
-        // If mSearchString has been saved, restore it. Most likely the orientation got changed.
-        if (mSearchString != null && !mSearchString.isEmpty()) {
-            searchItem.expandActionView();
-            mSearchView.setQuery(mSearchString, true);
-        }
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
     }
 
     /**
