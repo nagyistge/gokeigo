@@ -11,6 +11,7 @@ import javax.annotation.Generated;
 @Generated("org.jsonschema2pojo")
 public class EntriesResponse {
 
+    // Serialised fields have to match the json attibute or the mapping will not work.
     @SerializedName("data")
     @Expose
     private List<Entry> entries = new ArrayList<Entry>();

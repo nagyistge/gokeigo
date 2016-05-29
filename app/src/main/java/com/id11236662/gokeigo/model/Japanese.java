@@ -8,6 +8,7 @@ import javax.annotation.Generated;
 @Generated("org.jsonschema2pojo")
 public class Japanese {
 
+    // Serialised fields have to match the json attibute or the mapping will not work.
     @SerializedName("word")
     @Expose
     private String word;

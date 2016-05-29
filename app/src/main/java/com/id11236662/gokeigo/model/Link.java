@@ -8,6 +8,7 @@ import javax.annotation.Generated;
 @Generated("org.jsonschema2pojo")
 public class Link {
 
+    // Serialised fields have to match the json attibute or the mapping will not work.
     @SerializedName("text")
     @Expose
     private String text;
