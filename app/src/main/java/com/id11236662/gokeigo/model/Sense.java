@@ -12,6 +12,7 @@ import javax.annotation.Generated;
 @Generated("org.jsonschema2pojo")
 public class Sense {
 
+    // Serialised fields have to match the json attibute or the mapping will not work.
     @SerializedName("english_definitions")
     @Expose
     private List<String> englishDefinitions = new ArrayList<String>();
@@ -27,9 +28,6 @@ public class Sense {
     @SerializedName("see_also")
     @Expose
     private List<String> seeAlso = new ArrayList<String>();
-    @SerializedName("source")
-    @Expose
-    private List<Object> source = new ArrayList<Object>();
     @SerializedName("info")
     @Expose
     private List<String> info = new ArrayList<String>();
@@ -72,14 +70,6 @@ public class Sense {
 
     public void setSeeAlso(List<String> seeAlso) {
         this.seeAlso = seeAlso;
-    }
-
-    public List<Object> getSource() {
-        return source;
-    }
-
-    public void setSource(List<Object> source) {
-        this.source = source;
     }
 
     public List<String> getInfo() {
