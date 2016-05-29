@@ -6,8 +6,8 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 /**
- * This class represents a container that holds a word in dictionary form;
- * its respectful and humble versions if they've been calculated; its notes and starred status.
+ * This class represents a container that holds a regular word in dictionary form;
+ * its notes and starred status.
  */
 @Table(database = AppDatabase.class, allFields = true)
 public class Word extends BaseModel {

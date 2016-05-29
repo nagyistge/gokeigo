@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Helper class in utilising strings.
  */
-public class StringUtils {
+public class StringUtility {
 
     /**
      * @param strings a List of strings to be concatenated together.

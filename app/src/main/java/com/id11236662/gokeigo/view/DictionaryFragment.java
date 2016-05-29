@@ -40,10 +40,12 @@ public class DictionaryFragment extends Fragment {
             TextView readingTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_reading_text_view);
             TextView commonTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_common_status_text_view);
             TextView blurbTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_blurb_text_view);
+            TextView otherFormsTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_other_forms_text_view);
             wordTextView.setText(parcelableEntry.getWord());
             readingTextView.setText(parcelableEntry.getReading());
             commonTextView.setText(parcelableEntry.getCommonStatus());
             blurbTextView.setText(parcelableEntry.getBlurb());
+            otherFormsTextView.setText(parcelableEntry.getOtherForms());
         }
     }
 }

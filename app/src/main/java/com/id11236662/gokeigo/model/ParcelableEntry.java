@@ -3,7 +3,7 @@ package com.id11236662.gokeigo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.id11236662.gokeigo.util.StringUtils;
+import com.id11236662.gokeigo.util.StringUtility;
 
 import java.util.List;
 
@@ -16,6 +16,7 @@ public class ParcelableEntry implements Parcelable {
     private String word;
     private String reading;
     private String blurb;
+    private String otherForms;
 
     private ParcelableEntry() {
     }
@@ -37,6 +38,7 @@ public class ParcelableEntry implements Parcelable {
         word = source.readString();
         reading = source.readString();
         blurb = source.readString();
+        otherForms = source.readString();
     }
 
     /**
@@ -52,6 +54,7 @@ public class ParcelableEntry implements Parcelable {
         dest.writeString(word);
         dest.writeString(reading);
         dest.writeString(blurb);
+        dest.writeString(otherForms);
     }
 
     /**
@@ -66,7 +69,6 @@ public class ParcelableEntry implements Parcelable {
         return 0;
     }
 
-    // TODO: Figure out the rest from links onwards later.
     public static ParcelableEntry parse(Entry entry) {
         ParcelableEntry parcelableEntry = new ParcelableEntry();
         parcelableEntry.setCommonStatus(entry.getCommonStatus());
@@ -79,29 +81,48 @@ public class ParcelableEntry implements Parcelable {
         for (int i = 0; i < senseList.size(); i++) {
             Sense sense = senseList.get(i);
 
+            String partsOfSpeech = StringUtility.join(sense.getPartsOfSpeech());
+            if (!partsOfSpeech.isEmpty()) {
+                stringBuilder.append(partsOfSpeech);
+                stringBuilder.append(lineSeparator);
+            }
+
             int number = i + 1;
-            stringBuilder.append(number).append(". ");
-            String englishDefinition = StringUtils.join(sense.getEnglishDefinitions());
+            stringBuilder.append(number);
+            stringBuilder.append(". ");
+            String englishDefinition = StringUtility.join(sense.getEnglishDefinitions());
             stringBuilder.append(englishDefinition);
             stringBuilder.append(lineSeparator);
-            String partsOfSpeech = StringUtils.join(sense.getPartsOfSpeech());
-            stringBuilder.append(partsOfSpeech);
-            stringBuilder.append(lineSeparator);
-        }
-        parcelableEntry.setBlurb(stringBuilder.toString());
 
-//            String link = StringUtils.join(sense.getLinks()); // Link is an object...
+            String info = StringUtility.join(sense.getInfo());
+            if (!info.isEmpty()) {
+                stringBuilder.append(info);
+                stringBuilder.append(lineSeparator);
+            }
+
+            String seeAlso = StringUtility.join(sense.getSeeAlso());
+            if (!seeAlso.isEmpty()) {
+                stringBuilder.append("See also: ");
+                stringBuilder.append(seeAlso);
+                stringBuilder.append(lineSeparator);
+            }
+
+            String tags = StringUtility.join(sense.getTags());
+            if (!tags.isEmpty()) {
+                stringBuilder.append(tags);
+                stringBuilder.append(lineSeparator);
+            }
+            // TODO figure out how to get the links as hyperlinks in the textview with Android-TextView-LinkBuilder
+//            String link = StringUtility.join(sense.getLinks()); // Link is an object...
 //            links.add(link);
 
-
-        //    private ArrayList<String> tags = new ArrayList<>();
-//    private ArrayList<String> seeAlso = new ArrayList<>();
-//    private ArrayList<String> source = new ArrayList<>();
-//    private ArrayList<String> info = new ArrayList<>();
-//    private boolean isJmdict;
-//    private boolean isJmnedict;
-//    private boolean isDbpedia;
-
+            // Add comma to the list if it's not the last element.
+            if (i < senseList.size() - 1) {
+                stringBuilder.append(lineSeparator);
+            }
+        }
+        parcelableEntry.setBlurb(stringBuilder.toString());
+        parcelableEntry.setOtherForms(entry.getOtherForms());
         return parcelableEntry;
     }
 
@@ -135,5 +156,13 @@ public class ParcelableEntry implements Parcelable {
 
     public void setBlurb(String blurb) {
         this.blurb = blurb;
+    }
+
+    public String getOtherForms() {
+        return otherForms;
+    }
+
+    public void setOtherForms(String otherForms) {
+        this.otherForms = otherForms;
     }
 }
