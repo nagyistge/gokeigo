@@ -4,25 +4,59 @@
     android:layout_height="match_parent"
     tools:context=".view.DictionaryFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/fragment_dictionary_word_text_view"
+
+        <RelativeLayout
+            android:id="@+id/fragment_dictionary_left_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="word" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/fragment_dictionary_reading_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="reading" />
+            <TextView
+                android:id="@+id/fragment_dictionary_word_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:textIsSelectable="true"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/fragment_dictionary_reading_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fragment_dictionary_word_text_view"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:textIsSelectable="true"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/fragment_dictionary_common_status_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:padding="5dp"
+                android:textColor="@color/text_common"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/fragment_dictionary_blurb_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fragment_dictionary_reading_text_view"
+                android:padding="5dp"
+                android:textIsSelectable="true" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </FrameLayout>

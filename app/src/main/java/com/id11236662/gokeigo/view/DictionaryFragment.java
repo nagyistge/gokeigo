@@ -34,11 +34,16 @@ public class DictionaryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
 
-        TextView textView = (TextView) activity.findViewById(R.id.fragment_dictionary_word_text_view);
-        assert textView != null;
         ParcelableEntry parcelableEntry = activity.getIntent().getParcelableExtra(Constants.SELECTED_ENTRY);
         if (parcelableEntry != null) {
-            textView.setText(parcelableEntry.getWord());
+            TextView wordTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_word_text_view);
+            TextView readingTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_reading_text_view);
+            TextView commonTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_common_status_text_view);
+            TextView blurbTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_blurb_text_view);
+            wordTextView.setText(parcelableEntry.getWord());
+            readingTextView.setText(parcelableEntry.getReading());
+            commonTextView.setText(parcelableEntry.getCommonStatus());
+            blurbTextView.setText(parcelableEntry.getBlurb());
         }
     }
 }
