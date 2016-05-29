@@ -14,8 +14,9 @@ import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.Entry;
+import com.id11236662.gokeigo.model.ParcelableEntry;
+import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.view.EntryActivity;
-import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,7 +174,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                     if (mEntry != null) {
                         Context context = itemView.getContext();
                         Intent intent = new Intent(context, EntryActivity.class);
-                        intent.putExtra("WORD", mEntry.getWord());
+                        ParcelableEntry parcelableEntry = ParcelableEntry.parse(mEntry);
+                        intent.putExtra(Constants.SELECTED_ENTRY, parcelableEntry);
                         context.startActivity(intent);
                     }
                 }
@@ -188,16 +190,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             // Save the entry.
             mEntry = entry;
 
-            // TODO: unit test this - for UI purposes :P
-            // jisho.org's JSON data does not provide a word if it's wholly in katakana but it
-            // always provides a reading, so use that if there is no word provided.
-            String word = entry.getWord();
-            if (StringUtils.isNotNullOrEmpty(word)) {
-                mWordTextView.setText(word);
-                mReadingTextView.setText(entry.getReading());
-            } else {
-                mWordTextView.setText(entry.getReading());
-            }
+            mWordTextView.setText(entry.getWord());
+            mReadingTextView.setText(entry.getReading());
             mDefinitionTextView.setText(entry.getDefinition());
             mCommonStatusTextView.setText(entry.getCommonStatus());
         }

@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
+import com.id11236662.gokeigo.model.ParcelableEntry;
+import com.id11236662.gokeigo.util.Constants;
 
 public class DictionaryFragment extends Fragment {
 
@@ -32,10 +34,11 @@ public class DictionaryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
 
-        // TODO: TEMP
-        String word = activity.getIntent().getExtras().getString("WORD");
         TextView textView = (TextView) activity.findViewById(R.id.fragment_dictionary_word_text_view);
         assert textView != null;
-        textView.setText(word);
+        ParcelableEntry parcelableEntry = activity.getIntent().getParcelableExtra(Constants.SELECTED_ENTRY);
+        if (parcelableEntry != null) {
+            textView.setText(parcelableEntry.getWord());
+        }
     }
 }

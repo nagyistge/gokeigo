@@ -5,4 +5,5 @@ package com.id11236662.gokeigo.util;
  */
 public class Constants {
     public static final String TAG = "MAD";
+    public static final String SELECTED_ENTRY = "SELECTED_ENTRY";
 }

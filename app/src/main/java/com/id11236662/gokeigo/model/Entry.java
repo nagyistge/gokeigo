@@ -1,8 +1,5 @@
 package com.id11236662.gokeigo.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.id11236662.gokeigo.util.StringUtils;
@@ -13,7 +10,7 @@ import java.util.List;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Entry implements Parcelable {
+public class Entry {
 
     @SerializedName("is_common")
     @Expose
@@ -28,9 +25,8 @@ public class Entry implements Parcelable {
     @Expose
     private Attribution attribution;
 
-    public Entry(Parcel source) {
-        // TODO:
-    }
+    private String mWord = null;
+    private String mReading = null;
 
     public boolean getIsCommon() {
         return isCommon;
@@ -65,21 +61,52 @@ public class Entry implements Parcelable {
     }
 
     /**
-     * Get the first japanese element
+     * Get the first japanese element as that's the actual result.
+     * Unknown reason as to why the API returns other results. Ignore them.
      * @return an element in the Japanese list if it's not empty
      */
-    private Japanese getJapaneseMain() {
+    private Japanese getActualJapanese() {
         return japanese.size() > 0 ? japanese.get(0) : null;
     }
 
+    // TODO: unit test this
+
+    /**
+     * Lazy load the word.
+     * @return
+     */
     public String getWord() {
-        Japanese japanese = getJapaneseMain();
-        return japanese != null ? japanese.getWord() : "";
+        if (mWord == null) {
+            loadWordAndReading();
+        }
+        return mWord;
     }
 
+    /**
+     * Lazy load the reading.
+     * @return
+     */
     public String getReading() {
-        Japanese japanese = getJapaneseMain();
-        return japanese != null ? japanese.getReading() : "";
+        if (mReading == null) {
+            loadWordAndReading();
+        }
+        return mReading;
+    }
+
+    private void loadWordAndReading() {
+        Japanese japanese = getActualJapanese();
+        if (japanese != null) {
+            // jisho.org's JSON data does not provide a word if it's wholly in katakana but it
+            // always provides a reading, so use that if there is no word provided.
+            String word = japanese.getWord();
+            if (com.raizlabs.android.dbflow.StringUtils.isNotNullOrEmpty(word)) {
+                mWord = word;
+                mReading = japanese.getReading();
+            } else {
+                mWord = japanese.getReading();
+                mReading = "";
+            }
+        }
     }
 
     /**
@@ -97,27 +124,5 @@ public class Entry implements Parcelable {
 
     public String getCommonStatus() {
         return isCommon ? "Common" : ""; //TODO: turn Common into resource string
-    }
-
-    /**
-     * Describe the kinds of special objects contained in this Parcelable's
-     * marshalled representation.
-     * @return a bitmask indicating the set of special object types marshalled
-     * by the Parcelable.
-     */
-    @Override
-    public int describeContents() {
-        return 0; // TODO:
-    }
-
-    /**
-     * Flatten this object in to a Parcel.
-     * @param dest  The Parcel in which the object should be written.
-     * @param flags Additional flags about how the object should be written.
-     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
-     */
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
     }
 }
