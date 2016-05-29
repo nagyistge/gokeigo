@@ -16,6 +16,7 @@ public class ActivityConfigurator {
     /**
      * Locks tablets and phones to its natural orientation for a specific activity.
      * Code by jp36: http://stackoverflow.com/a/14565436/1007496
+     *
      * @param activity to be locked to the device's natural orientation.
      */
     public static void lockOrientation(Activity activity) {
@@ -27,16 +28,14 @@ public class ActivityConfigurator {
             case Configuration.ORIENTATION_LANDSCAPE:
                 if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_90) {
                     orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-                }
-                else {
+                } else {
                     orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE;
                 }
                 break;
             case Configuration.ORIENTATION_PORTRAIT:
                 if (rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_270) {
                     orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                }
-                else {
+                } else {
                     orientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT;
                 }
                 break;
