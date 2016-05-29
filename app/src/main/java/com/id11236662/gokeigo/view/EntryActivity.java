@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.controller.EntryAdapter;
@@ -25,9 +24,6 @@ public class EntryActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        // Set the title to Search so the user knows when they press back, it would go there.
-        setTitle(getString(R.string.search));
 
         SetupTabLayout();
     }
