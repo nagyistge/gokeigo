@@ -45,6 +45,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 || AppPreferenceFragment.class.getName().equals(fragmentName);
     }
 
+    // TODO: What does onOptionsItemSelected do
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

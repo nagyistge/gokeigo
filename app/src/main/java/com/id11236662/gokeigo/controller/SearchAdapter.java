@@ -173,8 +173,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                     if (mEntry != null) {
                         Context context = itemView.getContext();
                         Intent intent = new Intent(context, EntryActivity.class);
-                        intent.putExtra("YAY", true);
-
+                        intent.putExtra("WORD", mEntry.getWord());
                         context.startActivity(intent);
                     }
                 }

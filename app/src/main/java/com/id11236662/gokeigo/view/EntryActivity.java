@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.controller.EntryAdapter;
@@ -25,6 +26,13 @@ public class EntryActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        // Set the title to Search so the user knows when they press back, it would go there.
+        setTitle(getString(R.string.search));
+
+        SetupTabLayout();
+    }
+
+    private void SetupTabLayout() {
         // Set up a tab for dictionary entry and a tab each for the 3 levels of keigo.
         TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_entry_tab_layout);
         assert tabLayout != null;
@@ -70,9 +78,9 @@ public class EntryActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
+    // TODO: What does onOptionsItemSelected do
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
