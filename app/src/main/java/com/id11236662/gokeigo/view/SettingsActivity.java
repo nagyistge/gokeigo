@@ -35,7 +35,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // Lock the orientation to prevent losing search queries and notes.
+        // Lock the orientation for consistency with the other activities.
         ActivityConfigurator.lockOrientation(this);
     }
 

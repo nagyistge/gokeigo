@@ -26,7 +26,7 @@ public class EntryActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        // Lock the orientation to prevent losing search queries and notes.
+        // Lock the orientation to prevent losing notes.
         ActivityConfigurator.lockOrientation(this);
 
         SetupTabLayout();

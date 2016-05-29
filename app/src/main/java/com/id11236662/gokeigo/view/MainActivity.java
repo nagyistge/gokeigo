@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Lock the orientation to prevent losing search queries and notes.
+        // Lock the orientation to prevent losing search queries.
         ActivityConfigurator.lockOrientation(this);
     }
 
