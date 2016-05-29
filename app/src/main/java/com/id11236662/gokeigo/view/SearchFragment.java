@@ -22,8 +22,8 @@ import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.controller.SearchAdapter;
-import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.model.EntriesResponse;
+import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.util.ApiClient;
 import com.id11236662.gokeigo.util.ApiInterface;
 import com.id11236662.gokeigo.util.Constants;
@@ -45,16 +45,16 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     private TextView mResultsTextView;
     private RecyclerView mRecyclerView;
     private SearchAdapter mAdapter;
+    private SearchView mSearchView;
+    private String mSearchString;
 
     public SearchFragment() {
         // Required empty public constructor
     }
 
-    public static SearchFragment newInstance() {
-        return new SearchFragment();
-    }
-
-    /** Initialise textview field and recycler view and set an item decoration to recycler view.
+    /**
+     * Initialise textview field and recycler view and set an item decoration to recycler view.
+     *
      * @param inflater           used to inflate views in this fragment
      * @param container          this fragment
      * @param savedInstanceState unused argument
@@ -73,7 +73,20 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Add ItemDecoration to recycler view.
         mRecyclerView.addItemDecoration(new SearchAdapter.DividerItemDecoration(getActivity()));
+
+        // If saved something on outState, can recover them here.
+        if (savedInstanceState != null) {
+            mSearchString = savedInstanceState.getString(Constants.SEARCH_KEYWORD);
+        }
+
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mSearchString = mSearchView.getQuery().toString();
+        outState.putString(Constants.SEARCH_KEYWORD, mSearchString);
     }
 
     /**
@@ -99,12 +112,19 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         inflater.inflate(R.menu.main, menu);
 
         // Manually tint the search icon as it's provided separately from AppCompat.
-        final MenuItem item = menu.findItem(R.id.action_search);
-        MenuTint.colorMenuItem(item, Color.WHITE, null);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuTint.colorMenuItem(searchItem, Color.WHITE, null);
 
         // Set QueryTextListener on search view.
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        searchView.setOnQueryTextListener(this);
+        // TODO: make the searchview longer. it's so short on tablets
+        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        mSearchView.setOnQueryTextListener(this);
+
+        // If mSearchString has been saved, restore it. Most likely the orientation got changed.
+        if (mSearchString != null && !mSearchString.isEmpty()) {
+            searchItem.expandActionView();
+            mSearchView.setQuery(mSearchString, true);
+        }
     }
 
     /**
@@ -116,7 +136,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      */
     @Override
     public boolean onQueryTextChange(String query) {
-        // TODO: Make async call when fetching suggestions somehow
         return false;
     }
 
@@ -133,6 +152,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         return true;
     }
 
+    /**
+     * This AsyncTask calls the API to search up a keyword, and shows the returned results
+     * on the recycler view.
+     */
     private class SearchJishoAsyncTask extends AsyncTask<String, Void, List<Entry>> {
 
         private ProgressDialog mProgressDialog;
@@ -157,7 +180,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         @Override
         protected List<Entry> doInBackground(String... params) {
             String keyword = params[0];
-            // TODO: if not connected to the network...
+            // TODO: if not connected to the network... https://futurestud.io/blog/retrofit-2-simple-error-handling | https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html
             ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
             Call<EntriesResponse> call = apiInterface.getEntries(keyword);
             try {
@@ -171,6 +194,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         /**
          * Dismiss the progress dialogue after execution. Show the entries in the list and how
          * many there are.
+         *
          * @param entries list of entries returned by doInBackground()
          */
         @Override
