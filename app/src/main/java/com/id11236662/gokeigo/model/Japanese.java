@@ -2,6 +2,7 @@ package com.id11236662.gokeigo.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.raizlabs.android.dbflow.StringUtils;
 
 import javax.annotation.Generated;
 
@@ -15,6 +16,8 @@ public class Japanese {
     @SerializedName("reading")
     @Expose
     private String reading;
+
+    private String mWordAndReading = null;
 
     public String getWord() {
         return word;
@@ -30,6 +33,23 @@ public class Japanese {
 
     public void setReading(String reading) {
         this.reading = reading;
+    }
+
+    /**
+     * Lazy load the word and reading.
+     * @return the word and reading in following format: word 【reading】, word
+     */
+    public String getWordAndReading() {
+        if (mWordAndReading == null) {
+            if (StringUtils.isNotNullOrEmpty(word) && StringUtils.isNotNullOrEmpty(reading)) {
+                mWordAndReading = String.format("%s【%s】", word, reading);
+            } else if (StringUtils.isNotNullOrEmpty(word)) {
+                mWordAndReading = word;
+            } else if (StringUtils.isNotNullOrEmpty(reading)) {
+                mWordAndReading = reading;
+            }
+        }
+        return mWordAndReading;
     }
 
 }

@@ -113,16 +113,8 @@ public class Entry {
     public String getOtherForms() {
         if (mOtherForms == null) {
             mOtherForms = "";
-            // First japanese element in JSON is the main word, the few elements after are other forms.
-            // Make a string that goes in this format: word 【reading】, word
             for (int i = 1; i < japanese.size(); i++) {
-                Japanese japanese = this.japanese.get(i);
-                mOtherForms += japanese.getWord();
-
-                // Reading may be blank due to loadWordAndReading(). If blank, don't try to show it.
-                if (!japanese.getReading().isEmpty()) {
-                    mOtherForms += String.format("【%s】", japanese.getReading());
-                }
+                mOtherForms += japanese.get(i).getWordAndReading();
 
                 // Add comma to the list if it's not the last element.
                 if (i < this.japanese.size() - 1) {
