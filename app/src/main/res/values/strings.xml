@@ -13,6 +13,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_search">Search</string>
+    <string name="action_save">Save</string>
 
     <!-- Strings related to Settings -->
     <string name="pref_language">Language</string>
@@ -26,5 +27,13 @@
     <!-- Messages -->
     <string name="message_searching">Searching</string>
     <string name="message_entries_found">Entries found: %d</string>
+
+    <!-- Tab titles -->
+    <string name="tab_dictionary">Dictionary</string>
+    <string name="tab_keigo">Keigo</string>
+    <string name="tab_notes">Notes</string>
+
+    <!-- Hints -->
+    <string name="hint_notes">Your notes about the entry</string>
 
 </resources>

@@ -34,7 +34,7 @@ public class EntryDictionaryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
 
-        ParcelableEntry parcelableEntry = activity.getIntent().getParcelableExtra(Constants.SELECTED_ENTRY);
+        ParcelableEntry parcelableEntry = activity.getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
         if (parcelableEntry != null) {
             TextView wordTextView = (TextView) activity.findViewById(R.id.fragment_entry_dictionary_word_text_view);
             TextView readingTextView = (TextView) activity.findViewById(R.id.fragment_entry_dictionary_reading_text_view);

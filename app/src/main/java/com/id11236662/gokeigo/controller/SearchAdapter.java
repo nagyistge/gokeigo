@@ -175,7 +175,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                         Context context = itemView.getContext();
                         Intent intent = new Intent(context, EntryActivity.class);
                         ParcelableEntry parcelableEntry = ParcelableEntry.parse(mEntry);
-                        intent.putExtra(Constants.SELECTED_ENTRY, parcelableEntry);
+                        intent.putExtra(Constants.INTENT_SELECTED_ENTRY, parcelableEntry);
                         context.startActivity(intent);
                     }
                 }
