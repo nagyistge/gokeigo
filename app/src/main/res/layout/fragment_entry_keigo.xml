@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.id11236662.gokeigo.view.RespectfulFragment">
+    tools:context=".view.EntryKeigoFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

@@ -14,10 +14,10 @@ import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.ParcelableEntry;
 import com.id11236662.gokeigo.util.Constants;
 
-public class DictionaryFragment extends Fragment {
+public class EntryDictionaryFragment extends Fragment {
 
 
-    public DictionaryFragment() {
+    public EntryDictionaryFragment() {
         // Required empty public constructor
     }
 
@@ -26,7 +26,7 @@ public class DictionaryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dictionary, container, false);
+        return inflater.inflate(R.layout.fragment_entry_dictionary, container, false);
     }
 
     @Override
@@ -36,11 +36,11 @@ public class DictionaryFragment extends Fragment {
 
         ParcelableEntry parcelableEntry = activity.getIntent().getParcelableExtra(Constants.SELECTED_ENTRY);
         if (parcelableEntry != null) {
-            TextView wordTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_word_text_view);
-            TextView readingTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_reading_text_view);
-            TextView commonTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_common_status_text_view);
-            TextView blurbTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_blurb_text_view);
-            TextView otherFormsTextView = (TextView) activity.findViewById(R.id.fragment_dictionary_other_forms_text_view);
+            TextView wordTextView = (TextView) activity.findViewById(R.id.fragment_entry_dictionary_word_text_view);
+            TextView readingTextView = (TextView) activity.findViewById(R.id.fragment_entry_dictionary_reading_text_view);
+            TextView commonTextView = (TextView) activity.findViewById(R.id.fragment_entry_dictionary_common_status_text_view);
+            TextView blurbTextView = (TextView) activity.findViewById(R.id.fragment_text_dictionary_blurb_text_view);
+            TextView otherFormsTextView = (TextView) activity.findViewById(R.id.fragment_text_dictionary_other_forms_text_view);
             wordTextView.setText(parcelableEntry.getWord());
             readingTextView.setText(parcelableEntry.getReading());
             commonTextView.setText(parcelableEntry.getCommonStatus());

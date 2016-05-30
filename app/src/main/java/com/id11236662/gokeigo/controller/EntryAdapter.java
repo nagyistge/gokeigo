@@ -4,9 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.id11236662.gokeigo.view.DictionaryFragment;
-import com.id11236662.gokeigo.view.HumbleFragment;
-import com.id11236662.gokeigo.view.RespectfulFragment;
+import com.id11236662.gokeigo.view.EntryDictionaryFragment;
+import com.id11236662.gokeigo.view.EntryKeigoFragment;
+import com.id11236662.gokeigo.view.EntryNotesFragment;
 
 public class EntryAdapter extends FragmentStatePagerAdapter {
     private int mNumberOfTabs;
@@ -24,11 +24,11 @@ public class EntryAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new DictionaryFragment();
+                return new EntryDictionaryFragment();
             case 1:
-                return new RespectfulFragment();
+                return new EntryKeigoFragment();
             case 2:
-                return new HumbleFragment();
+                return new EntryNotesFragment();
             default:
                 return null;
         }

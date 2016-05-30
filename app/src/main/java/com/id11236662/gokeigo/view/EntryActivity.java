@@ -38,8 +38,8 @@ public class EntryActivity extends AppCompatActivity {
         assert tabLayout != null;
         // TODO: set them as resource strings
         tabLayout.addTab(tabLayout.newTab().setText("Dictionary"));
-        tabLayout.addTab(tabLayout.newTab().setText("Respectful"));
-        tabLayout.addTab(tabLayout.newTab().setText("Humble"));
+        tabLayout.addTab(tabLayout.newTab().setText("Keigo"));
+        tabLayout.addTab(tabLayout.newTab().setText("Notes"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.content_entry_view_pager);

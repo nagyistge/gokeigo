@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         // Set navigation item selected listener to the navigation drawer.
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 

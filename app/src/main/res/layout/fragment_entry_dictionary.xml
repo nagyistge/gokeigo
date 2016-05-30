@@ -2,64 +2,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.DictionaryFragment">
+    tools:context=".view.EntryDictionaryFragment">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <RelativeLayout
-            android:id="@+id/fragment_dictionary_left_layout"
+            android:id="@+id/fragment_entry_dictionary_left_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
-                android:id="@+id/fragment_dictionary_word_text_view"
+                android:id="@+id/fragment_entry_dictionary_word_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:paddingTop="5dp"
+                android:text="言葉"
                 android:textIsSelectable="true"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/fragment_dictionary_reading_text_view"
+                android:id="@+id/fragment_entry_dictionary_reading_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/fragment_dictionary_word_text_view"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:layout_below="@id/fragment_entry_dictionary_word_text_view"
                 android:paddingTop="5dp"
+                android:text="ことば"
+                android:textColor="@color/secondary_text"
                 android:textIsSelectable="true"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/fragment_dictionary_common_status_text_view"
+                android:id="@+id/fragment_entry_dictionary_common_status_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:padding="5dp"
-                android:textColor="@color/text_common"
+                android:paddingTop="5dp"
+                android:textColor="@color/common_status"
                 android:textIsSelectable="true" />
 
             <TextView
-                android:id="@+id/fragment_dictionary_blurb_text_view"
+                android:id="@+id/fragment_text_dictionary_blurb_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/fragment_dictionary_reading_text_view"
-                android:padding="5dp"
+                android:layout_below="@id/fragment_entry_dictionary_reading_text_view"
+                android:paddingTop="10dp"
+                android:text="noun\n1. word"
                 android:textIsSelectable="true" />
 
             <TextView
-                android:id="@+id/fragment_dictionary_other_forms_text_view"
+                android:id="@+id/fragment_text_dictionary_other_forms_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/fragment_dictionary_blurb_text_view"
+                android:layout_below="@id/fragment_text_dictionary_blurb_text_view"
                 android:padding="5dp"
                 android:textIsSelectable="true" />
 
