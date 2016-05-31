@@ -1,5 +1,6 @@
 package com.id11236662.gokeigo.view;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -11,7 +12,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,12 +20,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.EntriesResponse;
 import com.id11236662.gokeigo.model.Entry;
+import com.id11236662.gokeigo.util.ActivityConfigurator;
 import com.id11236662.gokeigo.util.ApiClient;
-import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.JishoService;
 import com.id11236662.gokeigo.util.MenuTint;
 
@@ -34,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
@@ -149,7 +149,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      */
     @Override
     public boolean onQueryTextChange(String query) {
-        saveJSONToPrivateStorage(); // TODO TEMP
         return false;
     }
 
@@ -162,39 +161,13 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      */
     @Override
     public boolean onQueryTextSubmit(String query) {
-        new SearchJishoAsyncTask().execute(query);
+        Activity activity = getActivity();
+        if (ActivityConfigurator.isDeviceOnline(activity)) {
+            new SearchJishoAsyncTask().execute(query);
+        } else {
+            Toast.makeText(activity, R.string.message_no_network_available, Toast.LENGTH_SHORT).show();
+        }
         return true;
-    }
-
-    private void saveJSONToPrivateStorage() {
-        new SaveKeigoResultsAsyncTask().execute();
-    }
-
-    private class SaveKeigoResultsAsyncTask extends AsyncTask<Void, Void, String> {
-        // TODO: Open an internal file for writing
-        // Write JSON to the file
-        // OPen the same internal file for rading
-        // Read the JSON string from the file
-        // Convert the JSON string to objects
-        // Compare the source and target objects to ensure they are the same
-
-
-        @Override
-        protected String doInBackground(Void... params) {
-            JishoService jishoService = ApiClient.getClient().create(JishoService.class);
-            Call<ResponseBody> call = jishoService.getJSON(Constants.KEYWORD_PREFIX_RESPECTFUL);
-            try {
-                return call.execute().body().string();
-            } catch (IOException e) {
-                Log.e(Constants.TAG_DEBUGGING, e.toString());
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String response) {
-            Log.d(Constants.TAG_DEBUGGING, response);
-        }
     }
 
     /**
@@ -225,15 +198,13 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         @Override
         protected List<Entry> doInBackground(String... params) {
             String keyword = params[0];
-            // TODO: if not connected to the network... https://futurestud.io/blog/retrofit-2-simple-error-handling | https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html
             JishoService jishoService = ApiClient.getClient().create(JishoService.class);
             Call<EntriesResponse> call = jishoService.getEntries(keyword);
             try {
                 return call.execute().body().getEntries();
             } catch (IOException e) {
-                Log.e(Constants.TAG_DEBUGGING, e.toString());
+                return null;
             }
-            return new ArrayList<>();
         }
 
         /**
@@ -248,14 +219,18 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 mProgressDialog.dismiss();
             }
 
-            // Show the entries in the list.
-            mAdapter.animateTo(entries);
+            if (entries != null) {
+                // Show the entries in the list.
+                mAdapter.animateTo(entries);
 
-            // Show how many entries were found.
-            int results = entries.size();
-            Locale currentLocale = Locale.ENGLISH; // TODO: Get from the preferences
-            mResultsTextView.setText(String.format(currentLocale,
-                    getString(R.string.message_entries_found), results));
+                // Show how many entries were found.
+                int results = entries.size();
+                Locale currentLocale = Locale.ENGLISH; // TODO: Get from the preferences
+                mResultsTextView.setText(String.format(currentLocale,
+                        getString(R.string.message_entries_found), results));
+            } else {
+                mResultsTextView.setText(R.string.message_no_network_available);
+            }
         }
     }
 }

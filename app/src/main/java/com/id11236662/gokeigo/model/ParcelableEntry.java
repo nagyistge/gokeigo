@@ -8,7 +8,7 @@ import com.id11236662.gokeigo.util.StringUtility;
 import java.util.List;
 
 /**
- * Parcelable version of the Entry object. This makes it passable via an intent.
+ * Parcelable version of the Entry object. This makes it easily transportable via intents.
  */
 public class ParcelableEntry implements Parcelable {
 
@@ -75,6 +75,8 @@ public class ParcelableEntry implements Parcelable {
         parcelableEntry.setWord(entry.getWord());
         parcelableEntry.setReading(entry.getReading());
 
+        // Create blurb using the following of every sense element: parts of speech,
+        // english definitions, info, see also, tags and links.
         StringBuilder stringBuilder = new StringBuilder();
         String lineSeparator = System.getProperty("line.separator");
         List<Sense> senseList = entry.getSenses();

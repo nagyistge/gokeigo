@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.view.Display;
 import android.view.Surface;
 import android.view.WindowManager;
@@ -41,5 +43,11 @@ public class ActivityConfigurator {
                 break;
         }
         activity.setRequestedOrientation(orientation);
+    }
+
+    public static boolean isDeviceOnline(Activity activity) {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 }

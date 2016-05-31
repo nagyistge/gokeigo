@@ -35,5 +35,6 @@
 
     <!-- Hints -->
     <string name="hint_notes">Your notes about the entry</string>
+    <string name="message_no_network_available">No network available</string>
 
 </resources>

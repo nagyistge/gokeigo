@@ -62,7 +62,7 @@ public class Entry {
         return japanese.size() > 0 ? japanese.get(0) : null;
     }
 
-    // TODO: unit test this
+    // TODO: unit test methods below
 
     /**
      * Lazy load the word.
@@ -141,5 +141,19 @@ public class Entry {
 
     public String getCommonStatus() {
         return isCommon ? "Common" : ""; //TODO: turn Common into resource string
+    }
+
+    public String getKeyDefinition() {
+        String result = "";
+        Sense sense = getMainSense();
+        if (sense != null && sense.getEnglishDefinitions().size() > 0) {
+            result = sense.getEnglishDefinitions().get(0);
+        }
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return getWord() + getKeyDefinition();
     }
 }
