@@ -12,7 +12,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -116,37 +115,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Set QueryTextListener on search view.
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
-//        searchView.setOnClickListener(new View.OnClickListener() {
-//            private boolean extended = false;
-//
-//            @Override
-//            public void onClick(View v) {
-//                if (!extended) {
-//                    extended = true;
-//                    ViewGroup.LayoutParams lp = v.getLayoutParams();
-//                    lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-//                }
-//            }
-//        });
-
-        searchView.setOnKeyListener(new View.OnKeyListener() {
-            private boolean extended = false;
-
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (!extended && event.getAction() == KeyEvent.ACTION_DOWN) {
-                    extended = true;
-                    ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
-                    layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                }
-
-                return false;
-            }
-
-        });
-        // TODO: make the searchview longer. it's so short on tablets EDT: bottom two lines throw exceptions. above two listeners don't do anything...
-//        ViewGroup.LayoutParams layoutParams = searchView.getLayoutParams(); //java.lang.NullPointerException: Attempt to write to field 'int android.view.ViewGroup$LayoutParams.width' on a null object reference
-//        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        // TODO: make the searchview longer. it's so short on tablets
     }
 
     /**
