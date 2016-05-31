@@ -33,7 +33,7 @@
     <string name="tab_notes">Notes</string>
 
     <!-- Hints -->
-    <string name="hint_notes">Your notes about the entry</string>
+    <string name="hint_notes">Your notes about the data</string>
     <string name="message_no_network_available">No network available</string>
     <string name="text_include_respectful">Include Respectful</string>
     <string name="text_include_humble">Include Humble</string>

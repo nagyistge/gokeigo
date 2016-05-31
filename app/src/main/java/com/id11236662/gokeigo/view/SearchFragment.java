@@ -23,8 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.model.EntriesResponse;
-import com.id11236662.gokeigo.model.Entry;
+import com.id11236662.gokeigo.model.Data;
+import com.id11236662.gokeigo.model.DataResponse;
 import com.id11236662.gokeigo.util.ActivityConfigurator;
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.JishoClient;
@@ -97,7 +97,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Setup Recycler View and an adapter for it.
         FragmentActivity activity = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        mAdapter = new SearchAdapter(new ArrayList<Entry>(), R.layout.item_search);
+        mAdapter = new SearchAdapter(new ArrayList<Data>(), R.layout.item_search);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -154,7 +154,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      * This AsyncTask calls the API to search up a keyword, and shows the returned results
      * on the recycler view.
      */
-    private class SearchJishoAsyncTask extends AsyncTask<String, Void, List<Entry>> {
+    private class SearchJishoAsyncTask extends AsyncTask<String, Void, List<Data>> {
 
         private ProgressDialog mProgressDialog;
         private boolean mIncludeRespectful;
@@ -183,18 +183,18 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
          * @return list of entries retrieved from the API. If null, there's been an exception.
          */
         @Override
-        protected List<Entry> doInBackground(String... params) {
+        protected List<Data> doInBackground(String... params) {
             String keyword = params[0];
             // If none of the options is checked, don't bother searching and return 0 results.
-            List<Entry> results = new ArrayList<>();
+            List<Data> results = new ArrayList<>();
             // Create client to access jisho's web service.
             JishoService jishoService = JishoClient.getClient().create(JishoService.class);
 
             // If "Include Respectful" option has been checked, grab relevant entries about it.
             if (mIncludeRespectful) {
-                Call<EntriesResponse> call = jishoService.getEntries(Constants.KEYWORD_PREFIX_RESPECTFUL + keyword);
+                Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_RESPECTFUL + keyword);
                 try {
-                    results.addAll(call.execute().body().getEntries());
+                    results.addAll(call.execute().body().getData());
                 } catch (IOException e) {
                     return null;
                 }
@@ -202,9 +202,9 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
             // If "Include Humble" option has been checked, grab relevant entries about it.
             if (mIncludeHumble) {
-                Call<EntriesResponse> call = jishoService.getEntries(Constants.KEYWORD_PREFIX_HUMBLE + keyword);
+                Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_HUMBLE + keyword);
                 try {
-                    results.addAll(call.execute().body().getEntries());
+                    results.addAll(call.execute().body().getData());
                 } catch (IOException e) {
                     return null;
                 }
@@ -214,23 +214,23 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         }
 
         /**
-         * Dismiss the progress dialogue after execution. Show the entries in the list and how
+         * Dismiss the progress dialogue after execution. Show the data in the list and how
          * many there are.
          *
-         * @param entries list of entries returned by doInBackground()
+         * @param data list of data returned by doInBackground()
          */
         @Override
-        protected void onPostExecute(List<Entry> entries) {
+        protected void onPostExecute(List<Data> data) {
             if (mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
 
-            if (entries != null) {
-                // Show the entries in the list.
-                mAdapter.animateTo(entries);
+            if (data != null) {
+                // Show the data in the list.
+                mAdapter.animateTo(data);
 
-                // Show how many entries were found.
-                int results = entries.size();
+                // Show how many data were found.
+                int results = data.size();
                 Locale currentLocale = Locale.ENGLISH;
                 mResultsTextView.setText(String.format(currentLocale,
                         getString(R.string.message_entries_found), results));

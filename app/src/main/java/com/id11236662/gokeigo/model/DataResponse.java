@@ -9,19 +9,19 @@ import java.util.List;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class EntriesResponse {
+public class DataResponse {
 
     // Serialised fields have to match the json attibute or the mapping will not work.
     @SerializedName("data")
     @Expose
-    private List<Entry> entries = new ArrayList<Entry>();
+    private List<Data> data = new ArrayList<Data>();
 
-    public List<Entry> getEntries() {
-        return entries;
+    public List<Data> getData() {
+        return data;
     }
 
-    public void setEntries(List<Entry> entries) {
-        this.entries = entries;
+    public void setData(List<Data> data) {
+        this.data = data;
     }
 
 }

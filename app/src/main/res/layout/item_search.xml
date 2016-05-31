@@ -8,7 +8,7 @@
     android:orientation="horizontal">
 
     <RelativeLayout
-        android:id="@+id/item_search_left_layout"
+        android:id="@+id/item_notes_left_layout"
         android:layout_width="100dp"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -77,9 +77,9 @@
         android:id="@+id/item_search_middle_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toEndOf="@id/item_search_left_layout"
+        android:layout_toEndOf="@id/item_notes_left_layout"
         android:layout_toLeftOf="@id/item_search_right_layout"
-        android:layout_toRightOf="@id/item_search_left_layout"
+        android:layout_toRightOf="@id/item_notes_left_layout"
         android:layout_toStartOf="@id/item_search_right_layout"
         android:orientation="vertical">
 

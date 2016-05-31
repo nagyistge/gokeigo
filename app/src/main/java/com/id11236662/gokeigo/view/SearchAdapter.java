@@ -13,24 +13,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
+import com.id11236662.gokeigo.model.Data;
 import com.id11236662.gokeigo.model.Entry;
-import com.id11236662.gokeigo.model.ParcelableEntry;
 import com.id11236662.gokeigo.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This adapter turns a list of Entry-type objects into Views for a RecyclerView.
+ * This adapter turns a list of Data-type objects into Views for a RecyclerView.
  * These Views are added, removed and moved around depending on the given list of objects.
  */
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
-    private List<Entry> mEntries;
+    private List<Data> mData;
     private int mRowLayoutId;
 
-    public SearchAdapter(List<Entry> entries, int rowLayoutId) {
-        mEntries = new ArrayList<>(entries);
+    public SearchAdapter(List<Data> entries, int rowLayoutId) {
+        mData = new ArrayList<>(entries);
         mRowLayoutId = rowLayoutId;
     }
 
@@ -47,15 +47,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     /**
-     * Binds the row with Entry-type object.
+     * Binds the row with Data-type object.
      *
      * @param holder   unused argument
      * @param position index of the row
      */
     @Override
     public void onBindViewHolder(SearchViewHolder holder, int position) {
-        final Entry entry = mEntries.get(position);
-        holder.bind(entry);
+        final Data data = mData.get(position);
+        holder.bind(data);
     }
 
     /**
@@ -63,30 +63,30 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      */
     @Override
     public int getItemCount() {
-        return mEntries.size();
+        return mData.size();
     }
 
     /**
      * Removes, adds and moves around Views so they correspond to the objects in the list.
      * The order is important to keep track of indexes.
      *
-     * @param filteredEntries list of objects that have already been filtered
+     * @param filteredData list of objects that have already been filtered
      */
-    public void animateTo(List<Entry> filteredEntries) {
-        applyAndAnimateRemovals(filteredEntries);
-        applyAndAnimateAdditions(filteredEntries);
-        applyAndAnimateMovedItems(filteredEntries);
+    public void animateTo(List<Data> filteredData) {
+        applyAndAnimateRemovals(filteredData);
+        applyAndAnimateAdditions(filteredData);
+        applyAndAnimateMovedItems(filteredData);
     }
 
     /**
      * Removes the View if its object IS NOT in the filtered list.
      *
-     * @param filteredEntries list of objects that have already been filtered
+     * @param filteredData list of objects that have already been filtered
      */
-    private void applyAndAnimateRemovals(List<Entry> filteredEntries) {
-        for (int i = mEntries.size() - 1; i >= 0; i--) {
-            final Entry entry = mEntries.get(i);
-            if (!filteredEntries.contains(entry)) {
+    private void applyAndAnimateRemovals(List<Data> filteredData) {
+        for (int i = mData.size() - 1; i >= 0; i--) {
+            final Data data = mData.get(i);
+            if (!filteredData.contains(data)) {
                 removeItem(i);
             }
         }
@@ -95,13 +95,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     /**
      * Adds the View if its object IS in the filtered list.
      *
-     * @param filteredEntries list of objects that have already been filtered
+     * @param filteredData list of objects that have already been filtered
      */
-    private void applyAndAnimateAdditions(List<Entry> filteredEntries) {
-        for (int i = 0, count = filteredEntries.size(); i < count; i++) {
-            final Entry entry = filteredEntries.get(i);
-            if (!mEntries.contains(entry)) {
-                addItem(i, entry);
+    private void applyAndAnimateAdditions(List<Data> filteredData) {
+        for (int i = 0, count = filteredData.size(); i < count; i++) {
+            final Data data = filteredData.get(i);
+            if (!mData.contains(data)) {
+                addItem(i, data);
             }
         }
     }
@@ -109,12 +109,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     /**
      * Reorders the Views so they correspond with the originally ordered objects.
      *
-     * @param filteredEntries list of objects that have already been filtered
+     * @param filteredData list of objects that have already been filtered
      */
-    private void applyAndAnimateMovedItems(List<Entry> filteredEntries) {
-        for (int toPosition = filteredEntries.size() - 1; toPosition >= 0; toPosition--) {
-            final Entry entry = filteredEntries.get(toPosition);
-            final int fromPosition = mEntries.indexOf(entry);
+    private void applyAndAnimateMovedItems(List<Data> filteredData) {
+        for (int toPosition = filteredData.size() - 1; toPosition >= 0; toPosition--) {
+            final Data data = filteredData.get(toPosition);
+            final int fromPosition = mData.indexOf(data);
             if (fromPosition >= 0 && fromPosition != toPosition) {
                 moveItem(fromPosition, toPosition);
             }
@@ -127,7 +127,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      * @param position index in the list
      */
     public void removeItem(int position) {
-        mEntries.remove(position);
+        mData.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -136,8 +136,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      *
      * @param position index in the list
      */
-    public void addItem(int position, Entry entry) {
-        mEntries.add(position, entry);
+    public void addItem(int position, Data data) {
+        mData.add(position, data);
         notifyItemInserted(position);
     }
 
@@ -148,13 +148,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      * @param toPosition   new index in the list
      */
     public void moveItem(int fromPosition, int toPosition) {
-        final Entry entry = mEntries.remove(fromPosition);
-        mEntries.add(toPosition, entry);
+        final Data data = mData.remove(fromPosition);
+        mData.add(toPosition, data);
         notifyItemMoved(fromPosition, toPosition);
     }
 
     /**
-     * This ViewHolder sets the GUI elements of a row with the values of the Entry-type object.
+     * This ViewHolder sets the GUI elements of a row with the values of the Data-type object.
      * Ensure it is static to avoid memory problems if more than one SearchViewHolder is created.
      */
     public static class SearchViewHolder extends RecyclerView.ViewHolder {
@@ -165,7 +165,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         private final TextView mCommonStatusTextView;
         private final TextView mRespectfulLevelTextView;
         private final TextView mHumbleLevelTextView;
-        private Entry mEntry = null;
+        private Data mData = null;
 
         public SearchViewHolder(final View itemView) {
             super(itemView);
@@ -182,11 +182,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mEntry != null) {
+                    if (mData != null) {
                         Context context = itemView.getContext();
                         Intent intent = new Intent(context, EntryActivity.class);
-                        ParcelableEntry parcelableEntry = ParcelableEntry.parse(mEntry);
-                        intent.putExtra(Constants.INTENT_SELECTED_ENTRY, parcelableEntry);
+                        Entry entry = Entry.parse(mData);
+                        intent.putExtra(Constants.INTENT_SELECTED_ENTRY, entry);
                         context.startActivity(intent);
                     }
                 }
@@ -194,35 +194,35 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         }
 
         /**
-         * Sets the GUI elements of a row with the values of entry.
+         * Sets the GUI elements of a row with the values of data.
          *
-         * @param entry the object to bind to a View
+         * @param data the object to bind to a View
          */
-        public void bind(Entry entry) {
-            // Save the entry.
-            mEntry = entry;
+        public void bind(Data data) {
+            // Save the data.
+            mData = data;
 
-            // Set values to all the text views from entry.
-            mWordTextView.setText(entry.getWord());
-            mReadingTextView.setText(entry.getReading());
-            mDefinitionTextView.setText(entry.getDefinition());
+            // Set values to all the text views from data.
+            mWordTextView.setText(data.getWord());
+            mReadingTextView.setText(data.getReading());
+            mDefinitionTextView.setText(data.getDefinition());
 
             // Show common text view if is common, hide if not common.
-            if (entry.getIsCommon()) {
+            if (data.getIsCommon()) {
                 mCommonStatusTextView.setVisibility(View.VISIBLE);
             } else {
                 mCommonStatusTextView.setVisibility(View.INVISIBLE);
             }
 
             // Show the appropriate text view depending on the keigo level.
-            if (entry.getIsRespectful()) {
+            if (data.getIsRespectful()) {
                 mRespectfulLevelTextView.setVisibility(View.VISIBLE);
             } else {
                 mRespectfulLevelTextView.setVisibility(View.INVISIBLE);
             }
 
             // Show the appropriate text view depending on the keigo level.
-            if (entry.getIsHumble()) {
+            if (data.getIsHumble()) {
                 mHumbleLevelTextView.setVisibility(View.VISIBLE);
             } else {
                 mHumbleLevelTextView.setVisibility(View.INVISIBLE);

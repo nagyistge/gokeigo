@@ -17,8 +17,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.id11236662.gokeigo.R;
+import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.model.EntryManager;
-import com.id11236662.gokeigo.model.ParcelableEntry;
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.MenuTint;
 
@@ -32,7 +32,7 @@ public class EntryNotesFragment extends Fragment implements View.OnClickListener
     private FloatingActionButton mFAB;
     private boolean isInEditMode = false;
     private EntryManager mManager;
-    private ParcelableEntry mSavedEntry;
+    private Entry mSavedEntry;
 
     public EntryNotesFragment() {
         // Required empty public constructor
@@ -83,13 +83,13 @@ public class EntryNotesFragment extends Fragment implements View.OnClickListener
         Activity activity = getActivity();
 
         mManager = EntryManager.getInstance();
-        ParcelableEntry parcelableEntry = activity.getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
-        if (parcelableEntry != null) {
-            mSavedEntry = mManager.getEntry(parcelableEntry);
+        Entry entry = activity.getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
+        if (entry != null) {
+            mSavedEntry = mManager.getEntry(entry);
             if (mSavedEntry != null) {
                 mNotesEditText.setText(mSavedEntry.getNotes());
             } else {
-                mSavedEntry = parcelableEntry;
+                mSavedEntry = entry;
                 mManager.saveEntry(mSavedEntry);
             }
         }

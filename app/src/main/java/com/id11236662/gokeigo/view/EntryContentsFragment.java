@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.model.ParcelableEntry;
+import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.util.Constants;
 
 public class EntryContentsFragment extends Fragment {
@@ -32,8 +32,8 @@ public class EntryContentsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Activity activity = getActivity();
 
-        ParcelableEntry parcelableEntry = activity.getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
-        if (parcelableEntry != null) {
+        Entry entry = activity.getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
+        if (entry != null) {
 
             // Set values to all the text views with the parcelled entry!
             TextView wordTextView = (TextView) activity.findViewById(R.id.fragment_entry_dictionary_word_text_view);
@@ -41,20 +41,20 @@ public class EntryContentsFragment extends Fragment {
             TextView commonTextView = (TextView) activity.findViewById(R.id.fragment_entry_dictionary_common_status_text_view);
             TextView blurbTextView = (TextView) activity.findViewById(R.id.fragment_text_dictionary_blurb_text_view);
             TextView otherFormsTextView = (TextView) activity.findViewById(R.id.fragment_text_dictionary_other_forms_text_view);
-            wordTextView.setText(parcelableEntry.getWord());
-            readingTextView.setText(parcelableEntry.getReading());
-            blurbTextView.setText(parcelableEntry.getBlurb());
-            otherFormsTextView.setText(parcelableEntry.getOtherForms());
+            wordTextView.setText(entry.getWord());
+            readingTextView.setText(entry.getReading());
+            blurbTextView.setText(entry.getBlurb());
+            otherFormsTextView.setText(entry.getOtherForms());
 
             // Show common text view if is common, hide if not common.
-            if (parcelableEntry.getIsCommonStatus()) {
+            if (entry.getIsCommonStatus()) {
                 commonTextView.setVisibility(View.VISIBLE);
             } else {
                 commonTextView.setVisibility(View.INVISIBLE);
             }
 
             // Make the title of the activity be the selected entry.
-            activity.setTitle(parcelableEntry.getWord());
+            activity.setTitle(entry.getWord());
         }
     }
 }

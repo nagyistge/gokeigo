@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class EntryManager {
     private static EntryManager mInstance = null;
-    private List<ParcelableEntry> mEntries;
+    private List<Entry> mEntries;
 
     private EntryManager() {
         // Hide constructor to ensure singleton pattern
@@ -22,31 +22,31 @@ public class EntryManager {
         return mInstance;
     }
 
-    public void saveEntry(ParcelableEntry parcelableEntry) {
-        getEntries().add(parcelableEntry);
-        parcelableEntry.insert();
-        parcelableEntry.save();
+    public void saveEntry(Entry entry) {
+        getEntries().add(entry);
+        entry.insert();
+        entry.save();
     }
 
-    public void saveNotes(ParcelableEntry parcelableEntry, String notes) {
+    public void saveNotes(Entry entry, String notes) {
         // TODO: DBFlow inserts literal value into the ModelAdapter for the table so Strings must be escaped before setting
-        parcelableEntry.setNotes(notes);
-        parcelableEntry.save();
+        entry.setNotes(notes);
+        entry.save();
     }
 
     /**
      * @return a list of Words from the DB via lazy loading
      */
-    public List<ParcelableEntry> getEntries() {
+    public List<Entry> getEntries() {
         if (mEntries == null) {
             // TODO: Make the transaction be Async
-            mEntries = SQLite.select().from(ParcelableEntry.class).queryList();
+            mEntries = SQLite.select().from(Entry.class).queryList();
         }
         return mEntries;
     }
 
-    public ParcelableEntry getEntry(ParcelableEntry entry) {
-        for (ParcelableEntry savedEntry : getEntries()) {
+    public Entry getEntry(Entry entry) {
+        for (Entry savedEntry : getEntries()) {
             if (savedEntry.getWord().equals(entry.getWord()) && savedEntry.getReading().equals(entry.getReading())) {
                 return savedEntry;
             }
