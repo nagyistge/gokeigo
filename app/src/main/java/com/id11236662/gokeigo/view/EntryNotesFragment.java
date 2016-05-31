@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.id11236662.gokeigo.R;
+import com.id11236662.gokeigo.model.EntryManager;
+import com.id11236662.gokeigo.model.ParcelableEntry;
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.MenuTint;
 
@@ -29,6 +31,8 @@ public class EntryNotesFragment extends Fragment implements View.OnClickListener
     private MenuItem mSaveItem;
     private FloatingActionButton mFAB;
     private boolean isInEditMode = false;
+    private EntryManager mManager;
+    private ParcelableEntry mSavedEntry;
 
     public EntryNotesFragment() {
         // Required empty public constructor
@@ -71,6 +75,24 @@ public class EntryNotesFragment extends Fragment implements View.OnClickListener
         mSaveItem = menu.findItem(R.id.action_save);
         MenuTint.colorMenuItem(mSaveItem, Color.WHITE, null);
         mSaveItem.setOnMenuItemClickListener(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Activity activity = getActivity();
+
+        mManager = EntryManager.getInstance();
+        ParcelableEntry parcelableEntry = activity.getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
+        if (parcelableEntry != null) {
+            mSavedEntry = mManager.getEntry(parcelableEntry);
+            if (mSavedEntry != null) {
+                mNotesEditText.setText(mSavedEntry.getNotes());
+            } else {
+                mSavedEntry = parcelableEntry;
+                mManager.saveEntry(mSavedEntry);
+            }
+        }
     }
 
     @Override
@@ -119,7 +141,7 @@ public class EntryNotesFragment extends Fragment implements View.OnClickListener
         final EntryActivity activity = (EntryActivity) getActivity();
         activity.setIsInEditMode(this, isInEditMode);
 
-        // TODO: Persist the note
+        mManager.saveNotes(mSavedEntry, mNotesEditText.getText().toString());
         return true;
     }
 }

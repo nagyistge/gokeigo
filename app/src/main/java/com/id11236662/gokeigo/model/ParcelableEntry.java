@@ -3,24 +3,33 @@ package com.id11236662.gokeigo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.id11236662.gokeigo.util.AppDatabase;
 import com.id11236662.gokeigo.util.StringUtility;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
 
 /**
  * Parcelable version of the Entry object. This makes it easily transportable via intents.
  */
-public class ParcelableEntry implements Parcelable {
+@Table(database = AppDatabase.class, allFields = true)
+public class ParcelableEntry extends BaseModel implements Parcelable {
 
-    // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
-    // Source: general_line_spacing
-    private int isCommonStatus;
+    @PrimaryKey(autoincrement = true)
+    private long id;
+    private boolean isCommonStatus;
     private String word;
     private String reading;
     private String blurb;
     private String otherForms;
+    private String notes;
+    private boolean isStarred;
+    // TODO: DateTime for history log
 
-    private ParcelableEntry() {
+    public ParcelableEntry() {
+        // Required empty public constructor to create table
     }
 
     public static final Creator<ParcelableEntry> CREATOR = new Creator<ParcelableEntry>() {
@@ -36,7 +45,9 @@ public class ParcelableEntry implements Parcelable {
     };
 
     protected ParcelableEntry(Parcel source) {
-        isCommonStatus = source.readInt();
+        // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
+        // Source: https://code.google.com/p/android/issues/detail?id=5973
+        isCommonStatus = source.readInt() == 1;
         word = source.readString();
         reading = source.readString();
         blurb = source.readString();
@@ -52,7 +63,9 @@ public class ParcelableEntry implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(isCommonStatus);
+        // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
+        // Source: https://code.google.com/p/android/issues/detail?id=5973
+        dest.writeInt(isCommonStatus ? 1 : 0);
         dest.writeString(word);
         dest.writeString(reading);
         dest.writeString(blurb);
@@ -73,8 +86,7 @@ public class ParcelableEntry implements Parcelable {
 
     public static ParcelableEntry parse(Entry entry) {
         ParcelableEntry parcelableEntry = new ParcelableEntry();
-        // If boolean is true, int is 1. If boolean is false, int is 0.
-        parcelableEntry.setIsCommonStatus(entry.getIsCommon() ? 1 : 0);
+        parcelableEntry.setIsCommonStatus(entry.getIsCommon());
         parcelableEntry.setWord(entry.getWord());
         parcelableEntry.setReading(entry.getReading());
 
@@ -131,11 +143,19 @@ public class ParcelableEntry implements Parcelable {
         return parcelableEntry;
     }
 
-    public boolean getIsCommonStatus() {
-        return isCommonStatus == 1;
+    public long getId() {
+        return id;
     }
 
-    public void setIsCommonStatus(int isCommonStatus) {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public boolean getIsCommonStatus() {
+        return isCommonStatus;
+    }
+
+    public void setIsCommonStatus(boolean isCommonStatus) {
         this.isCommonStatus = isCommonStatus;
     }
 
@@ -169,5 +189,21 @@ public class ParcelableEntry implements Parcelable {
 
     public void setOtherForms(String otherForms) {
         this.otherForms = otherForms;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public boolean getIsStarred() {
+        return isStarred;
+    }
+
+    public void setIsStarred(boolean starred) {
+        isStarred = starred;
     }
 }

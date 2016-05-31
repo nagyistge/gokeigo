@@ -106,7 +106,6 @@ public class EntryActivity extends AppCompatActivity {
 
     public static class YesNoDialog extends DialogFragment {
         public YesNoDialog() {
-
         }
 
         @Override
