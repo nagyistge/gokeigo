@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 /**
@@ -148,6 +149,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      */
     @Override
     public boolean onQueryTextChange(String query) {
+        saveJSONToPrivateStorage(); // TODO TEMP
         return false;
     }
 
@@ -162,6 +164,37 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     public boolean onQueryTextSubmit(String query) {
         new SearchJishoAsyncTask().execute(query);
         return true;
+    }
+
+    private void saveJSONToPrivateStorage() {
+        new SaveKeigoResultsAsyncTask().execute();
+    }
+
+    private class SaveKeigoResultsAsyncTask extends AsyncTask<Void, Void, String> {
+        // TODO: Open an internal file for writing
+        // Write JSON to the file
+        // OPen the same internal file for rading
+        // Read the JSON string from the file
+        // Convert the JSON string to objects
+        // Compare the source and target objects to ensure they are the same
+
+
+        @Override
+        protected String doInBackground(Void... params) {
+            JishoService jishoService = ApiClient.getClient().create(JishoService.class);
+            Call<ResponseBody> call = jishoService.getJSON(Constants.KEYWORD_PREFIX_RESPECTFUL);
+            try {
+                return call.execute().body().string();
+            } catch (IOException e) {
+                Log.e(Constants.TAG_DEBUGGING, e.toString());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            Log.d(Constants.TAG_DEBUGGING, response);
+        }
     }
 
     /**
@@ -194,7 +227,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             String keyword = params[0];
             // TODO: if not connected to the network... https://futurestud.io/blog/retrofit-2-simple-error-handling | https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html
             JishoService jishoService = ApiClient.getClient().create(JishoService.class);
-            Call<EntriesResponse> call = jishoService.getEntries(Constants.KEYWORD_PREFIX_RESPECTFUL + keyword);
+            Call<EntriesResponse> call = jishoService.getEntries(keyword);
             try {
                 return call.execute().body().getEntries();
             } catch (IOException e) {
