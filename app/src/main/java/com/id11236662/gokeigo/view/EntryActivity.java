@@ -46,8 +46,7 @@ public class EntryActivity extends AppCompatActivity {
         // Set up a tab for dictionary entry and a tab each for the 3 levels of keigo.
         TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_entry_tab_layout);
         assert tabLayout != null;
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_dictionary));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_keigo));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_entry));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_notes));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

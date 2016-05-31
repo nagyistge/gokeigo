@@ -14,16 +14,15 @@ public class EntryAdapter extends FragmentStatePagerAdapter {
 
     /**
      * Return the Fragment associated with a specified position.
+     *
      * @param position of the tab
      */
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new EntryDictionaryFragment();
+                return new EntryContentsFragment();
             case 1:
-                return new EntryKeigoFragment();
-            case 2:
                 return new EntryNotesFragment();
             default:
                 return null;

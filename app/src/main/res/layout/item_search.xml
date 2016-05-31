@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_search"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="85dp"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:orientation="horizontal">
@@ -14,28 +14,28 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/item_search_word"
+            android:id="@+id/item_search_word_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="5dp"
+            android:layout_marginLeft="@dimen/general_margin"
+            android:layout_marginRight="@dimen/general_margin"
+            android:layout_marginTop="@dimen/general_margin"
             android:textSize="17sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/item_search_reading"
+            android:id="@+id/item_search_reading_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_search_word"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="5dp"
+            android:layout_below="@id/item_search_word_text_view"
+            android:layout_marginLeft="@dimen/general_margin"
+            android:layout_marginRight="@dimen/general_margin"
+            android:layout_marginTop="@dimen/general_margin"
             android:textSize="12sp" />
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/item_search_right_layout"
         android:layout_width="80dp"
         android:layout_height="match_parent"
@@ -44,13 +44,34 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/item_search_common_status"
+            android:id="@+id/item_search_common_status_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:padding="5dp"
+            android:layout_marginTop="@dimen/general_margin"
+            android:text="@string/text_common"
             android:textColor="@color/common_status" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/item_search_respectful_level_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_search_common_status_text_view"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/general_margin"
+            android:text="@string/text_respectful"
+            android:textColor="@color/respectful_level" />
+
+        <TextView
+            android:id="@+id/item_search_humble_level_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/item_search_respectful_level_text_view"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/general_margin"
+            android:text="@string/text_humble"
+            android:textColor="@color/humble_level" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/item_search_middle_layout"
@@ -63,10 +84,10 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/item_search_definition"
+            android:id="@+id/item_search_definition_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5dp"
+            android:layout_margin="@dimen/general_margin"
             android:textSize="12sp" />
 
     </LinearLayout>

@@ -48,6 +48,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Binds the row with Entry-type object.
+     *
      * @param holder   unused argument
      * @param position index of the row
      */
@@ -68,6 +69,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     /**
      * Removes, adds and moves around Views so they correspond to the objects in the list.
      * The order is important to keep track of indexes.
+     *
      * @param filteredEntries list of objects that have already been filtered
      */
     public void animateTo(List<Entry> filteredEntries) {
@@ -78,6 +80,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Removes the View if its object IS NOT in the filtered list.
+     *
      * @param filteredEntries list of objects that have already been filtered
      */
     private void applyAndAnimateRemovals(List<Entry> filteredEntries) {
@@ -91,6 +94,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Adds the View if its object IS in the filtered list.
+     *
      * @param filteredEntries list of objects that have already been filtered
      */
     private void applyAndAnimateAdditions(List<Entry> filteredEntries) {
@@ -104,6 +108,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Reorders the Views so they correspond with the originally ordered objects.
+     *
      * @param filteredEntries list of objects that have already been filtered
      */
     private void applyAndAnimateMovedItems(List<Entry> filteredEntries) {
@@ -118,6 +123,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Removes the item from the list and notifies the Recycler View.
+     *
      * @param position index in the list
      */
     public void removeItem(int position) {
@@ -127,6 +133,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Adds the item from the list and notifies the Recycler View.
+     *
      * @param position index in the list
      */
     public void addItem(int position, Entry entry) {
@@ -136,6 +143,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Reorders the item in the list.
+     *
      * @param fromPosition old index in the list
      * @param toPosition   new index in the list
      */
@@ -155,15 +163,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         private final TextView mReadingTextView;
         private final TextView mDefinitionTextView;
         private final TextView mCommonStatusTextView;
+        private final TextView mRespectfulLevelTextView;
+        private final TextView mHumbleLevelTextView;
         private Entry mEntry = null;
 
         public SearchViewHolder(final View itemView) {
             super(itemView);
             // Initialise all the GUI elements from the xml layout of the one row.
-            mWordTextView = (TextView) itemView.findViewById(R.id.item_search_word);
-            mReadingTextView = (TextView) itemView.findViewById(R.id.item_search_reading);
-            mDefinitionTextView = (TextView) itemView.findViewById(R.id.item_search_definition);
-            mCommonStatusTextView = (TextView) itemView.findViewById(R.id.item_search_common_status);
+            mWordTextView = (TextView) itemView.findViewById(R.id.item_search_word_text_view);
+            mReadingTextView = (TextView) itemView.findViewById(R.id.item_search_reading_text_view);
+            mDefinitionTextView = (TextView) itemView.findViewById(R.id.item_search_definition_text_view);
+            mCommonStatusTextView = (TextView) itemView.findViewById(R.id.item_search_common_status_text_view);
+            mRespectfulLevelTextView = (TextView) itemView.findViewById(R.id.item_search_respectful_level_text_view);
+            mHumbleLevelTextView = (TextView) itemView.findViewById(R.id.item_search_humble_level_text_view);
 
             // Set listener to the row.
             RelativeLayout row = (RelativeLayout) itemView.findViewById(R.id.item_search);
@@ -183,16 +195,38 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
         /**
          * Sets the GUI elements of a row with the values of entry.
+         *
          * @param entry the object to bind to a View
          */
         public void bind(Entry entry) {
             // Save the entry.
             mEntry = entry;
 
+            // Set values to all the text views from entry.
             mWordTextView.setText(entry.getWord());
             mReadingTextView.setText(entry.getReading());
             mDefinitionTextView.setText(entry.getDefinition());
-            mCommonStatusTextView.setText(entry.getCommonStatus());
+
+            // Show common text view if is common, hide if not common.
+            if (entry.getIsCommon()) {
+                mCommonStatusTextView.setVisibility(View.VISIBLE);
+            } else {
+                mCommonStatusTextView.setVisibility(View.INVISIBLE);
+            }
+
+            // Show the appropriate text view depending on the keigo level.
+            if (entry.getIsRespectful()) {
+                mRespectfulLevelTextView.setVisibility(View.VISIBLE);
+            } else {
+                mRespectfulLevelTextView.setVisibility(View.INVISIBLE);
+            }
+
+            // Show the appropriate text view depending on the keigo level.
+            if (entry.getIsHumble()) {
+                mHumbleLevelTextView.setVisibility(View.VISIBLE);
+            } else {
+                mHumbleLevelTextView.setVisibility(View.INVISIBLE);
+            }
         }
     }
 

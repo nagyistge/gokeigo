@@ -1,7 +1,6 @@
 package com.id11236662.gokeigo.view;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -10,23 +9,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.model.EntriesResponse;
-import com.id11236662.gokeigo.model.Entry;
-import com.id11236662.gokeigo.model.KeigoManager;
 import com.id11236662.gokeigo.util.ActivityConfigurator;
-import com.id11236662.gokeigo.util.ApiClient;
-import com.id11236662.gokeigo.util.Constants;
-import com.id11236662.gokeigo.util.JishoService;
-
-import java.io.IOException;
-import java.util.List;
-
-import retrofit2.Call;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -60,13 +46,6 @@ public class MainActivity extends AppCompatActivity
 
         // Lock the orientation to prevent losing search queries.
         ActivityConfigurator.lockOrientation(this);
-
-        // TODO: Does this even work...
-        if (ActivityConfigurator.isDeviceOnline(this)) {
-            new SetupKeigoManagerAsyncTask().execute();
-        } else {
-            Toast.makeText(this, R.string.message_no_network_available, Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -125,25 +104,5 @@ public class MainActivity extends AppCompatActivity
         assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private class SetupKeigoManagerAsyncTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            Log.e(Constants.TAG_DEBUGGING, "SetupKeigoManagerAsyncTask.doInBackground");
-            JishoService jishoService = ApiClient.getClient().create(JishoService.class);
-            Call<EntriesResponse> callForRespectfulResult = jishoService.getEntries(Constants.KEYWORD_PREFIX_RESPECTFUL);
-            Call<EntriesResponse> callForHumbleResult = jishoService.getEntries(Constants.KEYWORD_PREFIX_HUMBLE);
-            try {
-                KeigoManager manager = KeigoManager.getInstance();
-                List<Entry> respectfulEntries = callForRespectfulResult.execute().body().getEntries();
-                manager.addRespectfulEntries(respectfulEntries);
-                List<Entry> humbleEntries = callForHumbleResult.execute().body().getEntries();
-                manager.addHumbleEntries(humbleEntries);
-            } catch (IOException e) {
-                Log.e(Constants.TAG_DEBUGGING, e.toString());
-            }
-            return null;
-        }
     }
 }

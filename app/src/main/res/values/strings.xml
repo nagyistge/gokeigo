@@ -29,12 +29,17 @@
     <string name="message_entries_found">Entries found: %d</string>
 
     <!-- Tab titles -->
-    <string name="tab_dictionary">Dictionary</string>
-    <string name="tab_keigo">Keigo</string>
+    <string name="tab_entry">Entry</string>
     <string name="tab_notes">Notes</string>
 
     <!-- Hints -->
     <string name="hint_notes">Your notes about the entry</string>
     <string name="message_no_network_available">No network available</string>
+    <string name="text_include_respectful">Include Respectful</string>
+    <string name="text_include_humble">Include Humble</string>
+    <string name="message_home">Go search up respectful and/or humble forms of Keigo.\nOnly search queries in English are supported.</string>
+    <string name="text_common">Common</string>
+    <string name="text_respectful">Respectful</string>
+    <string name="text_humble">Humble</string>
 
 </resources>

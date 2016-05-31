@@ -6,5 +6,7 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    // TODO: add dimensions here
+    <dimen name="general_line_spacing">5dp</dimen>
+    <dimen name="general_margin">5dp</dimen>
+    <dimen name="general_2x_margin">10dp</dimen>
 </resources>

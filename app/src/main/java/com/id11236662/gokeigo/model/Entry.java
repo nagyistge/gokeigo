@@ -2,6 +2,7 @@ package com.id11236662.gokeigo.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.StringUtility;
 import com.raizlabs.android.dbflow.StringUtils;
 
@@ -27,6 +28,8 @@ public class Entry {
     private String mWord = null;
     private String mReading = null;
     private String mOtherForms = null;
+    private Boolean mIsRespectful = null;
+    private Boolean mIsHumble = null;
 
     public boolean getIsCommon() {
         return isCommon;
@@ -62,10 +65,8 @@ public class Entry {
         return japanese.size() > 0 ? japanese.get(0) : null;
     }
 
-    // TODO: unit test methods below
-
     /**
-     * Lazy load the word.
+     * Calculate the word once and store it.
      *
      * @return word
      */
@@ -77,7 +78,7 @@ public class Entry {
     }
 
     /**
-     * Lazy load the reading.
+     * Calculate the reading once and store it.
      *
      * @return reading
      */
@@ -88,6 +89,9 @@ public class Entry {
         return mReading;
     }
 
+    /**
+     * Calculate the load and reading.
+     */
     private void loadWordAndReading() {
         Japanese japanese = getMainJapanese();
         if (japanese != null) {
@@ -106,7 +110,7 @@ public class Entry {
     }
 
     /**
-     * Lazy load the other forms of Japanese.
+     * Calculate the other forms of Japanese once and store them.
      *
      * @return other forms of the main Japanese word
      */
@@ -126,7 +130,7 @@ public class Entry {
     }
 
     /**
-     * Get the first sense element as it contains the most common defintion.
+     * Get the first sense element as it contains the main details.
      *
      * @return an element in the Sense list if it's not empty
      */
@@ -134,26 +138,61 @@ public class Entry {
         return senses.size() > 0 ? senses.get(0) : null;
     }
 
+    /**
+     * Get the first definition as it's the most common one.
+     *
+     * @return the first definition, appropriate to display on the item results screen.
+     */
     public String getDefinition() {
         Sense sense = getMainSense();
         return sense != null ? StringUtility.join(sense.getEnglishDefinitions()) : "";
     }
 
-    public String getCommonStatus() {
-        return isCommon ? "Common" : ""; //TODO: turn Common into resource string
-    }
-
-    public String getKeyDefinition() {
-        String result = "";
-        Sense sense = getMainSense();
-        if (sense != null && sense.getEnglishDefinitions().size() > 0) {
-            result = sense.getEnglishDefinitions().get(0);
+    /**
+     * Calculate the keigo related booleans once and store them.
+     *
+     * @return nullable boolean
+     */
+    public Boolean getIsRespectful() {
+        if (mIsRespectful == null) {
+            loadKeigoBooleans();
         }
-        return result;
+        return mIsRespectful;
     }
 
-    @Override
-    public String toString() {
-        return getWord() + getKeyDefinition();
+    /**
+     * Calculate the keigo related booleans once and store them.
+     *
+     * @return nullable boolean
+     */
+    public Boolean getIsHumble() {
+        if (mIsHumble == null) {
+            loadKeigoBooleans();
+        }
+        return mIsHumble;
+    }
+
+    /**
+     * Calculate the keigo related booleans
+     */
+    private void loadKeigoBooleans() {
+        mIsRespectful = false;
+        mIsHumble = false;
+
+        // Type of keigo is stored in the tags within the senses nodes.
+        for (Sense sense : senses) {
+            for (String tag : sense.getTags()) {
+                if (tag != null && tag.equals(Constants.ENTRY_TAG_RESPECTFUL)) {
+                    mIsRespectful = true;
+                } else if (tag != null && tag.equals(Constants.ENTRY_TAG_HUMBLE)) {
+                    mIsHumble = true;
+                }
+
+                // Stop looping if they're both true already.
+                if (mIsRespectful && mIsHumble) {
+                    break;
+                }
+            }
+        }
     }
 }

@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,8 @@ import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.EntriesResponse;
 import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.util.ActivityConfigurator;
-import com.id11236662.gokeigo.util.ApiClient;
+import com.id11236662.gokeigo.util.Constants;
+import com.id11236662.gokeigo.util.JishoClient;
 import com.id11236662.gokeigo.util.JishoService;
 import com.id11236662.gokeigo.util.MenuTint;
 
@@ -43,16 +45,19 @@ import retrofit2.Call;
  */
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
+    private CheckBox mIncludeRespectfulCheckbox;
+    private CheckBox mIncludeHumbleCheckbox;
     private TextView mResultsTextView;
     private RecyclerView mRecyclerView;
     private SearchAdapter mAdapter;
 
     public SearchFragment() {
-        // Required empty public constructor
+        // Required empty public constructor.
     }
 
     /**
-     * Initialise textview field and recycler view and set an item decoration to recycler view.
+     * Initialise checkbox fields, textview field, and recycler view field
+     * and set an item decoration to recycler view.
      *
      * @param inflater           used to inflate views in this fragment
      * @param container          this fragment
@@ -64,7 +69,11 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Inflate the layout for this fragment.
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        // Initialise the text view field
+        // Initialise the check box fields.
+        mIncludeRespectfulCheckbox = (CheckBox) view.findViewById(R.id.fragment_search_include_respectful_check_box);
+        mIncludeHumbleCheckbox = (CheckBox) view.findViewById(R.id.fragment_search_include_humble_check_box);
+
+        // Initialise the text view field.
         mResultsTextView = (TextView) view.findViewById(R.id.fragment_search_results_text_view);
 
         // Initialise the recycler view field with the value before returning it.
@@ -163,7 +172,9 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     public boolean onQueryTextSubmit(String query) {
         Activity activity = getActivity();
         if (ActivityConfigurator.isDeviceOnline(activity)) {
-            new SearchJishoAsyncTask().execute(query);
+            boolean includeRespectful = mIncludeRespectfulCheckbox.isChecked();
+            boolean includeHumble = mIncludeHumbleCheckbox.isChecked();
+            new SearchJishoAsyncTask(includeRespectful, includeHumble).execute(query);
         } else {
             Toast.makeText(activity, R.string.message_no_network_available, Toast.LENGTH_SHORT).show();
         }
@@ -177,6 +188,13 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     private class SearchJishoAsyncTask extends AsyncTask<String, Void, List<Entry>> {
 
         private ProgressDialog mProgressDialog;
+        private boolean mIncludeRespectful;
+        private boolean mIncludeHumble;
+
+        public SearchJishoAsyncTask(boolean includeRespectful, boolean includeHumble) {
+            mIncludeRespectful = includeRespectful;
+            mIncludeHumble = includeHumble;
+        }
 
         /**
          * Before executing new thread, show dialogue that the search process will soon execute.
@@ -193,18 +211,37 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
          * Execute search process.
          *
          * @param params Keyword for the URI query.
-         * @return list of entries retrieved from the API.
+         * @return list of entries retrieved from the API. If null, there's been an exception.
          */
         @Override
         protected List<Entry> doInBackground(String... params) {
             String keyword = params[0];
-            JishoService jishoService = ApiClient.getClient().create(JishoService.class);
-            Call<EntriesResponse> call = jishoService.getEntries(keyword);
-            try {
-                return call.execute().body().getEntries();
-            } catch (IOException e) {
-                return null;
+            // If none of the options is checked, don't bother searching and return 0 results.
+            List<Entry> results = new ArrayList<>();
+            // Create client to access jisho's web service.
+            JishoService jishoService = JishoClient.getClient().create(JishoService.class);
+
+            // If "Include Respectful" option has been checked, grab relevant entries about it.
+            if (mIncludeRespectful) {
+                Call<EntriesResponse> call = jishoService.getEntries(Constants.KEYWORD_PREFIX_RESPECTFUL + keyword);
+                try {
+                    results.addAll(call.execute().body().getEntries());
+                } catch (IOException e) {
+                    return null;
+                }
             }
+
+            // If "Include Humble" option has been checked, grab relevant entries about it.
+            if (mIncludeHumble) {
+                Call<EntriesResponse> call = jishoService.getEntries(Constants.KEYWORD_PREFIX_HUMBLE + keyword);
+                try {
+                    results.addAll(call.execute().body().getEntries());
+                } catch (IOException e) {
+                    return null;
+                }
+            }
+
+            return results;
         }
 
         /**
@@ -225,7 +262,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
                 // Show how many entries were found.
                 int results = entries.size();
-                Locale currentLocale = Locale.ENGLISH; // TODO: Get from the preferences
+                Locale currentLocale = Locale.ENGLISH;
                 mResultsTextView.setText(String.format(currentLocale,
                         getString(R.string.message_entries_found), results));
             } else {

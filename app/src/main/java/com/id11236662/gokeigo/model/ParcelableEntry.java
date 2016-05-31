@@ -12,7 +12,9 @@ import java.util.List;
  */
 public class ParcelableEntry implements Parcelable {
 
-    private String commonStatus;
+    // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
+    // Source: general_line_spacing
+    private int isCommonStatus;
     private String word;
     private String reading;
     private String blurb;
@@ -34,7 +36,7 @@ public class ParcelableEntry implements Parcelable {
     };
 
     protected ParcelableEntry(Parcel source) {
-        commonStatus = source.readString();
+        isCommonStatus = source.readInt();
         word = source.readString();
         reading = source.readString();
         blurb = source.readString();
@@ -50,7 +52,7 @@ public class ParcelableEntry implements Parcelable {
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(commonStatus);
+        dest.writeInt(isCommonStatus);
         dest.writeString(word);
         dest.writeString(reading);
         dest.writeString(blurb);
@@ -71,7 +73,8 @@ public class ParcelableEntry implements Parcelable {
 
     public static ParcelableEntry parse(Entry entry) {
         ParcelableEntry parcelableEntry = new ParcelableEntry();
-        parcelableEntry.setCommonStatus(entry.getCommonStatus());
+        // If boolean is true, int is 1. If boolean is false, int is 0.
+        parcelableEntry.setIsCommonStatus(entry.getIsCommon() ? 1 : 0);
         parcelableEntry.setWord(entry.getWord());
         parcelableEntry.setReading(entry.getReading());
 
@@ -128,12 +131,12 @@ public class ParcelableEntry implements Parcelable {
         return parcelableEntry;
     }
 
-    public String getCommonStatus() {
-        return commonStatus;
+    public boolean getIsCommonStatus() {
+        return isCommonStatus == 1;
     }
 
-    public void setCommonStatus(String commonStatus) {
-        this.commonStatus = commonStatus;
+    public void setIsCommonStatus(int isCommonStatus) {
+        this.isCommonStatus = isCommonStatus;
     }
 
     public String getWord() {
