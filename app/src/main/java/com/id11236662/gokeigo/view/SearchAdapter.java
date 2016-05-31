@@ -1,4 +1,4 @@
-package com.id11236662.gokeigo.controller;
+package com.id11236662.gokeigo.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,7 +16,6 @@ import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.model.ParcelableEntry;
 import com.id11236662.gokeigo.util.Constants;
-import com.id11236662.gokeigo.view.EntryActivity;
 
 import java.util.ArrayList;
 import java.util.List;

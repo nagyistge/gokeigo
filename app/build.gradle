@@ -40,9 +40,8 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow-sqlcipher:${dbflow_version}"
     // kotlin extensions // TODO: Do I even need this?
     compile "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
-    // GSON
+    // Retrofit, GSON
     compile 'com.google.code.gson:gson:2.6.2'
-    // Retrofit
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     // Annotations

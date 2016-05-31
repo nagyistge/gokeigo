@@ -1,12 +1,8 @@
-package com.id11236662.gokeigo.controller;
+package com.id11236662.gokeigo.view;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
-import com.id11236662.gokeigo.view.EntryDictionaryFragment;
-import com.id11236662.gokeigo.view.EntryKeigoFragment;
-import com.id11236662.gokeigo.view.EntryNotesFragment;
 
 public class EntryAdapter extends FragmentStatePagerAdapter {
     private int mNumberOfTabs;

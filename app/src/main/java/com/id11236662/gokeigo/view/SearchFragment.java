@@ -22,12 +22,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.controller.SearchAdapter;
 import com.id11236662.gokeigo.model.EntriesResponse;
 import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.util.ApiClient;
-import com.id11236662.gokeigo.util.ApiInterface;
 import com.id11236662.gokeigo.util.Constants;
+import com.id11236662.gokeigo.util.JishoService;
 import com.id11236662.gokeigo.util.MenuTint;
 
 import java.io.IOException;
@@ -194,8 +193,8 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         protected List<Entry> doInBackground(String... params) {
             String keyword = params[0];
             // TODO: if not connected to the network... https://futurestud.io/blog/retrofit-2-simple-error-handling | https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html
-            ApiInterface apiInterface = ApiClient.getClient().create(ApiInterface.class);
-            Call<EntriesResponse> call = apiInterface.getEntries(keyword);
+            JishoService jishoService = ApiClient.getClient().create(JishoService.class);
+            Call<EntriesResponse> call = jishoService.getEntries(Constants.KEYWORD_PREFIX_RESPECTFUL + keyword);
             try {
                 return call.execute().body().getEntries();
             } catch (IOException e) {

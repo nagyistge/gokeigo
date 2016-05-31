@@ -9,7 +9,7 @@ import retrofit2.http.Query;
 /**
  * Endpoints of the API webservice is defined here.
  */
-public interface ApiInterface {
+public interface JishoService {
     @GET("words")
     Call<EntriesResponse> getEntries(@Query("keyword") String keyword);
 }

@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.controller.EntryAdapter;
 import com.id11236662.gokeigo.util.ActivityConfigurator;
 import com.id11236662.gokeigo.util.Constants;
 
