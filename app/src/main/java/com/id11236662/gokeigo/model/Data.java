@@ -15,6 +15,7 @@ import javax.annotation.Generated;
 public class Data {
 
     // Serialised fields have to match the json attibute or the mapping will not work.
+
     @SerializedName("is_common")
     @Expose
     private boolean isCommon;
@@ -61,6 +62,7 @@ public class Data {
      *
      * @return an element in the Japanese list if it's not empty
      */
+
     private Japanese getMainJapanese() {
         return japanese.size() > 0 ? japanese.get(0) : null;
     }
@@ -70,6 +72,7 @@ public class Data {
      *
      * @return word
      */
+
     public String getWord() {
         if (mWord == null) {
             loadWordAndReading();
@@ -82,6 +85,7 @@ public class Data {
      *
      * @return reading
      */
+
     public String getReading() {
         if (mReading == null) {
             loadWordAndReading();
@@ -92,12 +96,15 @@ public class Data {
     /**
      * Calculate the load and reading.
      */
+
     private void loadWordAndReading() {
         Japanese japanese = getMainJapanese();
         if (japanese != null) {
+
             // jisho.org's JSON data does not provide a word if it's wholly in katakana but it
             // always provides a reading, so use that as the word instead. In that case, blank out
             // the reading to avoid redundancy.
+
             String word = japanese.getWord();
             if (StringUtils.isNotNullOrEmpty(word)) {
                 mWord = word;
@@ -114,6 +121,7 @@ public class Data {
      *
      * @return other forms of the main Japanese word
      */
+
     public String getOtherForms() {
         if (mOtherForms == null) {
             mOtherForms = "";
@@ -121,6 +129,7 @@ public class Data {
                 mOtherForms += japanese.get(i).getWordAndReading();
 
                 // Add comma to the list if it's not the last element.
+
                 if (i < this.japanese.size() - 1) {
                     mOtherForms += "、";
                 }
@@ -134,6 +143,7 @@ public class Data {
      *
      * @return an element in the Sense list if it's not empty
      */
+
     private Sense getMainSense() {
         return senses.size() > 0 ? senses.get(0) : null;
     }
@@ -143,6 +153,7 @@ public class Data {
      *
      * @return the first definition, appropriate to display on the item results screen.
      */
+
     public String getDefinition() {
         Sense sense = getMainSense();
         return sense != null ? StringUtility.join(sense.getEnglishDefinitions()) : "";
@@ -153,6 +164,7 @@ public class Data {
      *
      * @return nullable boolean
      */
+
     public Boolean getIsRespectful() {
         if (mIsRespectful == null) {
             loadKeigoBooleans();
@@ -165,6 +177,7 @@ public class Data {
      *
      * @return nullable boolean
      */
+
     public Boolean getIsHumble() {
         if (mIsHumble == null) {
             loadKeigoBooleans();
@@ -175,11 +188,13 @@ public class Data {
     /**
      * Calculate the keigo related booleans
      */
+
     private void loadKeigoBooleans() {
         mIsRespectful = false;
         mIsHumble = false;
 
         // Type of keigo is stored in the tags within the senses nodes.
+
         for (Sense sense : senses) {
             for (String tag : sense.getTags()) {
                 if (tag != null && tag.equals(Constants.ENTRY_TAG_RESPECTFUL)) {
@@ -189,6 +204,7 @@ public class Data {
                 }
 
                 // Stop looping if they're both true already.
+
                 if (mIsRespectful && mIsHumble) {
                     break;
                 }

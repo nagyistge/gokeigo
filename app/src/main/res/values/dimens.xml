@@ -9,4 +9,5 @@
     <dimen name="general_line_spacing">5dp</dimen>
     <dimen name="general_margin">5dp</dimen>
     <dimen name="general_2x_margin">10dp</dimen>
+    <dimen name="reading_text_size">12sp</dimen>
 </resources>

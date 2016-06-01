@@ -8,18 +8,20 @@ import java.util.List;
  * This singleton class manages CRUD operations in relation to Entries
  */
 public class EntryManager {
-    private static EntryManager mInstance = null;
+    private static EntryManager instance = null;
     private List<Entry> mEntries;
 
     private EntryManager() {
+
         // Hide constructor to ensure singleton pattern
+
     }
 
     public static EntryManager getInstance() {
-        if (mInstance == null) {
-            mInstance = new EntryManager();
+        if (instance == null) {
+            instance = new EntryManager();
         }
-        return mInstance;
+        return instance;
     }
 
     public void saveEntry(Entry entry) {
@@ -29,7 +31,9 @@ public class EntryManager {
     }
 
     public void saveNotes(Entry entry, String notes) {
+
         // TODO: DBFlow inserts literal value into the ModelAdapter for the table so Strings must be escaped before setting
+
         entry.setNotes(notes);
         entry.save();
     }
@@ -37,9 +41,12 @@ public class EntryManager {
     /**
      * @return a list of Words from the DB via lazy loading
      */
+
     public List<Entry> getEntries() {
         if (mEntries == null) {
+
             // TODO: Make the transaction be Async
+
             mEntries = SQLite.select().from(Entry.class).queryList();
         }
         return mEntries;

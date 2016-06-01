@@ -27,10 +27,13 @@ public class Entry extends BaseModel implements Parcelable {
     private String otherForms;
     private String notes;
     private boolean isStarred;
-    // TODO: DateTime for history log
+
+    // TODO: Add DateTime for history log
 
     public Entry() {
+
         // Required empty public constructor to create table
+
     }
 
     public static final Creator<Entry> CREATOR = new Creator<Entry>() {
@@ -46,8 +49,10 @@ public class Entry extends BaseModel implements Parcelable {
     };
 
     protected Entry(Parcel source) {
+
         // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
         // Source: https://code.google.com/p/android/issues/detail?id=5973
+
         isCommonStatus = source.readInt() == 1;
         word = source.readString();
         reading = source.readString();
@@ -62,10 +67,13 @@ public class Entry extends BaseModel implements Parcelable {
      * @param flags Additional flags about how the object should be written.
      *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
      */
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+
         // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
         // Source: https://code.google.com/p/android/issues/detail?id=5973
+
         dest.writeInt(isCommonStatus ? 1 : 0);
         dest.writeString(word);
         dest.writeString(reading);
@@ -80,6 +88,7 @@ public class Entry extends BaseModel implements Parcelable {
      * @return a bitmask indicating the set of special object types marshalled
      * by the Parcelable.
      */
+
     @Override
     public int describeContents() {
         return 0;
@@ -93,6 +102,7 @@ public class Entry extends BaseModel implements Parcelable {
 
         // Create blurb using the following of every sense element: parts of speech,
         // english definitions, info, see also, tags and links.
+
         StringBuilder stringBuilder = new StringBuilder();
         String lineSeparator = System.getProperty("line.separator");
         List<Sense> senseList = data.getSenses();
@@ -130,11 +140,13 @@ public class Entry extends BaseModel implements Parcelable {
                 stringBuilder.append(tags);
                 stringBuilder.append(lineSeparator);
             }
+
             // TODO figure out how to get the links as hyperlinks in the textview with Android-TextView-LinkBuilder
 //            String link = StringUtility.join(sense.getLinks()); // Link is an object...
 //            links.add(link);
 
             // Add comma to the list if it's not the last element.
+
             if (i < senseList.size() - 1) {
                 stringBuilder.append(lineSeparator);
             }

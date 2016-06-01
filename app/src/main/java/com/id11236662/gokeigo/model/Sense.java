@@ -13,6 +13,7 @@ import javax.annotation.Generated;
 public class Sense {
 
     // Serialised fields have to match the json attibute or the mapping will not work.
+
     @SerializedName("english_definitions")
     @Expose
     private List<String> englishDefinitions = new ArrayList<String>();

@@ -21,6 +21,7 @@ public class ActivityConfigurator {
      *
      * @param activity to be locked to the device's natural orientation.
      */
+
     public static void lockOrientation(Activity activity) {
         Display display = ((WindowManager) activity.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         int rotation = display.getRotation();
@@ -45,6 +46,11 @@ public class ActivityConfigurator {
         activity.setRequestedOrientation(orientation);
     }
 
+    /**
+     * Check if the device has any network connectivity
+     * @param activity
+     * @return true is there is network connectivity. False if there is none.
+     */
     public static boolean isDeviceOnline(Activity activity) {
         ConnectivityManager mConnectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();

@@ -14,8 +14,10 @@ public class FlowManagerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         // DB is initialised the first time FlowManager.getDatabase(...).getWritableDatabase()
         // is called.
+
         FlowManager.init(new FlowConfig.Builder(this).build());
     }
 }

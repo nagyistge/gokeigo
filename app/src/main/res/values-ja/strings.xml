@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ご敬語</string>
-    <string name="message_entries_found">該当件数 : %d件</string>
+    <string name="message_entries_found_for">「%s」の該当件数</string> <!-- TODO: translate this later-->
+    <string name="message_number_of_entries">%d件</string>
 </resources>

@@ -31,7 +31,7 @@
             android:layout_marginLeft="@dimen/general_margin"
             android:layout_marginRight="@dimen/general_margin"
             android:layout_marginTop="@dimen/general_margin"
-            android:textSize="12sp" />
+            android:textSize="@dimen/reading_text_size" />
 
     </RelativeLayout>
 
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/general_margin"
-            android:textSize="12sp" />
+            android:textSize="@dimen/reading_text_size" />
 
     </LinearLayout>
 

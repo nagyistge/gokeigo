@@ -211,21 +211,21 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             if (data.getIsCommon()) {
                 mCommonStatusTextView.setVisibility(View.VISIBLE);
             } else {
-                mCommonStatusTextView.setVisibility(View.INVISIBLE);
+                mCommonStatusTextView.setVisibility(View.GONE);
             }
 
             // Show the appropriate text view depending on the keigo level.
             if (data.getIsRespectful()) {
                 mRespectfulLevelTextView.setVisibility(View.VISIBLE);
             } else {
-                mRespectfulLevelTextView.setVisibility(View.INVISIBLE);
+                mRespectfulLevelTextView.setVisibility(View.GONE);
             }
 
             // Show the appropriate text view depending on the keigo level.
             if (data.getIsHumble()) {
                 mHumbleLevelTextView.setVisibility(View.VISIBLE);
             } else {
-                mHumbleLevelTextView.setVisibility(View.INVISIBLE);
+                mHumbleLevelTextView.setVisibility(View.GONE);
             }
         }
     }

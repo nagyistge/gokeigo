@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // Show the search fragment.
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.content_main_layout, new SearchFragment())
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         // Add drawer listener to the navigation drawer.
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -40,11 +42,13 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         // Set navigation item selected listener to the navigation drawer.
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
         // Lock the orientation to prevent losing search queries.
+
         ActivityConfigurator.lockOrientation(this);
     }
 
@@ -52,7 +56,9 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         assert drawer != null;
+
         // If the drawer is open, close it. Else, actually go back.
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -66,13 +72,17 @@ public class MainActivity extends AppCompatActivity
      * @param item The selected item
      * @return true to display the item as the selected item
      */
+
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
         FragmentManager manager = getSupportFragmentManager();
 
         // TODO: possibly refactor
+
         switch (id) {
             case R.id.nav_home:
                 manager.beginTransaction()

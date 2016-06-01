@@ -10,6 +10,7 @@ import javax.annotation.Generated;
 public class Japanese {
 
     // Serialised fields have to match the json attibute or the mapping will not work.
+
     @SerializedName("word")
     @Expose
     private String word;
@@ -39,6 +40,7 @@ public class Japanese {
      * Lazy load the word and reading.
      * @return the word and reading in following format: word 【reading】, word
      */
+
     public String getWordAndReading() {
         if (mWordAndReading == null) {
             if (StringUtils.isNotNullOrEmpty(word) && StringUtils.isNotNullOrEmpty(reading)) {

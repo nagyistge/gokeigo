@@ -12,6 +12,7 @@ import javax.annotation.Generated;
 public class DataResponse {
 
     // Serialised fields have to match the json attibute or the mapping will not work.
+
     @SerializedName("data")
     @Expose
     private List<Data> data = new ArrayList<Data>();
