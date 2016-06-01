@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,10 +44,14 @@ import retrofit2.Call;
  * Has a search action on the toolbar, which has query functionality implemented on it.
  */
 
-public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener {
 
+    private RelativeLayout mSearchViewRelativeLayout;
+    private SearchView mSearchView;
+    private MenuItem mSearchViewMenuItem;
     private CheckBox mIncludeRespectfulCheckbox;
     private CheckBox mIncludeHumbleCheckbox;
+    private RelativeLayout mSearchResultsRelativeLayout;
     private TextView mResultsTextView;
     private RecyclerView mRecyclerView;
     private SearchAdapter mAdapter;
@@ -56,7 +61,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
     /**
-     * Initialise checkbox fields, textview field, and recycler view field
+     * Initialise search view field, checkbox fields, textview field, and recycler view field
      * and set an item decoration to recycler view.
      *
      * @param inflater           used to inflate views in this fragment
@@ -71,6 +76,15 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Inflate the layout for this fragment.
 
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        // Initialise the relative layout fields.
+        mSearchViewRelativeLayout = (RelativeLayout) view.findViewById(R.id.fragment_search_view_relative_layout);
+        mSearchResultsRelativeLayout = (RelativeLayout) view.findViewById(R.id.fragment_search_results_relative_layout);
+
+        // Initialise the search view field and set OnQueryTextListener and OnClickListener to it.
+        mSearchView = (SearchView) view.findViewById(R.id.fragment_search_view);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setOnClickListener(this);
 
         // Initialise the check box fields.
 
@@ -115,25 +129,21 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
-
         inflater.inflate(R.menu.main, menu);
-        menu.setGroupVisible(R.id.main_search_group, true);
+        menu.setGroupVisible(R.id.main_search_group, false);
         menu.setGroupVisible(R.id.main_save_group, false);
 
         // Manually tint the search icon as it's provided separately from AppCompat.
+        mSearchViewMenuItem = menu.findItem(R.id.action_search);
+        MenuTint.colorMenuItem(mSearchViewMenuItem, Color.WHITE, null);
 
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
-        MenuTint.colorMenuItem(searchItem, Color.WHITE, null);
-
-        // Set QueryTextListener on search view.
-
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        // Set OnClick listener on search view.
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewMenuItem);
         searchView.setOnQueryTextListener(this);
 
-        // TODO: make the searchview longer. it's so short on tablets
-
+        // Set query hint. TODO: For some reason the big search view doesn't show
+        searchView.setQueryHint(getString(R.string.search_query_hint));
     }
 
     /**
@@ -168,6 +178,24 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             Toast.makeText(activity, R.string.message_no_network_available, Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fragment_search_view:
+
+                // Expands the search view no matter where you click it.
+
+                mSearchView.onActionViewExpanded();
+                break;
+        }
     }
 
     /**
@@ -256,6 +284,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 mProgressDialog.dismiss();
             }
 
+            mSearchViewMenuItem.setVisible(true);
+            mSearchViewRelativeLayout.setVisibility(View.GONE);
+            mSearchResultsRelativeLayout.setVisibility(View.VISIBLE);
+
             if (data != null) {
 
                 // Show the data in the list.
@@ -264,17 +296,16 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
                 // Show how many data were found.
 
-                int results = data.size();
+                int number = data.size();
                 Locale currentLocale = Locale.ENGLISH;
-                String message1 = String.format(currentLocale, getString(R.string.message_entries_found_for), mQuery);
-                String message2 = String.format(currentLocale, getString(R.string.message_number_of_entries), results);
-                mResultsTextView.setText((message1 + ": " + message2));
+                String results = String.format(currentLocale, getString(R.string.message_entries_found_for), mQuery) +
+                        ": " + String.format(currentLocale, getString(R.string.message_number_of_entries), number);
+                mResultsTextView.setText(results);
             } else {
 
-                // If data is null, it's set to that when there's an exception.
-                // Most likely network-related
+                // If data is null, it's because there's an exception in calling the server.
 
-                mResultsTextView.setText(R.string.message_no_network_available);
+                mResultsTextView.setText(R.string.message_search_exception);
             }
         }
     }

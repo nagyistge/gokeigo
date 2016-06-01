@@ -35,11 +35,13 @@
 
     <!-- Hints -->
     <string name="hint_notes">Your notes about the entry</string>
+    <string name="message_search_exception">No network available or the server is currently down.</string>
     <string name="message_no_network_available">No network available</string>
     <string name="text_include_respectful">Include Respectful</string>
     <string name="text_include_humble">Include Humble</string>
-    <string name="message_home">Go search up respectful and/or humble forms of Keigo.\nSearch queries in English is supported. \nJapanese/Romaji support is limited.</string>
+    <string name="message_home">Go search your Keigo</string>
     <string name="text_common">Common</string>
     <string name="text_respectful">上</string>
     <string name="text_humble">下</string>
+    <string name="search_query_hint">Search a verb or noun</string>
 </resources>

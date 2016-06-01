@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary"
     tools:context="com.id11236662.gokeigo.view.SearchFragment">
 
     <RelativeLayout
@@ -19,15 +20,18 @@
             android:layout_margin="@dimen/search_margin"
             android:lineSpacingExtra="@dimen/general_line_spacing"
             android:text="@string/message_home"
-            android:textSize="@dimen/search_message_text_size" />
+            android:textColor="@color/text_or_icons"
+            android:textSize="@dimen/search_message_text_size_xlarge" />
 
         <android.support.v7.widget.SearchView
             android:id="@+id/fragment_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_search_message"
-            android:layout_margin="@dimen/search_margin"
-            android:clickable="true"
+            android:layout_marginEnd="@dimen/search_margin"
+            android:layout_marginLeft="@dimen/search_margin"
+            android:layout_marginRight="@dimen/search_margin"
+            android:layout_marginStart="@dimen/search_margin"
             android:background="@color/primary_light"
             android:queryHint="@string/search_query_hint" />
 
@@ -67,8 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/fragment_search_results_text_view"
