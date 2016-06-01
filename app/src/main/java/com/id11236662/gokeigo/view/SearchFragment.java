@@ -48,7 +48,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     private RelativeLayout mSearchViewRelativeLayout;
     private SearchView mSearchView;
-    private MenuItem mSearchViewMenuItem;
+    private MenuItem mSearchActionMenuItem;
     private CheckBox mIncludeRespectfulCheckbox;
     private CheckBox mIncludeHumbleCheckbox;
     private RelativeLayout mSearchResultsRelativeLayout;
@@ -78,13 +78,19 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         // Initialise the relative layout fields.
+
         mSearchViewRelativeLayout = (RelativeLayout) view.findViewById(R.id.fragment_search_view_relative_layout);
         mSearchResultsRelativeLayout = (RelativeLayout) view.findViewById(R.id.fragment_search_results_relative_layout);
 
         // Initialise the search view field and set OnQueryTextListener and OnClickListener to it.
+
         mSearchView = (SearchView) view.findViewById(R.id.fragment_search_view);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setOnClickListener(this);
+
+        // Set query hint.
+
+        mSearchView.setQueryHint(getString(R.string.search_query_hint));
 
         // Initialise the check box fields.
 
@@ -130,28 +136,78 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         inflater.inflate(R.menu.main, menu);
         menu.setGroupVisible(R.id.main_search_group, false);
         menu.setGroupVisible(R.id.main_save_group, false);
 
         // Manually tint the search icon as it's provided separately from AppCompat.
-        mSearchViewMenuItem = menu.findItem(R.id.action_search);
-        MenuTint.colorMenuItem(mSearchViewMenuItem, Color.WHITE, null);
+
+        mSearchActionMenuItem = menu.findItem(R.id.action_search);
+        MenuTint.colorMenuItem(mSearchActionMenuItem, Color.WHITE, null);
 
         // Set OnClick listener on search view.
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewMenuItem);
+
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchActionMenuItem);
         searchView.setOnQueryTextListener(this);
 
-        // Set query hint. TODO: For some reason the big search view doesn't show
+        // Set query hint.
+
         searchView.setQueryHint(getString(R.string.search_query_hint));
+
+        // Hide the Search Result Layout and show the Search View Layout again
+
+        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+
+            /**
+             * Called when a menu item is expanded.
+             *
+             * @param item Item that was expanded
+             * @return true so the item expands
+             */
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            /**
+             * Called when a menu item is collapsed.
+             *
+             * @param item Item that was collapsed
+             * @return true so the item collapses
+             */
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_search:
+                        mSearchView.setQuery(searchView.getQuery(), false);
+                        SetVisibleSearchResults(false);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     /**
-     * Called when the query text is changed by the user.
+     * Set the visibility of the search action menu, the search results layout and the search view
+     * layout. If the search view layout is visible, hide the search results layout and vice versa.
+     *
+     * @param isVisible the visibility state of the Search Results related views.
+     */
+    private void SetVisibleSearchResults(boolean isVisible) {
+        mSearchActionMenuItem.setVisible(isVisible);
+        mSearchResultsRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mSearchViewRelativeLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+    }
+
+    /**
+     * Called when the query text is changed by the user. // TODO: Show past searches.
      *
      * @param query the new content of the query text field.
-     * @return false if the SearchView should perform the default action of showing any
-     * suggestions if available, true if the action was handled by the listener. TODO: revise this
+     * @return always true as the action is handled and overrides the default action.
      */
 
     @Override
@@ -164,7 +220,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      * Call the API to search up possible entries with the query text.
      *
      * @param query the new content of the query text field.
-     * @return true, always.
+     * @return always true as the action is handled and overrides the default action.
      */
 
     @Override
@@ -284,9 +340,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 mProgressDialog.dismiss();
             }
 
-            mSearchViewMenuItem.setVisible(true);
-            mSearchViewRelativeLayout.setVisibility(View.GONE);
-            mSearchResultsRelativeLayout.setVisibility(View.VISIBLE);
+            SetVisibleSearchResults(true);
 
             if (data != null) {
 

@@ -28,18 +28,18 @@
     <string name="message_searching">Searching</string>
     <string name="message_entries_found_for">Entries found for \'%s\'</string>
     <string name="message_number_of_entries">%d</string>
+    <string name="message_search_exception">No network available or the server is currently down.</string>
+    <string name="message_no_network_available">No network available</string>
 
     <!-- Tab titles -->
     <string name="tab_entry">Entry</string>
     <string name="tab_notes">Notes</string>
 
-    <!-- Hints -->
+    <!-- Texts & Hints -->
     <string name="hint_notes">Your notes about the entry</string>
-    <string name="message_search_exception">No network available or the server is currently down.</string>
-    <string name="message_no_network_available">No network available</string>
-    <string name="text_include_respectful">Include Respectful</string>
-    <string name="text_include_humble">Include Humble</string>
-    <string name="message_home">Go search your Keigo</string>
+    <string name="text_home">Go search your Keigo</string>
+    <string name="text_include_respectful">Respectful （上）</string>
+    <string name="text_include_humble">Humble （下）</string>
     <string name="text_common">Common</string>
     <string name="text_respectful">上</string>
     <string name="text_humble">下</string>
