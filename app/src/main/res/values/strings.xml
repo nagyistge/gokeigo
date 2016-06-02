@@ -41,7 +41,8 @@
     <string name="text_respectful">上</string>
     <string name="text_humble">下</string>
     <string name="text_other_forms">Other forms</string>
-    <string name="text_meanings_and_usage">Meanings and Usage</string>
+    <string name="text_definition">Definition</string>
     <string name="text_notes">Notes</string>
     <string name="text_go">GO</string>
+    <string name="tap_to_add_note">Tap to add note</string>
 </resources>

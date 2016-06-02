@@ -8,67 +8,33 @@
     android:orientation="horizontal">
 
     <RelativeLayout
-        android:id="@+id/item_notes_left_layout"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:id="@+id/item_search_left_top_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/item_search_word_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/general_margin"
-            android:layout_marginRight="@dimen/general_margin"
+            android:layout_marginStart="@dimen/general_margin"
             android:layout_marginTop="@dimen/general_margin"
+            android:text="言葉"
             android:textSize="17sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/item_search_reading_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/item_search_word_text_view"
-            android:layout_marginLeft="@dimen/general_margin"
-            android:layout_marginRight="@dimen/general_margin"
-            android:layout_marginTop="@dimen/general_margin"
-            android:textSize="@dimen/reading_text_size" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/item_search_right_layout"
-        android:layout_width="80dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="@dimen/general_margin"
-        android:layout_marginRight="@dimen/general_margin"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/item_search_common_status_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/general_margin"
-            android:text="@string/text_common"
-            android:textColor="@color/common_status" />
-
         <RelativeLayout
+            android:id="@+id/item_search_left_bottom_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/item_search_common_status_text_view"
-            android:orientation="horizontal">
+            android:layout_below="@id/item_search_word_text_view">
 
             <TextView
                 android:id="@+id/item_search_respectful_level_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/general_margin"
-                android:layout_marginRight="@dimen/general_margin"
+                android:layout_marginLeft="@dimen/general_margin"
+                android:layout_marginStart="@dimen/general_margin"
                 android:layout_marginTop="@dimen/general_margin"
                 android:text="@string/text_respectful"
                 android:textColor="@color/respectful_level" />
@@ -77,33 +43,85 @@
                 android:id="@+id/item_search_humble_level_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_marginLeft="@dimen/general_margin"
+                android:layout_marginStart="@dimen/general_margin"
                 android:layout_marginTop="@dimen/general_margin"
                 android:layout_toEndOf="@id/item_search_respectful_level_text_view"
                 android:layout_toRightOf="@id/item_search_respectful_level_text_view"
                 android:text="@string/text_humble"
                 android:textColor="@color/humble_level" />
+
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/item_search_reading_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/item_search_left_bottom_layout"
+            android:layout_marginLeft="@dimen/general_margin"
+            android:layout_marginStart="@dimen/general_margin"
+            android:layout_marginTop="@dimen/general_margin"
+            android:layout_toEndOf="@id/item_search_word_text_view"
+            android:layout_toRightOf="@id/item_search_word_text_view"
+            android:text="ことば"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/reading_text_size" />
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/item_search_middle_layout"
+    <TextView
+        android:id="@+id/item_search_definition_text_view"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@id/item_notes_left_layout"
-        android:layout_toLeftOf="@id/item_search_right_layout"
-        android:layout_toRightOf="@id/item_notes_left_layout"
-        android:layout_toStartOf="@id/item_search_right_layout"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_search_left_top_layout"
+        android:layout_marginLeft="@dimen/general_margin"
+        android:layout_marginStart="@dimen/general_margin"
+        android:layout_marginTop="@dimen/general_margin"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="a word, if i were to go across the page what would happen and here i go on and on and on and it has to be prety damn endliness "
+        android:textColor="@color/secondary_text"
+        android:textSize="@dimen/reading_text_size" />
 
-        <TextView
-            android:id="@+id/item_search_definition_text_view"
+    <RelativeLayout
+        android:id="@+id/item_search_right_layout"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/general_margin"
+        android:layout_marginRight="@dimen/general_margin"
+        android:layout_marginTop="@dimen/general_margin">
+
+        <ImageButton
+            android:id="@+id/item_search_star_filled_image_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/general_margin"
-            android:textSize="@dimen/reading_text_size" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_star_black_24dp" />
 
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/item_search_star_border_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_star_border_black_24dp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/item_search_common_status_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/item_search_right_layout"
+        android:layout_marginEnd="@dimen/general_margin"
+        android:layout_marginRight="@dimen/general_margin"
+        android:layout_marginTop="@dimen/general_margin"
+        android:text="@string/text_common"
+        android:textColor="@color/common_status" />
 
 </RelativeLayout>

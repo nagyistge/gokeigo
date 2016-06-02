@@ -29,7 +29,6 @@
             android:name=".view.EntryActivity"
             android:label="@string/title_activity_entry"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".view.NoteActivity"></activity>
     </application>
 
 </manifest>
