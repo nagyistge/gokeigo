@@ -37,25 +37,39 @@
             android:layout_below="@id/fragment_search_view"
             android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/search_margin"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <CheckBox
                 android:id="@+id/fragment_search_include_respectful_check_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:checked="true"
                 android:text="@string/text_include_respectful"
-                android:textColor="@color/respectful_level" />
+                android:textColor="@color/respectful_level"
+                android:textSize="@dimen/search_checkbox_text_size" />
 
             <CheckBox
                 android:id="@+id/fragment_search_include_humble_check_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="@dimen/search_margin"
                 android:checked="true"
                 android:text="@string/text_include_humble"
-                android:textColor="@color/humble_level" />
+                android:textColor="@color/humble_level"
+                android:textSize="@dimen/search_checkbox_text_size" />
+
+            <Button
+                android:id="@+id/fragment_search_go_button"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/search_margin"
+                android:layout_marginTop="@dimen/search_2x_margin"
+                android:background="@drawable/rounded_button"
+                android:clickable="true"
+                android:text="@string/text_go"
+                android:textAllCaps="true"
+                android:textSize="@dimen/search_message_text_size" />
 
         </LinearLayout>
 
@@ -74,6 +88,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/general_margin"
+            android:layout_marginStart="@dimen/general_margin"
             android:layout_marginTop="@dimen/general_2x_margin"
             android:textStyle="bold" />
 

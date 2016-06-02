@@ -7,6 +7,7 @@ import java.util.List;
 /**
  * This singleton class manages CRUD operations in relation to Entries
  */
+
 public class EntryManager {
     private static EntryManager instance = null;
     private List<Entry> mEntries;
@@ -24,25 +25,11 @@ public class EntryManager {
         return instance;
     }
 
-    public void saveEntry(Entry entry) {
-        getEntries().add(entry);
-        entry.insert();
-        entry.save();
-    }
-
-    public void saveNotes(Entry entry, String notes) {
-
-        // TODO: DBFlow inserts literal value into the ModelAdapter for the table so Strings must be escaped before setting
-
-        entry.setNotes(notes);
-        entry.save();
-    }
-
     /**
      * @return a list of Words from the DB via lazy loading
      */
 
-    public List<Entry> getEntries() {
+    private List<Entry> getEntries() {
         if (mEntries == null) {
 
             // TODO: Make the transaction be Async
@@ -53,11 +40,35 @@ public class EntryManager {
     }
 
     public Entry getEntry(Entry entry) {
+
+        // Entries are unique with their word and reading combination. That is their ID. JSON data provides no unique key.
+
         for (Entry savedEntry : getEntries()) {
             if (savedEntry.getWord().equals(entry.getWord()) && savedEntry.getReading().equals(entry.getReading())) {
                 return savedEntry;
             }
         }
         return null;
+    }
+
+    public void insertEntry(Entry entry) {
+
+        // Add entry to the list, and then the DB.
+
+        getEntries().add(entry);
+        entry.insert();
+        entry.save();
+    }
+
+//    public void saveNotes(Entry entry, String notes) {
+//
+//        // TODO: DBFlow inserts literal value into the ModelAdapter for the table so Strings must be escaped before setting
+//        Log.d(Constants.TAG_DEBUGGING, "EntryManager.saveNotes. notes: " + notes);
+//        entry.setNotes(notes);
+//        entry.save();
+//    }
+
+    public void updateEntry(Entry entry) {
+        entry.save();
     }
 }

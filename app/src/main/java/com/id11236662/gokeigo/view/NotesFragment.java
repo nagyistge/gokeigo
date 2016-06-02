@@ -27,4 +27,6 @@ public class NotesFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_notes, container, false);
     }
 
+    // TODO: Have a NoteAdapter, show only entries that have non-blank notes.
+
 }

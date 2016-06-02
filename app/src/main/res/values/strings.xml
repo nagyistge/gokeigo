@@ -13,7 +13,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_search">Search</string>
-    <string name="action_save">Save</string>
 
     <!-- Strings related to Settings -->
     <string name="pref_language">Language</string>
@@ -31,17 +30,18 @@
     <string name="message_search_exception">No network available or the server is currently down.</string>
     <string name="message_no_network_available">No network available</string>
 
-    <!-- Tab titles -->
-    <string name="tab_entry">Entry</string>
-    <string name="tab_notes">Notes</string>
-
     <!-- Texts & Hints -->
     <string name="hint_notes">Your notes about the entry</string>
-    <string name="text_home">Go search your Keigo</string>
+    <string name="hint_search_query">Try a verb or noun</string>
+    <string name="hint_search_results_query">Search a verb or noun</string>
+    <string name="text_home">Search your Keigo</string>
     <string name="text_include_respectful">Respectful （上）</string>
     <string name="text_include_humble">Humble （下）</string>
     <string name="text_common">Common</string>
     <string name="text_respectful">上</string>
     <string name="text_humble">下</string>
-    <string name="search_query_hint">Search a verb or noun</string>
+    <string name="text_other_forms">Other forms</string>
+    <string name="text_meanings_and_usage">Meanings and Usage</string>
+    <string name="text_notes">Notes</string>
+    <string name="text_go">GO</string>
 </resources>

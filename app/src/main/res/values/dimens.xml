@@ -11,7 +11,7 @@
     <dimen name="general_2x_margin">10dp</dimen>
     <dimen name="reading_text_size">12sp</dimen>
     <dimen name="search_message_text_size">34sp</dimen>
-    <dimen name="search_message_text_size_xlarge">56sp</dimen>
+    <dimen name="search_checkbox_text_size">16sp</dimen>
     <dimen name="search_margin">15dp</dimen>
-    <dimen name="search_2x_margin">20dp</dimen>
+    <dimen name="search_2x_margin">25dp</dimen>
 </resources>

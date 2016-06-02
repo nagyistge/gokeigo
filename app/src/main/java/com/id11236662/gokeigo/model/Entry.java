@@ -12,9 +12,10 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import java.util.List;
 
 /**
- * Parcelable, persistent and concise version of the Data object.
- * Its implementation of parcelable makes it easily transportable through intents.
+ * Parcelable, persistent and concise version of the Data object (which contains Japanese, Link and Sense).
+ * The implementation of parcelable makes the object be easily transportable through intents.
  */
+
 @Table(database = AppDatabase.class, allFields = true)
 public class Entry extends BaseModel implements Parcelable {
 

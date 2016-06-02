@@ -24,6 +24,7 @@ import java.util.List;
  * This adapter turns a list of Data-type objects into Views for a RecyclerView.
  * These Views are added, removed and moved around depending on the given list of objects.
  */
+
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
 
     private List<Data> mData;
@@ -39,6 +40,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      * @param viewType unused argument
      * @return a SearchViewHolder inflated with the row layout xml
      */
+
     @Override
     public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View itemView = LayoutInflater.from(parent.getContext())
@@ -61,6 +63,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     /**
      * @return the total number of items in the list.
      */
+
     @Override
     public int getItemCount() {
         return mData.size();
@@ -72,6 +75,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      *
      * @param filteredData list of objects that have already been filtered
      */
+
     public void animateTo(List<Data> filteredData) {
         applyAndAnimateRemovals(filteredData);
         applyAndAnimateAdditions(filteredData);
@@ -83,6 +87,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      *
      * @param filteredData list of objects that have already been filtered
      */
+
     private void applyAndAnimateRemovals(List<Data> filteredData) {
         for (int i = mData.size() - 1; i >= 0; i--) {
             final Data data = mData.get(i);
@@ -97,6 +102,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      *
      * @param filteredData list of objects that have already been filtered
      */
+
     private void applyAndAnimateAdditions(List<Data> filteredData) {
         for (int i = 0, count = filteredData.size(); i < count; i++) {
             final Data data = filteredData.get(i);
@@ -111,6 +117,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      *
      * @param filteredData list of objects that have already been filtered
      */
+
     private void applyAndAnimateMovedItems(List<Data> filteredData) {
         for (int toPosition = filteredData.size() - 1; toPosition >= 0; toPosition--) {
             final Data data = filteredData.get(toPosition);
@@ -126,6 +133,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      *
      * @param position index in the list
      */
+
     public void removeItem(int position) {
         mData.remove(position);
         notifyItemRemoved(position);
@@ -136,6 +144,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      *
      * @param position index in the list
      */
+
     public void addItem(int position, Data data) {
         mData.add(position, data);
         notifyItemInserted(position);
@@ -147,6 +156,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      * @param fromPosition old index in the list
      * @param toPosition   new index in the list
      */
+
     public void moveItem(int fromPosition, int toPosition) {
         final Data data = mData.remove(fromPosition);
         mData.add(toPosition, data);
@@ -157,6 +167,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      * This ViewHolder sets the GUI elements of a row with the values of the Data-type object.
      * Ensure it is static to avoid memory problems if more than one SearchViewHolder is created.
      */
+
     public static class SearchViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView mWordTextView;
@@ -169,7 +180,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
         public SearchViewHolder(final View itemView) {
             super(itemView);
+
             // Initialise all the GUI elements from the xml layout of the one row.
+
             mWordTextView = (TextView) itemView.findViewById(R.id.item_search_word_text_view);
             mReadingTextView = (TextView) itemView.findViewById(R.id.item_search_reading_text_view);
             mDefinitionTextView = (TextView) itemView.findViewById(R.id.item_search_definition_text_view);
@@ -198,16 +211,21 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
          *
          * @param data the object to bind to a View
          */
+
         public void bind(Data data) {
+
             // Save the data.
+
             mData = data;
 
             // Set values to all the text views from data.
+
             mWordTextView.setText(data.getWord());
             mReadingTextView.setText(data.getReading());
             mDefinitionTextView.setText(data.getDefinition());
 
             // Show common text view if is common, hide if not common.
+
             if (data.getIsCommon()) {
                 mCommonStatusTextView.setVisibility(View.VISIBLE);
             } else {
@@ -215,6 +233,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             }
 
             // Show the appropriate text view depending on the keigo level.
+
             if (data.getIsRespectful()) {
                 mRespectfulLevelTextView.setVisibility(View.VISIBLE);
             } else {
@@ -222,6 +241,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             }
 
             // Show the appropriate text view depending on the keigo level.
+
             if (data.getIsHumble()) {
                 mHumbleLevelTextView.setVisibility(View.VISIBLE);
             } else {

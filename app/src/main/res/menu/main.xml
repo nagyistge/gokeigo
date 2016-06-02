@@ -2,20 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <group android:id="@+id/main_search_group">
-        <item
-            android:id="@+id/action_search"
-            android:icon="@drawable/ic_search_black_24dp"
-            android:title="@string/action_search"
-            app:actionViewClass="android.support.v7.widget.SearchView"
-            app:showAsAction="ifRoom|collapseActionView" />
-    </group>
-
-    <group android:id="@+id/main_save_group">
-        <item
-            android:id="@+id/action_save"
-            android:icon="@drawable/ic_save_black_24dp"
-            android:title="@string/action_save"
-            app:showAsAction="ifRoom" />
-    </group>
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/action_search"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
 </menu>

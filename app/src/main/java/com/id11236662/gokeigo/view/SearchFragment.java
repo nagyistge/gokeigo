@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -90,7 +91,11 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Set query hint.
 
-        mSearchView.setQueryHint(getString(R.string.search_query_hint));
+        mSearchView.setQueryHint(getString(R.string.hint_search_query));
+
+        // Set OnClickListener to the GO button.
+        Button goButton = (Button) view.findViewById(R.id.fragment_search_go_button);
+        goButton.setOnClickListener(this);
 
         // Initialise the check box fields.
 
@@ -138,22 +143,28 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Inflate the menu; this adds items to the action bar if it is present.
 
         inflater.inflate(R.menu.main, menu);
-        menu.setGroupVisible(R.id.main_search_group, false);
-        menu.setGroupVisible(R.id.main_save_group, false);
 
         // Manually tint the search icon as it's provided separately from AppCompat.
 
         mSearchActionMenuItem = menu.findItem(R.id.action_search);
         MenuTint.colorMenuItem(mSearchActionMenuItem, Color.WHITE, null);
 
+        // Hide the layout that contains views which display the search results.
+
+        SetVisibleSearchResults(false);
+
         // Set OnClick listener on search view.
 
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchActionMenuItem);
         searchView.setOnQueryTextListener(this);
 
+        // Enable a submit button on the search view.
+
+        searchView.setSubmitButtonEnabled(true);
+
         // Set query hint.
 
-        searchView.setQueryHint(getString(R.string.search_query_hint));
+        searchView.setQueryHint(getString(R.string.hint_search_results_query));
 
         // Hide the Search Result Layout and show the Search View Layout again
 
@@ -201,6 +212,13 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         mSearchActionMenuItem.setVisible(isVisible);
         mSearchResultsRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         mSearchViewRelativeLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
+        // Let the system explicitly know that the changed views have to be redrawn.
+
+        mSearchResultsRelativeLayout.invalidate();
+        mSearchResultsRelativeLayout.requestLayout();
+        mSearchViewRelativeLayout.invalidate();
+        mSearchViewRelativeLayout.requestLayout();
     }
 
     /**
@@ -250,6 +268,12 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 // Expands the search view no matter where you click it.
 
                 mSearchView.onActionViewExpanded();
+                break;
+            case R.id.fragment_search_go_button:
+
+                // Submit the query in the main search view.
+
+                mSearchView.setQuery(mSearchView.getQuery(), true);
                 break;
         }
     }

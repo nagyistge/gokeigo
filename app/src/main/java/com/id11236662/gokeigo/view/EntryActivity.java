@@ -1,28 +1,28 @@
 package com.id11236662.gokeigo.view;
 
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
+import com.id11236662.gokeigo.model.Entry;
+import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.ActivityConfigurator;
 import com.id11236662.gokeigo.util.Constants;
 
-public class EntryActivity extends AppCompatActivity {
+public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Fragment mFragmentInEditMode;
-    private boolean mIsInEditMode = false;
+    private EntryManager mEntryManager = EntryManager.getInstance();
+    private Entry mEntry;
+    static final int SAVE_ENTRY_NOTE = 1;
+    private TextView mNotesTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,104 +32,142 @@ public class EntryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Show the back button in the action bar.
+
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         // Lock the orientation to prevent losing notes.
+
         ActivityConfigurator.lockOrientation(this);
 
-        SetupTabLayout();
+
+        Entry selectedEntry = getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
+        if (selectedEntry != null) {
+            Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onCreate. past the selectedEntry != null");
+            Entry previouslySavedEntry = mEntryManager.getEntry(selectedEntry);
+
+            if (previouslySavedEntry != null) {
+                // TODO: Update history date
+            } else {
+
+                // Save selected entry to history for the first time.
+                // TODO: If clear history, clear the dates of every entry. Only delete entries if no notes nor hasn't been starred.
+
+                mEntryManager.insertEntry(selectedEntry);
+            }
+
+            // Save the entry for later use in the rest of the class.
+
+            mEntry = selectedEntry;
+
+            // Set values to all the text views with the parcelled entry!
+
+            TextView wordTextView = (TextView) findViewById(R.id.activity_entry_word_text_view);
+            TextView readingTextView = (TextView) findViewById(R.id.activity_entry_reading_text_view);
+            TextView commonTextView = (TextView) findViewById(R.id.activity_entry_common_status_text_view);
+            TextView blurbTextView = (TextView) findViewById(R.id.activity_entry_blurb_text_view);
+            TextView otherFormsTextView = (TextView) findViewById(R.id.activity_entry_other_forms_text_view);
+            mNotesTextView = (TextView) findViewById(R.id.activity_entry_notes_text_view);
+            assert wordTextView != null;
+            wordTextView.setText(mEntry.getWord());
+            assert readingTextView != null;
+            readingTextView.setText(mEntry.getReading());
+            assert blurbTextView != null;
+            blurbTextView.setText(mEntry.getBlurb());
+            assert otherFormsTextView != null;
+            otherFormsTextView.setText(mEntry.getOtherForms());
+            assert mNotesTextView != null;
+            mNotesTextView.setText(mEntry.getNotes());
+
+            // Show common text view if is common, hide if not common.
+
+            assert commonTextView != null;
+            if (mEntry.getIsCommonStatus()) {
+                commonTextView.setVisibility(View.VISIBLE);
+            } else {
+                commonTextView.setVisibility(View.INVISIBLE);
+            }
+
+            // Make the title of the activity be the selected entry.
+
+            setTitle(mEntry.getWord());
+        }
+
+        // Initialise fab field and set click listener.
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.activity_entry_notes_fab);
+        assert fab != null;
+        fab.setOnClickListener(this);
     }
 
-    private void SetupTabLayout() {
-        // Set up a tab for dictionary entry and a tab each for the 3 levels of keigo.
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.activity_entry_tab_layout);
-        assert tabLayout != null;
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_entry));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_notes));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.activity_entry_notes_fab) {
+            Intent intent = new Intent(this, NoteActivity.class);
+            intent.putExtra(Constants.INTENT_SELECTED_ENTRY, mEntry);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.content_entry_view_pager);
-        final EntryAdapter adapter = new EntryAdapter(getSupportFragmentManager(),
-                tabLayout.getTabCount());
-        assert viewPager != null;
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
+            Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onClick. notes: " + mEntry.getNotes());
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
+            startActivityForResult(intent, SAVE_ENTRY_NOTE);
+        }
+    }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //outState
+        // TODO: use note fragment again? i don't want this activity to be destroyed.
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    /**
+     * This is called if we get a result back from NoteActivity
+     *
+     * @param requestCode
+     * @param resultCode  unused parameter
+     * @param data        unused parameter
+     */
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        // Check if the requestCode corresponds to what we asked for.
+
+        switch (requestCode) {
+            case SAVE_ENTRY_NOTE:
+
+                // Get the resulted note, set it to the entry object, update it in the DB and reset
+                // the text on display.
+
+                String notes = data.getExtras().getString(Constants.INTENT_ENTRY_NOTE);
+
+                Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onActivityResult. notes: " + notes);
+
+                mEntry.setNotes(notes);
+                mEntryManager.updateEntry(mEntry);
+                mNotesTextView.setText(notes);
+                break;
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO: what happens if it was the NoteActivity that called?
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        Log.d(Constants.TAG_DEBUGGING, "onBackPressed: mIsInEditMode - " + (mIsInEditMode ? "true" : "false"));
-        // If a fragment is still in editing mode, show a dialogue to confirm if should discard changes.
-        if (mFragmentInEditMode != null && mIsInEditMode) {
-            DialogFragment dialogFragment = new YesNoDialog();
-            Bundle args = new Bundle();
-            args.putString(Constants.DIALOG_TITLE, "Discard changes to notes?");
-            args.putString(Constants.DIALOG_MESSAGE, "Your changes are not saved. Are you sure you want to discard the changes?");
-            dialogFragment.setArguments(args);
-            dialogFragment.setTargetFragment(mFragmentInEditMode, Constants.REQUEST_CODE_YES_NO);
-            dialogFragment.show(getSupportFragmentManager(), Constants.TAG_FRAGMENT_YES_NO);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    public void setIsInEditMode(Fragment fragmentInEditMode, boolean isInEditMode) {
-        mFragmentInEditMode = fragmentInEditMode;
-        mIsInEditMode = isInEditMode;
-    }
-
-    public static class YesNoDialog extends DialogFragment {
-        public YesNoDialog() {
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            Bundle args = getArguments();
-            String title = args.getString(Constants.DIALOG_TITLE, "");
-            String message = args.getString(Constants.DIALOG_MESSAGE, "");
-
-            return new AlertDialog.Builder(getActivity())
-                    .setTitle(title)
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
-                        }
-                    })
-                    .create();
-        }
     }
 }

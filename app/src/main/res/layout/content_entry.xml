@@ -12,10 +12,106 @@
     tools:context="com.id11236662.gokeigo.view.EntryActivity"
     tools:showIn="@layout/activity_entry">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/content_entry_view_pager"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/activity_entry_tab_layout" />
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/activity_entry_left_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/general_margin"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/activity_entry_word_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_margin"
+                android:text="言葉"
+                android:textIsSelectable="true"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/activity_entry_reading_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_entry_word_text_view"
+                android:layout_marginTop="@dimen/general_margin"
+                android:text="ことば"
+                android:textColor="@color/secondary_text"
+                android:textIsSelectable="true"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/activity_entry_common_status_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/general_margin"
+                android:text="@string/text_common"
+                android:textColor="@color/common_status"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/activity_entry_blurb_label_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_entry_reading_text_view"
+                android:layout_marginTop="@dimen/general_2x_margin"
+                android:text="@string/text_meanings_and_usage"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/activity_entry_blurb_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_entry_blurb_label_text_view"
+                android:layout_marginTop="@dimen/general_margin"
+                android:text="noun\n1. word"
+                android:textColor="@color/secondary_text"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/activity_entry_other_forms_label_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_entry_blurb_text_view"
+                android:layout_marginTop="@dimen/general_2x_margin"
+                android:text="@string/text_other_forms"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/activity_entry_other_forms_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_entry_other_forms_label_text_view"
+                android:layout_marginTop="@dimen/general_margin"
+                android:textColor="@color/secondary_text"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/activity_entry_notes_label_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/activity_entry_other_forms_text_view"
+                android:layout_marginTop="@dimen/general_2x_margin"
+                android:text="@string/text_notes"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/activity_entry_notes_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/activity_entry_notes_label_text_view"
+                android:layout_marginTop="@dimen/general_margin"
+                android:textColor="@color/primary_dark"
+                android:textIsSelectable="true" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

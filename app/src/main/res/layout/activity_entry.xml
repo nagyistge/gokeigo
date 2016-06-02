@@ -19,14 +19,16 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/activity_entry_tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"/>
-
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_entry" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/activity_entry_notes_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_menu_edit" />
 
 </android.support.design.widget.CoordinatorLayout>
