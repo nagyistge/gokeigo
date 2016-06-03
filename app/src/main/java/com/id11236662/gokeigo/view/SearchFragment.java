@@ -94,6 +94,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         mSearchView.setQueryHint(getString(R.string.hint_search_query));
 
         // Set OnClickListener to the GO button.
+
         Button goButton = (Button) view.findViewById(R.id.fragment_search_go_button);
         goButton.setOnClickListener(this);
 

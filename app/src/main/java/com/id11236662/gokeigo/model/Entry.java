@@ -24,6 +24,7 @@ public class Entry extends BaseModel implements Parcelable {
     private boolean isCommonStatus;
     private String word;
     private String reading;
+    private String wordAndReading;
     private String blurb;
     private String otherForms;
     private String notes;
@@ -57,6 +58,7 @@ public class Entry extends BaseModel implements Parcelable {
         isCommonStatus = source.readInt() == 1;
         word = source.readString();
         reading = source.readString();
+        wordAndReading = source.readString();
         blurb = source.readString();
         otherForms = source.readString();
     }
@@ -78,6 +80,7 @@ public class Entry extends BaseModel implements Parcelable {
         dest.writeInt(isCommonStatus ? 1 : 0);
         dest.writeString(word);
         dest.writeString(reading);
+        dest.writeString(wordAndReading);
         dest.writeString(blurb);
         dest.writeString(otherForms);
     }
@@ -100,6 +103,7 @@ public class Entry extends BaseModel implements Parcelable {
         entry.setIsCommonStatus(data.getIsCommon());
         entry.setWord(data.getWord());
         entry.setReading(data.getReading());
+        entry.setWordAndReading((data.getWordAndReading()));
 
         // Create blurb using the following of every sense element: parts of speech,
         // english definitions, info, see also, tags and links.
@@ -187,6 +191,14 @@ public class Entry extends BaseModel implements Parcelable {
 
     public void setReading(String reading) {
         this.reading = reading;
+    }
+
+    public String getWordAndReading() {
+        return wordAndReading;
+    }
+
+    public void setWordAndReading(String wordAndReading) {
+        this.wordAndReading = wordAndReading;
     }
 
     public String getBlurb() {

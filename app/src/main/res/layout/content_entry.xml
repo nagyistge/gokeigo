@@ -106,16 +106,12 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/activity_entry_notes_label_text_view"
                 android:layout_marginTop="@dimen/general_margin"
-                android:background="@color/accent"
-                android:gravity="top|start"
+                android:background="@color/primary_light"
                 android:hint="@string/tap_to_add_note"
                 android:inputType="textMultiLine"
                 android:maxLines="5"
                 android:padding="@dimen/general_margin"
-                android:saveEnabled="true"
                 android:scrollbars="vertical"
-                android:textColorHighlight="@color/primary_light"
-                android:textIsSelectable="true"
                 android:textSize="@dimen/edit_notes_text_size" />
 
         </RelativeLayout>

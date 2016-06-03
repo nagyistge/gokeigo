@@ -117,6 +117,20 @@ public class Data {
     }
 
     /**
+     * @return the word and reading in following format: word 【reading】, word
+     */
+
+    public String getWordAndReading() {
+
+        Japanese japanese = getMainJapanese();
+        if (japanese != null) {
+            return japanese.getWordAndReading();
+        }
+
+        return "";
+    }
+
+    /**
      * Calculate the other forms of Japanese once and store them.
      *
      * @return other forms of the main Japanese word

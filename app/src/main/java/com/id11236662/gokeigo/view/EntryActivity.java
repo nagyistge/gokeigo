@@ -43,7 +43,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
         ActivityConfigurator.lockOrientation(this);
 
-
         Entry selectedEntry = getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
         if (selectedEntry != null) {
             Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onCreate. past the selectedEntry != null");
@@ -84,10 +83,14 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             readingTextView.setText(mEntry.getReading());
             assert blurbTextView != null;
             blurbTextView.setText(mEntry.getBlurb());
+
+            // Set text to note edit text and set OnClickListener.
+
             assert mNotesEditText != null;
             mNotesEditText.setText(mEntry.getNotes());
+            mNotesEditText.setOnClickListener(this);
 
-            // Show other forms if there is any, hide related views if there isn't any.
+            // Show other forms if available, else hide the views that can contain these values.
 
             assert otherFormsTextView != null;
             String otherForms = mEntry.getOtherForms();
@@ -109,9 +112,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                 commonTextView.setVisibility(View.INVISIBLE);
             }
 
-            // Make the title of the activity be the selected entry.
+            // Make the title of the activity be the selected entry's word and reading.
 
-            setTitle(mEntry.getWord());
+            setTitle(mEntry.getWordAndReading());
         }
 
         // Initialise fab field and set click listener.
@@ -133,6 +136,20 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
                 // TODO: share the entry. include ankidroid option
 
+
+                break;
+
+            case R.id.activity_entry_notes_edit_text:
+
+                // TODO: change the highlight colour
+//                if (mNotesEditText.isFocused()) {
+//                    mNotesEditText.setBackgroundColor(getDrawable(Color.WHITE));
+//                } else {
+//                    mNotesEditText.setBackgroundColor(getResources().getColor(R.color.accent, null));
+//                }
+//
+//                mNotesEditText.invalidate();
+//                mNotesEditText.requestLayout();
 
                 break;
         }

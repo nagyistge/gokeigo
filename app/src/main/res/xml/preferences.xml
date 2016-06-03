@@ -12,15 +12,6 @@
 
     </PreferenceCategory>
     <PreferenceCategory
-        android:key="pref_key_search"
-        android:title="@string/pref_search">
-
-        <Preference
-            android:key="pref_key_search_clear"
-            android:title="@string/pref_title_search_clear" />
-
-    </PreferenceCategory>
-    <PreferenceCategory
         android:key="pref_key_history"
         android:title="@string/pref_history">
 
