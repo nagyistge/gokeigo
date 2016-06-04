@@ -2,12 +2,11 @@ package com.id11236662.gokeigo.view;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.util.ActivityConfigurator;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -27,16 +26,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         super.onCreate(savedInstanceState);
 
         // Use a PreferenceFragment in the PreferenceActivity as described in the Android Dev site.
+
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new AppPreferenceFragment()).commit();
 
         // Show the back button in the action bar.
+
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        // Lock the orientation for consistency with the other activities.
-        ActivityConfigurator.lockOrientation(this);
     }
 
     /**

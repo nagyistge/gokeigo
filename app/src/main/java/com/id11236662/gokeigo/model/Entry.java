@@ -3,7 +3,7 @@ package com.id11236662.gokeigo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.id11236662.gokeigo.util.AppDatabase;
+import com.id11236662.gokeigo.util.GoKeigoDatabase;
 import com.id11236662.gokeigo.util.StringUtility;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -16,7 +16,7 @@ import java.util.List;
  * The implementation of parcelable makes the object be easily transportable through intents.
  */
 
-@Table(database = AppDatabase.class, allFields = true)
+@Table(database = GoKeigoDatabase.class, allFields = true)
 public class Entry extends BaseModel implements Parcelable {
 
     @PrimaryKey(autoincrement = true)

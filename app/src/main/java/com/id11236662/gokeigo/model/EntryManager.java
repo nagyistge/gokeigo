@@ -60,14 +60,6 @@ public class EntryManager {
         entry.save();
     }
 
-//    public void saveNotes(Entry entry, String notes) {
-//
-//        // TODO: DBFlow inserts literal value into the ModelAdapter for the table so Strings must be escaped before setting
-//        Log.d(Constants.TAG_DEBUGGING, "EntryManager.saveNotes. notes: " + notes);
-//        entry.setNotes(notes);
-//        entry.save();
-//    }
-
     public void updateEntry(Entry entry) {
         entry.save();
     }

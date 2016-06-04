@@ -5,8 +5,8 @@ import com.raizlabs.android.dbflow.annotation.Database;
 /**
  * This class aids DBFlow in generating a database
  */
-@Database(name = AppDatabase.NAME, version = AppDatabase.VERSION)
-public class AppDatabase {
+@Database(name = GoKeigoDatabase.NAME, version = GoKeigoDatabase.VERSION)
+public class GoKeigoDatabase {
 
     // DBFlow will add the .db extension
 

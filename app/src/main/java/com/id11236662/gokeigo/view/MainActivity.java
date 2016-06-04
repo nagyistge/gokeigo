@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.util.ActivityConfigurator;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity
 
         // Lock the orientation to prevent losing search queries.
 
-        ActivityConfigurator.lockOrientation(this);
+//        ActivityConfigurator.lockOrientation(this);
     }
 
     @Override

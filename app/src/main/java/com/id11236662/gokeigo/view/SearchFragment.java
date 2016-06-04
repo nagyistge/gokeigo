@@ -2,7 +2,6 @@ package com.id11236662.gokeigo.view;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,7 +30,6 @@ import com.id11236662.gokeigo.util.ActivityConfigurator;
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.JishoClient;
 import com.id11236662.gokeigo.util.JishoService;
-import com.id11236662.gokeigo.util.MenuTint;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +47,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     private RelativeLayout mSearchViewRelativeLayout;
     private SearchView mSearchView;
-    private MenuItem mSearchActionMenuItem;
+    private MenuItem mSearchViewActionMenuItem;
     private CheckBox mIncludeRespectfulCheckbox;
     private CheckBox mIncludeHumbleCheckbox;
     private RelativeLayout mSearchResultsRelativeLayout;
@@ -145,10 +143,9 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         inflater.inflate(R.menu.main, menu);
 
-        // Manually tint the search icon as it's provided separately from AppCompat.
+        // Initialise the menu item field, the one that contains the search view on the toolbar.
 
-        mSearchActionMenuItem = menu.findItem(R.id.action_search);
-        MenuTint.colorMenuItem(mSearchActionMenuItem, Color.WHITE, null);
+        mSearchViewActionMenuItem = menu.findItem(R.id.action_search);
 
         // Hide the layout that contains views which display the search results.
 
@@ -156,7 +153,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Set OnClick listener on search view.
 
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchActionMenuItem);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewActionMenuItem);
         searchView.setOnQueryTextListener(this);
 
         // Enable a submit button on the search view.
@@ -179,7 +176,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Set visibilty states to the views.
 
-        mSearchActionMenuItem.setVisible(isVisible);
+        mSearchViewActionMenuItem.setVisible(isVisible);
         mSearchResultsRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         mSearchViewRelativeLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
 
