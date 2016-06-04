@@ -53,7 +53,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     private RelativeLayout mSearchResultsRelativeLayout;
     private TextView mResultsTextView;
     private RecyclerView mRecyclerView;
-    private SearchAdapter mAdapter;
+    private DataAdapter mAdapter;
 
     public SearchFragment() {
         // Required empty public constructor.
@@ -105,13 +105,13 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         mResultsTextView = (TextView) view.findViewById(R.id.fragment_search_results_text_view);
 
-        // Initialise the recycler view field with the value before returning it.
+        // Initialise the recycler view field.
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_search_recycler_view);
 
         // Add ItemDecoration to recycler view.
 
-        mRecyclerView.addItemDecoration(new SearchAdapter.DividerItemDecoration(getActivity()));
+        mRecyclerView.addItemDecoration(new DataAdapter.DividerItemDecoration(getActivity()));
 
         return view;
     }
@@ -133,7 +133,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         FragmentActivity activity = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        mAdapter = new SearchAdapter(new ArrayList<Data>(), R.layout.item_search);
+        mAdapter = new DataAdapter(new ArrayList<Data>(), R.layout.item_data);
         mRecyclerView.setAdapter(mAdapter);
     }
 

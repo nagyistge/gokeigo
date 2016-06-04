@@ -32,7 +32,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     private TextView mNotesTextView;
     private ImageSwitcher mStarImageSwitcher;
     private Speaker mSpeaker;
-    private ImageView mTextToSpeechImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,20 +63,22 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         // Add image views to the image switcher and set the animation.
 
         Context context = getApplicationContext();
-        ImageView starredImageView = new ImageView(context);
-        starredImageView.setImageResource(R.drawable.ic_star_light_brown_24dp);
-        mStarImageSwitcher.addView(starredImageView);
-
         ImageView unstarredImageView = new ImageView(getApplicationContext());
-        unstarredImageView.setImageResource(R.drawable.ic_star_border_light_brown_24dp);
+        unstarredImageView.setImageResource(R.drawable.ic_star_border_light_brown_48dp);
         mStarImageSwitcher.addView(unstarredImageView);
+
+        ImageView starredImageView = new ImageView(context);
+        starredImageView.setImageResource(R.drawable.ic_star_light_brown_48dp);
+        mStarImageSwitcher.addView(starredImageView);
 
         mStarImageSwitcher.setInAnimation(context, R.anim.star);
         mStarImageSwitcher.setOutAnimation(context, R.anim.star);
 
-        // Initialise the TTS image view and set OnClickListener on it, and check if TTS is installed.
-        mTextToSpeechImageView = (ImageView) findViewById(R.id.activity_entry_text_to_speech_image_view);
-        mTextToSpeechImageView.setOnClickListener(this);
+        // Set OnClickListener on to text to speech image view, and check if TTS is installed.
+
+        ImageView textToSpeechImageView = (ImageView) findViewById(R.id.activity_entry_text_to_speech_image_view);
+        assert textToSpeechImageView != null;
+        textToSpeechImageView.setOnClickListener(this);
         checkTts();
     }
 
@@ -90,31 +91,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         if (selectedEntry != null) {
 
             // Get a previously saved entry if there is. That way we can get previously saved notes or
-            // starred status.
+            // starred status. Save the entry for later use in the rest of the class.
 
-            Entry previouslySavedEntry = mEntryManager.getEntry(selectedEntry);
-
-            if (previouslySavedEntry != null) {
-
-                // Save the entry for later use in the rest of the class.
-
-                mEntry = previouslySavedEntry;
-
-
-                // TODO: Update history date
-
-
-            } else {
-
-                // Save the entry for later use in the rest of the class.
-
-                mEntry = selectedEntry;
-
-                // Save selected entry to history for the first time.
-                // TODO: If clear history, clear the dates of every entry. Only delete entries if no notes nor hasn't been starred.
-
-                mEntryManager.insertEntry(selectedEntry);
-            }
+            mEntry = mEntryManager.getPreviouslySavedEntryIfAvailableElseReturnPassedEntry(selectedEntry);
 
             // Set values to all the text views with the parcelled entry!
 
@@ -153,7 +132,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             // Show common text view if is common, hide if not common.
 
             assert commonTextView != null;
-            if (mEntry.getIsCommonStatus()) {
+            if (mEntry.getIsCommon()) {
                 commonTextView.setVisibility(View.VISIBLE);
             } else {
                 commonTextView.setVisibility(View.INVISIBLE);
@@ -292,6 +271,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onDestroy() {
+
         // Destroy the TTS service too.
 
         mSpeaker.destroy();

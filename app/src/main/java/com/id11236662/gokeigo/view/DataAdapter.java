@@ -25,27 +25,27 @@ import java.util.List;
  * These Views are added, removed and moved around depending on the given list of objects.
  */
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder> {
 
     private List<Data> mData;
     private int mRowLayoutId;
 
-    public SearchAdapter(List<Data> entries, int rowLayoutId) {
-        mData = new ArrayList<>(entries);
+    public DataAdapter(List<Data> data, int rowLayoutId) {
+        mData = new ArrayList<>(data);
         mRowLayoutId = rowLayoutId;
     }
 
     /**
      * @param parent   The RecyclerView
      * @param viewType unused argument
-     * @return a SearchViewHolder inflated with the row layout xml
+     * @return a DataViewHolder inflated with the row layout xml
      */
 
     @Override
-    public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DataViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(mRowLayoutId, parent, false);
-        return new SearchViewHolder(itemView);
+        return new DataViewHolder(itemView);
     }
 
     /**
@@ -54,14 +54,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      * @param holder   unused argument
      * @param position index of the row
      */
+
     @Override
-    public void onBindViewHolder(SearchViewHolder holder, int position) {
+    public void onBindViewHolder(DataViewHolder holder, int position) {
         final Data data = mData.get(position);
         holder.bind(data);
     }
 
     /**
-     * @return the total number of items in the list.
+     * Returns the total number of items in the data set hold by the adapter.
+     *
+     * @return The total number of items in this adapter.
      */
 
     @Override
@@ -72,6 +75,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     /**
      * Removes, adds and moves around Views so they correspond to the objects in the list.
      * The order is important to keep track of indexes.
+     * Source: http://stackoverflow.com/a/30429439/1007496
      *
      * @param filteredData list of objects that have already been filtered
      */
@@ -84,6 +88,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Removes the View if its object IS NOT in the filtered list.
+     * Source: http://stackoverflow.com/a/30429439/1007496
      *
      * @param filteredData list of objects that have already been filtered
      */
@@ -99,6 +104,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Adds the View if its object IS in the filtered list.
+     * Source: http://stackoverflow.com/a/30429439/1007496
      *
      * @param filteredData list of objects that have already been filtered
      */
@@ -114,6 +120,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Reorders the Views so they correspond with the originally ordered objects.
+     * Source: http://stackoverflow.com/a/30429439/1007496
      *
      * @param filteredData list of objects that have already been filtered
      */
@@ -130,6 +137,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Removes the item from the list and notifies the Recycler View.
+     * Source: http://stackoverflow.com/a/30429439/1007496
      *
      * @param position index in the list
      */
@@ -141,6 +149,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Adds the item from the list and notifies the Recycler View.
+     * Source: http://stackoverflow.com/a/30429439/1007496
      *
      * @param position index in the list
      */
@@ -152,6 +161,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * Reorders the item in the list.
+     * Source: http://stackoverflow.com/a/30429439/1007496
      *
      * @param fromPosition old index in the list
      * @param toPosition   new index in the list
@@ -165,10 +175,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     /**
      * This ViewHolder sets the GUI elements of a row with the values of the Data-type object.
-     * Ensure it is static to avoid memory problems if more than one SearchViewHolder is created.
+     * Ensure it is static to avoid memory problems if more than one DataViewHolder is created.
      */
 
-    public static class SearchViewHolder extends RecyclerView.ViewHolder {
+    public static class DataViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView mWordTextView;
         private final TextView mReadingTextView;
@@ -178,19 +188,20 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         private final TextView mHumbleLevelTextView;
         private Data mData = null;
 
-        public SearchViewHolder(final View itemView) {
+        public DataViewHolder(final View itemView) {
             super(itemView);
 
             // Initialise all the GUI elements from the xml layout of the one row.
 
-            mWordTextView = (TextView) itemView.findViewById(R.id.item_search_word_text_view);
-            mReadingTextView = (TextView) itemView.findViewById(R.id.item_search_reading_text_view);
-            mDefinitionTextView = (TextView) itemView.findViewById(R.id.item_search_definition_text_view);
-            mCommonStatusTextView = (TextView) itemView.findViewById(R.id.item_search_common_status_text_view);
-            mRespectfulLevelTextView = (TextView) itemView.findViewById(R.id.item_search_respectful_level_text_view);
-            mHumbleLevelTextView = (TextView) itemView.findViewById(R.id.item_search_humble_level_text_view);
+            mWordTextView = (TextView) itemView.findViewById(R.id.item_data_word_text_view);
+            mReadingTextView = (TextView) itemView.findViewById(R.id.item_data_reading_text_view);
+            mDefinitionTextView = (TextView) itemView.findViewById(R.id.item_data_definition_text_view);
+            mCommonStatusTextView = (TextView) itemView.findViewById(R.id.item_data_common_status_text_view);
+            mRespectfulLevelTextView = (TextView) itemView.findViewById(R.id.item_data_respectful_level_text_view);
+            mHumbleLevelTextView = (TextView) itemView.findViewById(R.id.item_data_humble_level_text_view);
 
             // Set listener to the row.
+
             RelativeLayout row = (RelativeLayout) itemView.findViewById(R.id.item_search);
             row.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -255,6 +266,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
      * Ensure it is static to avoid memory problems if more than one DividerItemDecoration
      * is created.
      */
+
     public static class DividerItemDecoration extends RecyclerView.ItemDecoration {
         private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
 

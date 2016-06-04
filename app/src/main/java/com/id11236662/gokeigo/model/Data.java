@@ -3,7 +3,7 @@ package com.id11236662.gokeigo.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.id11236662.gokeigo.util.Constants;
-import com.id11236662.gokeigo.util.StringUtility;
+import com.id11236662.gokeigo.util.TypeUtility;
 import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.ArrayList;
@@ -170,7 +170,7 @@ public class Data {
 
     public String getDefinition() {
         Sense sense = getMainSense();
-        return sense != null ? StringUtility.join(sense.getEnglishDefinitions()) : "";
+        return sense != null ? TypeUtility.join(sense.getEnglishDefinitions()) : "";
     }
 
     /**

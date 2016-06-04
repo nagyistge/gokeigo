@@ -28,7 +28,6 @@ public class Speaker implements TextToSpeech.OnInitListener {
      */
     @Override
     public void onInit(int status) {
-        Log.d(Constants.TAG, "Speaker.onInit");
         if (status == TextToSpeech.SUCCESS) {
             Log.d(Constants.TAG, "Speaker.onInit - SUCCESS");
 

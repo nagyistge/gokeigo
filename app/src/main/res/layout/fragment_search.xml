@@ -95,7 +95,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/fragment_search_results_text_view"
             android:layout_marginTop="@dimen/search_margin"
-            tools:listitem="@layout/item_search" />
+            tools:listitem="@layout/item_data" />
 
     </RelativeLayout>
 </FrameLayout>

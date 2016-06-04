@@ -4,11 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.id11236662.gokeigo.util.GoKeigoDatabase;
-import com.id11236662.gokeigo.util.StringUtility;
+import com.id11236662.gokeigo.util.TypeUtility;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class Entry extends BaseModel implements Parcelable {
 
     @PrimaryKey(autoincrement = true)
     private long id;
-    private boolean isCommonStatus;
+    private boolean isCommon;
     private String word;
     private String reading;
     private String wordAndReading;
@@ -29,8 +30,9 @@ public class Entry extends BaseModel implements Parcelable {
     private String otherForms;
     private String notes;
     private boolean isStarred;
-
-    // TODO: Add DateTime for history log
+    private Date lastAccessedDate;
+    private boolean isHumble;
+    private boolean isRespectful;
 
     public Entry() {
 
@@ -55,12 +57,14 @@ public class Entry extends BaseModel implements Parcelable {
         // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
         // Source: https://code.google.com/p/android/issues/detail?id=5973
 
-        isCommonStatus = source.readInt() == 1;
+        isCommon = TypeUtility.getBooleanFromInt(source.readInt());
         word = source.readString();
         reading = source.readString();
         wordAndReading = source.readString();
         blurb = source.readString();
         otherForms = source.readString();
+        isRespectful = TypeUtility.getBooleanFromInt(source.readInt());
+        isHumble = TypeUtility.getBooleanFromInt(source.readInt());
     }
 
     /**
@@ -77,12 +81,14 @@ public class Entry extends BaseModel implements Parcelable {
         // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
         // Source: https://code.google.com/p/android/issues/detail?id=5973
 
-        dest.writeInt(isCommonStatus ? 1 : 0);
+        dest.writeInt(TypeUtility.getIntFromBoolean(isCommon));
         dest.writeString(word);
         dest.writeString(reading);
         dest.writeString(wordAndReading);
         dest.writeString(blurb);
         dest.writeString(otherForms);
+        dest.writeInt(TypeUtility.getIntFromBoolean(isRespectful));
+        dest.writeInt(TypeUtility.getIntFromBoolean(isHumble));
     }
 
     /**
@@ -100,7 +106,7 @@ public class Entry extends BaseModel implements Parcelable {
 
     public static Entry parse(Data data) {
         Entry entry = new Entry();
-        entry.setIsCommonStatus(data.getIsCommon());
+        entry.setIsCommon(data.getIsCommon());
         entry.setWord(data.getWord());
         entry.setReading(data.getReading());
         entry.setWordAndReading((data.getWordAndReading()));
@@ -114,7 +120,7 @@ public class Entry extends BaseModel implements Parcelable {
         for (int i = 0; i < senseList.size(); i++) {
             Sense sense = senseList.get(i);
 
-            String partsOfSpeech = StringUtility.join(sense.getPartsOfSpeech());
+            String partsOfSpeech = TypeUtility.join(sense.getPartsOfSpeech());
             if (!partsOfSpeech.isEmpty()) {
                 stringBuilder.append(partsOfSpeech);
                 stringBuilder.append(lineSeparator);
@@ -123,31 +129,31 @@ public class Entry extends BaseModel implements Parcelable {
             int number = i + 1;
             stringBuilder.append(number);
             stringBuilder.append(". ");
-            String englishDefinition = StringUtility.join(sense.getEnglishDefinitions());
+            String englishDefinition = TypeUtility.join(sense.getEnglishDefinitions());
             stringBuilder.append(englishDefinition);
             stringBuilder.append(lineSeparator);
 
-            String info = StringUtility.join(sense.getInfo());
+            String info = TypeUtility.join(sense.getInfo());
             if (!info.isEmpty()) {
                 stringBuilder.append(info);
                 stringBuilder.append(lineSeparator);
             }
 
-            String seeAlso = StringUtility.join(sense.getSeeAlso());
+            String seeAlso = TypeUtility.join(sense.getSeeAlso());
             if (!seeAlso.isEmpty()) {
                 stringBuilder.append("See also: ");
                 stringBuilder.append(seeAlso);
                 stringBuilder.append(lineSeparator);
             }
 
-            String tags = StringUtility.join(sense.getTags());
+            String tags = TypeUtility.join(sense.getTags());
             if (!tags.isEmpty()) {
                 stringBuilder.append(tags);
                 stringBuilder.append(lineSeparator);
             }
 
             // TODO figure out how to get the links as hyperlinks in the textview with Android-TextView-LinkBuilder
-//            String link = StringUtility.join(sense.getLinks()); // Link is an object...
+//            String link = TypeUtility.join(sense.getLinks()); // Link is an object...
 //            links.add(link);
 
             // Add comma to the list if it's not the last element.
@@ -158,6 +164,8 @@ public class Entry extends BaseModel implements Parcelable {
         }
         entry.setBlurb(stringBuilder.toString());
         entry.setOtherForms(data.getOtherForms());
+        entry.setIsRespectful(data.getIsRespectful());
+        entry.setIsHumble(data.getIsHumble());
         return entry;
     }
 
@@ -169,12 +177,12 @@ public class Entry extends BaseModel implements Parcelable {
         this.id = id;
     }
 
-    public boolean getIsCommonStatus() {
-        return isCommonStatus;
+    public boolean getIsCommon() {
+        return isCommon;
     }
 
-    public void setIsCommonStatus(boolean isCommonStatus) {
-        this.isCommonStatus = isCommonStatus;
+    public void setIsCommon(boolean isCommonStatus) {
+        this.isCommon = isCommonStatus;
     }
 
     public String getWord() {
@@ -231,5 +239,29 @@ public class Entry extends BaseModel implements Parcelable {
 
     public void setIsStarred(boolean starred) {
         isStarred = starred;
+    }
+
+    public Date getLastAccessedDate() {
+        return lastAccessedDate;
+    }
+
+    public boolean getIsRespectful() {
+        return isRespectful;
+    }
+
+    public void setIsRespectful(boolean respectful) {
+        isRespectful = respectful;
+    }
+
+    public void setLastAccessedDate(Date lastAccessedDate) {
+        this.lastAccessedDate = lastAccessedDate;
+    }
+
+    public boolean getIsHumble() {
+        return isHumble;
+    }
+
+    public void setIsHumble(boolean humble) {
+        isHumble = humble;
     }
 }

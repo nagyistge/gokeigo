@@ -1,7 +1,12 @@
 package com.id11236662.gokeigo.model;
 
+import android.util.Log;
+
+import com.id11236662.gokeigo.util.Constants;
+import com.id11236662.gokeigo.util.TypeUtility;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,19 +44,45 @@ public class EntryManager {
         return mEntries;
     }
 
-    public Entry getEntry(Entry entry) {
+    /**
+     * @param entry that could be in the list and/or DB already.
+     * @return previously saved entry or the same entry that was passed.
+     */
+
+    public Entry getPreviouslySavedEntryIfAvailableElseReturnPassedEntry(Entry entry) {
+
+        Entry previouslySavedEntry = null;
 
         // Entries are unique with their word and reading combination. That is their ID. JSON data provides no unique key.
 
         for (Entry savedEntry : getEntries()) {
             if (savedEntry.getWord().equals(entry.getWord()) && savedEntry.getReading().equals(entry.getReading())) {
-                return savedEntry;
+                previouslySavedEntry = savedEntry;
+                break;
             }
         }
-        return null;
+
+        // Set current date to be the last accessed date.
+
+        Date currentDate = new Date();
+        entry.setLastAccessedDate(currentDate);
+
+        if (previouslySavedEntry == null) {
+
+            // Save entry to history for the first time and return it.
+
+            insertEntry(entry);
+            return entry;
+        } else {
+
+            // Update previously saved entry and return it.
+
+            updateEntry(previouslySavedEntry);
+            return previouslySavedEntry;
+        }
     }
 
-    public void insertEntry(Entry entry) {
+    private void insertEntry(Entry entry) {
 
         // Add entry to the list, and then the DB.
 
@@ -62,5 +93,17 @@ public class EntryManager {
 
     public void updateEntry(Entry entry) {
         entry.save();
+    }
+
+    // TODO:Tempt
+    public void printDatesToConsole() {
+        for (Entry entry : getEntries()) {
+            Log.d(Constants.TAG, TypeUtility.getDate(entry.getLastAccessedDate()));
+        }
+    }
+
+    public List<Entry> getPreviouslyAccessedEntries() {
+        // TODO: display them in order.
+        return getEntries();
     }
 }
