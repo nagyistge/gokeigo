@@ -4,10 +4,9 @@
     android:layout_height="match_parent"
     tools:context="com.id11236662.gokeigo.view.StarredFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_starred_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Starred" />
+        android:layout_height="match_parent" />
 
 </FrameLayout>

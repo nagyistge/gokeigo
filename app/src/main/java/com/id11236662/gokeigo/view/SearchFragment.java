@@ -166,53 +166,27 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Set query hint.
 
         searchView.setQueryHint(getString(R.string.hint_search_results_query));
-
-        // Hide the Search Result Layout and show the Search View Layout again
-
-        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
-
-            /**
-             * Called when a menu item is expanded.
-             *
-             * @param item Item that was expanded
-             * @return true so the item expands
-             */
-
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            /**
-             * Called when a menu item is collapsed.
-             *
-             * @param item Item that was collapsed
-             * @return true so the item collapses
-             */
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.action_search:
-                        mSearchView.setQuery(searchView.getQuery(), false);
-                        SetVisibleSearchResults(false);
-                        break;
-                }
-                return true;
-            }
-        });
     }
 
     /**
      * Set the visibility of the search action menu, the search results layout and the search view
      * layout. If the search view layout is visible, hide the search results layout and vice versa.
+     * Also show the appropriate title.
      *
      * @param isVisible the visibility state of the Search Results related views.
      */
     private void SetVisibleSearchResults(boolean isVisible) {
+
+        // Set visibilty states to the views.
+
         mSearchActionMenuItem.setVisible(isVisible);
         mSearchResultsRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         mSearchViewRelativeLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
+        // Set title of the activity.
+
+        CharSequence title = isVisible ? getString(R.string.title_search_results) : getString(R.string.app_name);
+        getActivity().setTitle(title);
 
         // Let the system explicitly know that the changed views have to be redrawn.
 
@@ -223,10 +197,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
     /**
-     * Called when the query text is changed by the user. // TODO: Show past searches.
+     * Called when the query text is changed by the user.
      *
      * @param query the new content of the query text field.
-     * @return always true as the action is handled and overrides the default action.
+     * @return always false as the default action should be used.
      */
 
     @Override
@@ -327,7 +301,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
             JishoService jishoService = JishoClient.getClient().create(JishoService.class);
 
-            // If "Include Respectful" option has been checked, grab relevant entries about it.
+            // If "Include Respectful" option has been checked, grab respectful-related entries.
 
             if (mIncludeRespectful) {
                 Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_RESPECTFUL + mQuery);
@@ -338,7 +312,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 }
             }
 
-            // If "Include Humble" option has been checked, grab relevant entries about it.
+            // If "Include Humble" option has been checked, grab humble-related entries.
 
             if (mIncludeHumble) {
                 Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_HUMBLE + mQuery);
