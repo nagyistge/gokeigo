@@ -12,7 +12,7 @@
             android:title="@string/navigation_history" />
         <item
             android:id="@+id/nav_notes"
-            android:icon="@drawable/ic_speaker_notes_black_24dp"
+            android:icon="@drawable/ic_note_black_24dp"
             android:title="@string/navigation_notes" />
         <item
             android:id="@+id/nav_starred"

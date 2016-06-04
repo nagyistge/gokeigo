@@ -7,10 +7,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.id11236662.gokeigo.view.NoteActivity">
+    tools:context=".view.EntryNoteActivity">
 
     <EditText
-        android:id="@+id/activity_note_edit_text"
+        android:id="@+id/activity_entry_note_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top|start"

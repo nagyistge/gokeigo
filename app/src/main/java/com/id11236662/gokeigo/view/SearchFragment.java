@@ -141,7 +141,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
 
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.options, menu);
 
         // Initialise the menu item field, the one that contains the search view on the toolbar.
 
@@ -347,7 +347,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 // Show how many data were found.
 
                 int number = data.size();
-                Locale currentLocale = Locale.ENGLISH;
+                Locale currentLocale = getResources().getConfiguration().locale; // TODO: get from settings.
                 String results = String.format(currentLocale, getString(R.string.message_entries_found_for), mQuery) +
                         ": " + String.format(currentLocale, getString(R.string.message_number_of_entries), number);
                 mResultsTextView.setText(results);

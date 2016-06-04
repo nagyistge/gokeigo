@@ -1,7 +1,9 @@
 package com.id11236662.gokeigo.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,21 +11,28 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
+import com.id11236662.gokeigo.util.Speaker;
 import com.raizlabs.android.dbflow.StringUtils;
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EntryManager mEntryManager = EntryManager.getInstance();
     private Entry mEntry;
-    static final int SAVE_ENTRY_NOTE = 1;
+    private static final int SAVE_ENTRY_NOTE = 1;
+    private static final int CHECK_CODE = 2;
     private FloatingActionButton mFab;
     private TextView mNotesTextView;
+    private ImageSwitcher mStarImageSwitcher;
+    private Speaker mSpeaker;
+    private ImageView mTextToSpeechImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +47,55 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        bindEntryToViews();
+
+        // Initialise fab field and set OnClickListener.
+
+        mFab = (FloatingActionButton) findViewById(R.id.activity_entry_notes_fab);
+        assert mFab != null;
+        mFab.setOnClickListener(this);
+
+        // Initialise the image switcher field and set OnClickListener.
+
+        mStarImageSwitcher = (ImageSwitcher) findViewById(R.id.activity_entry_star_image_switcher);
+        assert mStarImageSwitcher != null;
+        mStarImageSwitcher.setOnClickListener(this);
+
+        // Add image views to the image switcher and set the animation.
+
+        Context context = getApplicationContext();
+        ImageView starredImageView = new ImageView(context);
+        starredImageView.setImageResource(R.drawable.ic_star_light_brown_24dp);
+        mStarImageSwitcher.addView(starredImageView);
+
+        ImageView unstarredImageView = new ImageView(getApplicationContext());
+        unstarredImageView.setImageResource(R.drawable.ic_star_border_light_brown_24dp);
+        mStarImageSwitcher.addView(unstarredImageView);
+
+        mStarImageSwitcher.setInAnimation(context, R.anim.star);
+        mStarImageSwitcher.setOutAnimation(context, R.anim.star);
+
+        // Initialise the TTS image view and set OnClickListener on it, and check if TTS is installed.
+        mTextToSpeechImageView = (ImageView) findViewById(R.id.activity_entry_text_to_speech_image_view);
+        mTextToSpeechImageView.setOnClickListener(this);
+        checkTts();
+    }
+
+    /**
+     * Get the entry for passed intent and set its values to the views.
+     */
+
+    private void bindEntryToViews() {
         Entry selectedEntry = getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
         if (selectedEntry != null) {
-            Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onCreate. past the selectedEntry != null");
+
+            // Get a previously saved entry if there is. That way we can get previously saved notes or
+            // starred status.
+
             Entry previouslySavedEntry = mEntryManager.getEntry(selectedEntry);
 
             if (previouslySavedEntry != null) {
+
                 // Save the entry for later use in the rest of the class.
 
                 mEntry = previouslySavedEntry;
@@ -111,12 +163,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
             setTitle(mEntry.getWordAndReading());
         }
-
-        // Initialise fab field and set click listener.
-
-        mFab = (FloatingActionButton) findViewById(R.id.activity_entry_notes_fab);
-        assert mFab != null;
-        mFab.setOnClickListener(this);
     }
 
     /**
@@ -126,11 +172,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
      */
     @Override
     public void onClick(View v) {
-
-        Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onClick. view.getId: " + v.getId());
-
         switch (v.getId()) {
             case R.id.activity_entry_notes_fab:
+                Log.d(Constants.TAG, "EntryActivity.onClick - activity_entry_notes_fab");
 
                 // TODO: share the entry. include ankidroid option
 
@@ -138,22 +182,51 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.activity_entry_notes_text_view:
+                Log.d(Constants.TAG, "EntryActivity.onClick - activity_entry_notes_text_view");
 
-                // Start the NoteActivity for a result and pass the current notes to it for editing.
+                // Start the EntryNoteActivity with the current notes and the word and reading,
+                // and expect a result.
 
-                Intent intent = new Intent(this, NoteActivity.class);
+                Intent intent = new Intent(this, EntryNoteActivity.class);
                 String notes = mNotesTextView.getText().toString();
                 intent.putExtra(Constants.INTENT_ENTRY_NOTE, notes);
-                Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onClick. notes: " + notes);
-
+                intent.putExtra(Constants.INTENT_ENTRY_WORD_AND_READING, mEntry.getWordAndReading());
                 startActivityForResult(intent, SAVE_ENTRY_NOTE);
+                break;
 
+            case R.id.activity_entry_star_image_switcher:
+                Log.d(Constants.TAG, "EntryActivity.onClick - activity_entry_star_image_switcher");
+
+                // Switch to the next image (unstarred or starred).
+
+                mStarImageSwitcher.showNext();
+                break;
+
+            case R.id.activity_entry_text_to_speech_image_view:
+                Log.d(Constants.TAG, "EntryActivity.onClick - activity_entry_text_to_speech_image_view");
+
+                // Speak the word of the entry.
+
+                mSpeaker.speak(mEntry.getWord());
                 break;
         }
     }
 
     /**
-     * This is called if we get a result back from NoteActivity
+     * Check if a TTS engine is installed on the device.
+     */
+
+    private void checkTts() {
+        // Check is performed by making use of the result of another Activity.
+        // Source: http://code.tutsplus.com/tutorials/use-text-to-speech-on-android-to-read-out-incoming-messages--cms-22524
+
+        Intent check = new Intent();
+        check.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+        startActivityForResult(check, CHECK_CODE);
+    }
+
+    /**
+     * This is called if we get a result back from EntryNoteActivity
      *
      * @param requestCode
      * @param resultCode  unused parameter
@@ -168,22 +241,32 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         switch (requestCode) {
             case SAVE_ENTRY_NOTE:
 
-                // Get the resulted note, set it to the entry object, update it in the DB and reset
-                // the text on display.
+                // Get the resulted note, set it to the entry object, and reset the text on display.
 
                 String notes = data.getExtras().getString(Constants.INTENT_ENTRY_NOTE);
-
-                Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onActivityResult. notes: " + notes);
-
                 mEntry.setNotes(notes);
-                mEntryManager.updateEntry(mEntry);
                 mNotesTextView.setText(notes);
+                break;
+
+            case CHECK_CODE:
+
+                // If positive, initialise the speaker field.
+                // If no TTTS is installed, redirect the user to install it.
+
+                if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
+                    mSpeaker = new Speaker(getApplicationContext());
+                } else {
+                    Intent install = new Intent();
+                    install.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
+                    startActivity(install);
+                }
                 break;
         }
     }
 
     @Override
     public void onBackPressed() {
+
         // Update mEntry object with the note and save it to the DB, before going back Home.
 
         String notes = mNotesTextView.getText().toString();
@@ -196,15 +279,22 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onOptionsItemSelected. item.getItemId: " + item.getItemId());
-
         switch (item.getItemId()) {
             case android.R.id.home:
 
-                Log.d(Constants.TAG_DEBUGGING, "EntryActivity.onOptionsItemSelected. android.R.id.home: " + android.R.id.home);
+                // If the top-right button, do go up an level and return true to show it's been handled.
+
                 onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Destroy the TTS service too.
+
+        mSpeaker.destroy();
+        super.onDestroy();
     }
 }

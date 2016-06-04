@@ -32,7 +32,7 @@
             android:label="@string/title_activity_entry"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".view.NoteActivity"></activity>
+        <activity android:name=".view.EntryNoteActivity"></activity>
     </application>
 
 </manifest>
