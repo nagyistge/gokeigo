@@ -74,5 +74,11 @@ public class HistoryFragment extends Fragment {
     public void onResume() {
         Log.d(Constants.TAG, "HistoryFragment.onResume");
         super.onResume();
+
+        // There's a change the entries got edited upon return, such as the star states.
+        // Refresh the recycler view.
+
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.invalidate();
     }
 }

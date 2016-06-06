@@ -147,7 +147,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Hide the layout that contains views which display the search results.
 
-        SetVisibleSearchResults(false);
+        setVisibleSearchResults(false);
 
         // Set OnClick listener on search view.
 
@@ -171,7 +171,8 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      *
      * @param isVisible the visibility state of the Search Results related views.
      */
-    private void SetVisibleSearchResults(boolean isVisible) {
+
+    private void setVisibleSearchResults(boolean isVisible) {
 
         // Set visibilty states to the views.
 
@@ -346,7 +347,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 mProgressDialog.dismiss();
             }
 
-            SetVisibleSearchResults(true);
+            setVisibleSearchResults(true);
 
             if (data != null) {
 

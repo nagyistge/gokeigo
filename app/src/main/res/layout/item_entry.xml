@@ -102,13 +102,25 @@
         android:text="@string/text_common_word"
         android:textColor="@color/common_status" />
 
-    <ImageSwitcher
-        android:id="@+id/item_entry_star_image_switcher"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+    <ImageView
+        android:id="@+id/item_entry_unstarred_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/item_entry_common_status_text_view"
-        android:layout_marginTop="@dimen/general_margin" />
+        android:layout_marginTop="@dimen/general_margin"
+        android:src="@drawable/ic_star_border_light_brown_48dp" />
+
+    <ImageView
+        android:id="@+id/item_entry_starred_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/item_entry_common_status_text_view"
+        android:layout_marginTop="@dimen/general_margin"
+        android:src="@drawable/ic_star_light_brown_48dp"
+        android:visibility="gone" />
 
 </RelativeLayout>

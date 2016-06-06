@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,7 +28,6 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     private int mRowLayoutId;
 
     public EntryAdapter(List<Entry> entries, int rowLayoutId) {
-        Log.d(Constants.TAG, "EntryAdapter.const - entries.size: " + entries.size());
         mEntries = entries;
         mRowLayoutId = rowLayoutId;
     }
@@ -176,7 +174,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
      * This ViewHolder sets the GUI elements of a row with the values of the Entry-type object.
      * Ensure it is static to avoid memory problems if more than one EntryViewHolder is created.
      */
-    public static class EntryViewHolder extends RecyclerView.ViewHolder {
+    public static class EntryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView mWordTextView;
         private final TextView mReadingTextView;
@@ -184,7 +182,8 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         private final TextView mCommonStatusTextView;
         private final TextView mRespectfulLevelTextView;
         private final TextView mHumbleLevelTextView;
-        private final ImageSwitcher mStarImageSwitcher;
+        private final ImageView mStarredImageView;
+        private final ImageView mUnstarredImageView;
         private Entry mEntry = null;
 
         public EntryViewHolder(final View itemView) {
@@ -199,61 +198,17 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             mRespectfulLevelTextView = (TextView) itemView.findViewById(R.id.item_entry_respectful_level_text_view);
             mHumbleLevelTextView = (TextView) itemView.findViewById(R.id.item_entry_humble_level_text_view);
 
-            // Initialise the image switcher field and set OnClickListener.
+            // Initialise the imageview fields and set OnClickListener on them.
 
-            mStarImageSwitcher = (ImageSwitcher) itemView.findViewById(R.id.item_entry_star_image_switcher);
-            assert mStarImageSwitcher != null;
-            mStarImageSwitcher.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    if (mEntry != null) {
-
-                        // Switch to the next image (unstarred or starred).
-
-                        mStarImageSwitcher.showNext();
-
-                        // "Switch on/off" the IsStarrred state.
-
-                        mEntry.switchIsStarredState();
-
-                        // Save the changed state.
-
-                        EntryManager.getInstance().saveEntry(mEntry);
-                    }
-                }
-            });
-
-            // Add image views to the image switcher.
-            // Show unstarred first and starred second.
-
-            Context context = itemView.getContext();
-            ImageView unstarredImageView = new ImageView(context);
-            unstarredImageView.setImageResource(R.drawable.ic_star_border_light_brown_48dp);
-            mStarImageSwitcher.addView(unstarredImageView);
-
-            ImageView starredImageView = new ImageView(context);
-            starredImageView.setImageResource(R.drawable.ic_star_light_brown_48dp);
-            mStarImageSwitcher.addView(starredImageView);
+            mStarredImageView = (ImageView) itemView.findViewById(R.id.item_entry_starred_image_view);
+            mStarredImageView.setOnClickListener(this);
+            mUnstarredImageView = (ImageView) itemView.findViewById(R.id.item_entry_unstarred_image_view);
+            mUnstarredImageView.setOnClickListener(this);
 
             // Set listener to the row.
 
             RelativeLayout row = (RelativeLayout) itemView.findViewById(R.id.item_entry);
-            row.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mEntry != null) {
-
-                        // Start the EntryActivity with an intent that contains the selected Entry row
-                        // as a parcelable Entry.
-
-                        Context context = itemView.getContext();
-                        Intent intent = new Intent(context, EntryActivity.class);
-                        intent.putExtra(Constants.INTENT_SELECTED_ENTRY, mEntry);
-                        context.startActivity(intent);
-                    }
-                }
-            });
+            row.setOnClickListener(this);
         }
 
         /**
@@ -264,7 +219,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
         public void bind(Entry entry) {
 
-            Log.d(Constants.TAG, "EntryViewHolder.onBind");
+            Log.d(Constants.TAG, "EntryViewHolder.bind");
 
             // Save the entry.
 
@@ -300,12 +255,89 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
                 mHumbleLevelTextView.setVisibility(View.GONE);
             }
 
-            // Show starred if it's been starred, show the next image which is a starred image.
+            // Set visibility of the star related image views depending on starred state of entry.
 
-            if (mEntry.getIsStarred()) {
-                Log.d(Constants.TAG, "EntryViewHolder.onBind - word: " + mEntry.getWord() + " - showNext()");
-                mStarImageSwitcher.showNext();
+            setVisibleStarImage(mEntry.getIsStarred());
+        }
+
+        /**
+         * Called when a view has been clicked.
+         *
+         * @param v The view that was clicked.
+         */
+        @Override
+        public void onClick(View v) {
+
+            switch (v.getId()) {
+                case R.id.item_entry:
+
+                    if (mEntry != null) {
+
+                        // Start the EntryActivity with an intent that contains the selected Entry row
+                        // as a parcelable Entry.
+
+                        Context context = itemView.getContext();
+                        Intent intent = new Intent(context, EntryActivity.class);
+                        intent.putExtra(Constants.INTENT_SELECTED_ENTRY, mEntry);
+                        context.startActivity(intent);
+                    }
+
+                    break;
+
+                case R.id.item_entry_starred_image_view:
+
+                    if (mEntry != null) {
+
+                        // Switch the starred state of the entry and save it.
+
+                        mEntry.switchIsStarredState();
+                        EntryManager.getInstance().saveEntry(mEntry);
+
+                        // Since the starred image was clickable, hide it and replace it with the unstarred image.
+
+                        setVisibleStarImage(false);
+                    }
+
+                    break;
+
+                case R.id.item_entry_unstarred_image_view:
+
+                    if (mEntry != null) {
+
+                        // Switch the starred state of the entry and save it.
+
+                        mEntry.switchIsStarredState();
+                        EntryManager.getInstance().saveEntry(mEntry);
+
+                        // Since the unstarred image was clickable, hide it and replace it with the starred image.
+
+                        setVisibleStarImage(true);
+                    }
+
+                    break;
             }
+        }
+
+        /**
+         * Set the visibility of the star image views. If starred image view should be visible,
+         * hide the unstarred image view. And vice versa.
+         *
+         * @param isVisible the visibility state of the Search Results related views.
+         */
+
+        private void setVisibleStarImage(boolean isVisible) {
+
+            // Set visibility states to the views.
+
+            mStarredImageView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+            mUnstarredImageView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
+            // Let the system explicitly know that the changed views have to be redrawn.
+
+            mStarredImageView.invalidate();
+            mStarredImageView.requestLayout();
+            mUnstarredImageView.invalidate();
+            mUnstarredImageView.requestLayout();
         }
     }
 }
