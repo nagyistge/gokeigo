@@ -2,6 +2,9 @@ package com.id11236662.gokeigo.view;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,7 +29,6 @@ import android.widget.Toast;
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.Data;
 import com.id11236662.gokeigo.model.DataResponse;
-import com.id11236662.gokeigo.util.ActivityConfigurator;
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.JishoClient;
 import com.id11236662.gokeigo.util.JishoService;
@@ -86,10 +88,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         mSearchView = (SearchView) view.findViewById(R.id.fragment_search_view);
         mSearchView.setOnQueryTextListener(this);
         mSearchView.setOnClickListener(this);
-
-        // Set query hint.
-
-        mSearchView.setQueryHint(getString(R.string.hint_search_query));
 
         // Set OnClickListener to the GO button.
 
@@ -160,9 +158,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         searchView.setSubmitButtonEnabled(true);
 
-        // Set query hint.
+        // Set an arbitrary high number for the width of the search view so it expands properly on tablets.
+        // Source: http://stackoverflow.com/a/34050959/1007496
 
-        searchView.setQueryHint(getString(R.string.hint_search_results_query));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
     }
 
     /**
@@ -216,7 +215,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public boolean onQueryTextSubmit(String query) {
         Activity activity = getActivity();
-        if (ActivityConfigurator.isDeviceOnline(activity)) {
+        if (isDeviceOnline(activity)) {
             boolean includeRespectful = mIncludeRespectfulCheckbox.isChecked();
             boolean includeHumble = mIncludeHumbleCheckbox.isChecked();
             new SearchJishoAsyncTask(includeRespectful, includeHumble, query).execute();
@@ -224,6 +223,17 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             Toast.makeText(activity, R.string.message_no_network_available, Toast.LENGTH_SHORT).show();
         }
         return true;
+    }
+
+    /**
+     * Check if the device has any network connectivity
+     * @param activity to get the system's connectivity service from.
+     * @return true is there is network connectivity. False if there is none.
+     */
+    private static boolean isDeviceOnline(Activity activity) {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 
     /**

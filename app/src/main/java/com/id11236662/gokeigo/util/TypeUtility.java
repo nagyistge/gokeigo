@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Helper class in utilising strings and .
+ * Helper class in utilising strings and dates, converting booleans into ints and converting ints into booleans.
  */
 
 public class TypeUtility {
@@ -29,7 +29,6 @@ public class TypeUtility {
     }
 
     public static String getDate(Date date) {
-
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         return formatter.format(date);
     }

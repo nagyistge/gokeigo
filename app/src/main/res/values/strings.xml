@@ -23,9 +23,7 @@
     <string name="pref_language">Language</string>
     <string name="pref_title_language_interface">Interface Language</string>
     <string name="pref_summary_language_interface">Show Japanese on the interface</string>
-    <string name="pref_search">Search</string>
     <string name="pref_history">History</string>
-    <string name="pref_title_search_clear">Clear Recent Searches</string>
     <string name="pref_title_history_clear">Clear History</string>
 
     <!-- Messages -->
@@ -37,12 +35,10 @@
 
     <!-- Texts & Hints -->
     <string name="hint_notes">Your notes about the entry</string>
-    <string name="hint_search_query">Try a verb or noun</string>
-    <string name="hint_search_results_query">Search a verb or noun</string>
     <string name="text_home">Search your Keigo</string>
     <string name="text_include_respectful">Respectful （上）</string>
     <string name="text_include_humble">Humble （下）</string>
-    <string name="text_common">Common</string>
+    <string name="text_common_word">Common word</string>
     <string name="text_respectful">上</string>
     <string name="text_humble">下</string>
     <string name="text_other_forms">Other forms</string>

@@ -1,9 +1,5 @@
 package com.id11236662.gokeigo.model;
 
-import android.util.Log;
-
-import com.id11236662.gokeigo.util.Constants;
-import com.id11236662.gokeigo.util.TypeUtility;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Date;
@@ -95,15 +91,13 @@ public class EntryManager {
         entry.save();
     }
 
-    // TODO:Tempt
-    public void printDatesToConsole() {
-        for (Entry entry : getEntries()) {
-            Log.d(Constants.TAG, TypeUtility.getDate(entry.getLastAccessedDate()));
-        }
-    }
-
     public List<Entry> getPreviouslyAccessedEntries() {
         // TODO: display them in order.
+        for (Entry entry : getEntries()) {
+            // TODO: Check if datetime can be null
+            Date date = entry.getLastAccessedDate();
+        }
+
         return getEntries();
     }
 }

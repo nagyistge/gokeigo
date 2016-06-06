@@ -14,6 +14,7 @@ public class Japanese {
     @SerializedName("word")
     @Expose
     private String word;
+
     @SerializedName("reading")
     @Expose
     private String reading;

@@ -45,10 +45,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
-
-        // Lock the orientation to prevent losing search queries.
-
-//        ActivityConfigurator.lockOrientation(this);
     }
 
     @Override
@@ -79,8 +75,6 @@ public class MainActivity extends AppCompatActivity
 
         int id = item.getItemId();
         FragmentManager manager = getSupportFragmentManager();
-
-        // TODO: possibly refactor
 
         switch (id) {
             case R.id.nav_home:

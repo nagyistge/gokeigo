@@ -17,18 +17,19 @@ public class Sense {
     @SerializedName("english_definitions")
     @Expose
     private List<String> englishDefinitions = new ArrayList<String>();
+
     @SerializedName("parts_of_speech")
     @Expose
     private List<String> partsOfSpeech = new ArrayList<String>();
-    @SerializedName("links")
-    @Expose
-    private List<Link> links = new ArrayList<Link>();
+
     @SerializedName("tags")
     @Expose
     private List<String> tags = new ArrayList<String>();
+
     @SerializedName("see_also")
     @Expose
     private List<String> seeAlso = new ArrayList<String>();
+
     @SerializedName("info")
     @Expose
     private List<String> info = new ArrayList<String>();
@@ -47,14 +48,6 @@ public class Sense {
 
     public void setPartsOfSpeech(List<String> partsOfSpeech) {
         this.partsOfSpeech = partsOfSpeech;
-    }
-
-    public List<Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(List<Link> links) {
-        this.links = links;
     }
 
     public List<String> getTags() {

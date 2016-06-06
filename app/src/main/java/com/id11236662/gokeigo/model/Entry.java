@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Parcelable, persistent and concise version of the Data object (which contains Japanese, Link and Sense).
+ * Parcelable, persistent and concise version of the Data object (which contains elements of Japanese and Sense).
  * The implementation of parcelable makes the object be easily transportable through intents.
  */
 
@@ -152,10 +152,6 @@ public class Entry extends BaseModel implements Parcelable {
                 stringBuilder.append(lineSeparator);
             }
 
-            // TODO figure out how to get the links as hyperlinks in the textview with Android-TextView-LinkBuilder
-//            String link = TypeUtility.join(sense.getLinks()); // Link is an object...
-//            links.add(link);
-
             // Add comma to the list if it's not the last element.
 
             if (i < senseList.size() - 1) {
@@ -239,6 +235,10 @@ public class Entry extends BaseModel implements Parcelable {
 
     public void setIsStarred(boolean starred) {
         isStarred = starred;
+    }
+
+    public void switchIsStarredValue() {
+        isStarred = !isStarred;
     }
 
     public Date getLastAccessedDate() {

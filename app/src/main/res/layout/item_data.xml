@@ -86,7 +86,7 @@
         android:layout_marginEnd="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/general_margin"
-        android:text="@string/text_common"
+        android:text="@string/text_common_word"
         android:textColor="@color/common_status" />
 
 </RelativeLayout>

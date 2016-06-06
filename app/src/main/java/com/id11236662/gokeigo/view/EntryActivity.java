@@ -46,8 +46,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        bindEntryToViews();
-
         // Initialise fab field and set OnClickListener.
 
         mFab = (FloatingActionButton) findViewById(R.id.activity_entry_notes_fab);
@@ -60,7 +58,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         assert mStarImageSwitcher != null;
         mStarImageSwitcher.setOnClickListener(this);
 
-        // Add image views to the image switcher and set the animation.
+        // Add image views to the image switcher. Show unstarred first and starred second.
 
         Context context = getApplicationContext();
         ImageView unstarredImageView = new ImageView(getApplicationContext());
@@ -71,15 +69,16 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         starredImageView.setImageResource(R.drawable.ic_star_light_brown_48dp);
         mStarImageSwitcher.addView(starredImageView);
 
-        mStarImageSwitcher.setInAnimation(context, R.anim.star);
-        mStarImageSwitcher.setOutAnimation(context, R.anim.star);
-
         // Set OnClickListener on to text to speech image view, and check if TTS is installed.
 
         ImageView textToSpeechImageView = (ImageView) findViewById(R.id.activity_entry_text_to_speech_image_view);
         assert textToSpeechImageView != null;
         textToSpeechImageView.setOnClickListener(this);
         checkTts();
+
+        // After setting up the views, set values to these views.
+
+        bindEntryToViews();
     }
 
     /**
@@ -138,6 +137,12 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                 commonTextView.setVisibility(View.INVISIBLE);
             }
 
+            // Show starred if it's been starred, show the next image which is a starred image.
+
+            if (mEntry.getIsStarred()) {
+                mStarImageSwitcher.showNext();
+            }
+
             // Make the title of the activity be the selected entry's word and reading.
 
             setTitle(mEntry.getWordAndReading());
@@ -179,6 +184,10 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                 // Switch to the next image (unstarred or starred).
 
                 mStarImageSwitcher.showNext();
+
+                // "Switch on/off" the IsStarrred value.
+
+                mEntry.switchIsStarredValue();
                 break;
 
             case R.id.activity_entry_text_to_speech_image_view:
@@ -230,7 +239,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
             case CHECK_CODE:
 
                 // If positive, initialise the speaker field.
-                // If no TTTS is installed, redirect the user to install it.
+                // If no TTS is installed, redirect the user to install it.
 
                 if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                     mSpeaker = new Speaker(getApplicationContext());
@@ -245,8 +254,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
+        Log.d(Constants.TAG, "EntryActivity.onBackPressed - IsStarred: " + (mEntry.getIsStarred() ? "true" : "false"));
 
-        // Update mEntry object with the note and save it to the DB, before going back Home.
+        // Update mEntry object with the note and save the entry to the DB, before going back Home.
 
         String notes = mNotesTextView.getText().toString();
         mEntry.setNotes(notes);

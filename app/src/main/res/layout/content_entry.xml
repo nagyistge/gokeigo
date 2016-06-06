@@ -70,7 +70,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="@dimen/general_margin"
-                android:text="@string/text_common"
+                android:text="@string/text_common_word"
                 android:textColor="@color/common_status"
                 android:textIsSelectable="true" />
 
@@ -129,7 +129,7 @@
                 android:text="@string/text_notes"
                 android:textIsSelectable="true" />
 
-            <TextView
+            <com.klinker.android.link_builder.LinkConsumableTextView
                 android:id="@+id/activity_entry_notes_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -48,5 +48,9 @@ dependencies {
     // Annotations
 
     compile 'org.glassfish:javax.annotation:10.0-b28'
+
+    // Android-TextView-LinkBuilder
+
+    compile 'com.klinkerapps:link_builder:1.3.2'
 }
 

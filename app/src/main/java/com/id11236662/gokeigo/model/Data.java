@@ -19,9 +19,11 @@ public class Data {
     @SerializedName("is_common")
     @Expose
     private boolean isCommon;
+
     @SerializedName("japanese")
     @Expose
     private List<Japanese> japanese = new ArrayList<Japanese>();
+
     @SerializedName("senses")
     @Expose
     private List<Sense> senses = new ArrayList<Sense>();
