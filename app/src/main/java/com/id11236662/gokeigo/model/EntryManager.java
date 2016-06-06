@@ -42,7 +42,7 @@ public class EntryManager {
 
     /**
      * @param entry that could be in the list and/or DB already.
-     * @return previously saved entry or the same entry that was passed.
+     * @return saved entry.
      */
 
     public Entry getPreviouslySavedEntryIfAvailableElseReturnPassedEntry(Entry entry) {
@@ -63,19 +63,37 @@ public class EntryManager {
         Date currentDate = new Date();
         entry.setLastAccessedDate(currentDate);
 
-        if (previouslySavedEntry == null) {
+        if (previouslySavedEntry != null) {
 
-            // Save entry to history for the first time and return it.
+            // Update entry's notes and starred state with information from previously saved entry.
+            // Reasons:
+            // - If the jisho.org API has updated the blurb-related attributes of the entry
+            //   since it's been last saved; we want to save the latest information.
+            // - If we add another column to Entry, this is our chance populate the new column
+            //   on previously saved entries.
 
-            insertEntry(entry);
-            return entry;
-        } else {
+            entry.setIsStarred(previouslySavedEntry.getIsStarred());
+            entry.setNotes(previouslySavedEntry.getNotes());
 
-            // Update previously saved entry and return it.
-
-            saveEntry(previouslySavedEntry);
-            return previouslySavedEntry;
+            // Delete the old entry.
+            previouslySavedEntry.delete();
         }
+
+        // Replace saved entry with new entry.
+
+        replaceEntry(previouslySavedEntry, entry);
+
+        return entry;
+    }
+
+    private void replaceEntry(Entry oldEntry, Entry newEntry) {
+
+        // Remove entry from the list and the DB.
+        getEntries().remove(oldEntry);
+        oldEntry.delete();
+        oldEntry.save();
+
+        insertEntry(newEntry);
     }
 
     private void insertEntry(Entry entry) {

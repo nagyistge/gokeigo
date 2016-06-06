@@ -109,6 +109,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/item_entry_common_status_text_view"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/general_margin"
         android:src="@drawable/ic_star_border_light_brown_48dp" />
 
@@ -119,6 +121,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@id/item_entry_common_status_text_view"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/general_margin"
         android:src="@drawable/ic_star_light_brown_48dp"
         android:visibility="gone" />

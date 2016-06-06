@@ -229,7 +229,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
             mWordTextView.setText(entry.getWord());
             mReadingTextView.setText(entry.getReading());
-            mDefinitionTextView.setText(entry.getBlurb());
+            mDefinitionTextView.setText(entry.getDefinition());
 
             // Show common text view if is common, hide if not common.
 

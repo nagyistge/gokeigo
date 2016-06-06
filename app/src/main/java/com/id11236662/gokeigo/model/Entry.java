@@ -33,6 +33,7 @@ public class Entry extends BaseModel implements Parcelable {
     private Date lastAccessedDate;
     private boolean isHumble;
     private boolean isRespectful;
+    private String definition;
 
     public Entry() {
 
@@ -65,6 +66,7 @@ public class Entry extends BaseModel implements Parcelable {
         otherForms = source.readString();
         isRespectful = TypeUtility.getBooleanFromInt(source.readInt());
         isHumble = TypeUtility.getBooleanFromInt(source.readInt());
+        definition = source.readString();
     }
 
     /**
@@ -89,6 +91,7 @@ public class Entry extends BaseModel implements Parcelable {
         dest.writeString(otherForms);
         dest.writeInt(TypeUtility.getIntFromBoolean(isRespectful));
         dest.writeInt(TypeUtility.getIntFromBoolean(isHumble));
+        dest.writeString(definition);
     }
 
     /**
@@ -162,6 +165,7 @@ public class Entry extends BaseModel implements Parcelable {
         entry.setOtherForms(data.getOtherForms());
         entry.setIsRespectful(data.getIsRespectful());
         entry.setIsHumble(data.getIsHumble());
+        entry.setDefinition(data.getDefinition());
         return entry;
     }
 
@@ -263,5 +267,13 @@ public class Entry extends BaseModel implements Parcelable {
 
     public void setIsHumble(boolean humble) {
         isHumble = humble;
+    }
+
+    public String getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(String definition) {
+        this.definition = definition;
     }
 }

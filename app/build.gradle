@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+
+// Use the apt plugin to enable Annotation Processing for DBFlow to work
+
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {

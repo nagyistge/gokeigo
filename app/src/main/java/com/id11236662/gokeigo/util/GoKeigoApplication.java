@@ -1,6 +1,7 @@
 package com.id11236662.gokeigo.util;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -20,5 +21,7 @@ public class GoKeigoApplication extends Application {
 
         FlowManager.init(new FlowConfig.Builder(this)
                 .openDatabasesOnInit(true).build());
+
+        Log.d(Constants.TAG, "DB Version: " + FlowManager.getWritableDatabase(GoKeigoDatabase.class).getVersion());
     }
 }

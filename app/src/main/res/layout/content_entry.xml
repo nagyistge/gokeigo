@@ -130,7 +130,7 @@
                 android:textIsSelectable="true" />
 
             <com.klinker.android.link_builder.LinkConsumableTextView
-                android:id="@+id/activity_entry_notes_text_view"
+                android:id="@+id/activity_entry_notes_link_consumable_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/activity_entry_notes_label_text_view"
