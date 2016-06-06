@@ -3,8 +3,10 @@ package com.id11236662.gokeigo.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.GoKeigoDatabase;
 import com.id11236662.gokeigo.util.TypeUtility;
+import com.raizlabs.android.dbflow.StringUtils;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -241,6 +243,10 @@ public class Entry extends BaseModel implements Parcelable {
         isStarred = starred;
     }
 
+    /**
+     * Switch the Starred state. If it's true, make it false. If false, make it true.
+     */
+
     public void switchIsStarredState() {
         isStarred = !isStarred;
     }
@@ -273,7 +279,25 @@ public class Entry extends BaseModel implements Parcelable {
         return definition;
     }
 
+    /**
+     * If Definition is empty, possible because this column was added later on, return the blurb.
+     *
+     * @return definition, if available, or blurb.
+     */
+
+    public String getDefinitionToShow() {
+        if (StringUtils.isNotNullOrEmpty(definition)) {
+            return definition;
+        }
+
+        return getBlurb();
+    }
+
     public void setDefinition(String definition) {
         this.definition = definition;
+    }
+
+    public String getUriToExampleSentences() {
+        return Constants.URL_BASE_EXAMPLE_SENTENCES + getWord();
     }
 }

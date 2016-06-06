@@ -12,4 +12,5 @@ public class Constants {
     public static final String ENTRY_TAG_RESPECTFUL = "Honorific or respectful (sonkeigo)";
     public static final String KEYWORD_PREFIX_RESPECTFUL = "#hon ";
     public static final String KEYWORD_PREFIX_HUMBLE = "#hum ";
+    public static final String URL_BASE_EXAMPLE_SENTENCES = "http://jisho.org/word/";
 }

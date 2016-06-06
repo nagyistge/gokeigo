@@ -75,28 +75,28 @@ public class EntryManager {
             entry.setIsStarred(previouslySavedEntry.getIsStarred());
             entry.setNotes(previouslySavedEntry.getNotes());
 
-            // Delete the old entry.
-            previouslySavedEntry.delete();
+            // Replace saved entry with new entry.
+
+            replaceAndSaveEntry(previouslySavedEntry, entry);
+        } else {
+
+            // Insert the new entry for the first time.
+            insertAndSaveEntry(entry);
         }
-
-        // Replace saved entry with new entry.
-
-        replaceEntry(previouslySavedEntry, entry);
 
         return entry;
     }
 
-    private void replaceEntry(Entry oldEntry, Entry newEntry) {
+    private void replaceAndSaveEntry(Entry oldEntry, Entry newEntry) {
 
         // Remove entry from the list and the DB.
         getEntries().remove(oldEntry);
         oldEntry.delete();
-        oldEntry.save();
 
-        insertEntry(newEntry);
+        insertAndSaveEntry(newEntry);
     }
 
-    private void insertEntry(Entry entry) {
+    private void insertAndSaveEntry(Entry entry) {
 
         // Add entry to the list, and then the DB.
 

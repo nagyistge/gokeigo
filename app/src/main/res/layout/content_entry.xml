@@ -33,7 +33,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/general_margin"
-                    android:text="言葉"
                     android:textIsSelectable="true"
                     android:textSize="17sp"
                     android:textStyle="bold" />
@@ -44,7 +43,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/activity_entry_word_text_view"
                     android:layout_marginTop="@dimen/general_margin"
-                    android:text="ことば"
                     android:textColor="@color/secondary_text"
                     android:textIsSelectable="true"
                     android:textSize="12sp" />
@@ -98,15 +96,22 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/activity_entry_blurb_label_text_view"
                 android:layout_marginTop="@dimen/general_margin"
-                android:text="noun\n1. word"
                 android:textColor="@color/secondary_text"
                 android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/activity_entry_example_sentences_uri_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_entry_blurb_text_view"
+                android:layout_marginTop="@dimen/general_2x_margin"
+                android:text="@string/text_example_sentences" />
 
             <TextView
                 android:id="@+id/activity_entry_other_forms_label_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/activity_entry_blurb_text_view"
+                android:layout_below="@id/activity_entry_example_sentences_uri_text_view"
                 android:layout_marginTop="@dimen/general_2x_margin"
                 android:text="@string/text_other_forms"
                 android:textIsSelectable="true" />
@@ -129,18 +134,19 @@
                 android:text="@string/text_notes"
                 android:textIsSelectable="true" />
 
-            <com.klinker.android.link_builder.LinkConsumableTextView
-                android:id="@+id/activity_entry_notes_link_consumable_text_view"
+            <TextView
+                android:id="@+id/activity_entry_notes_text_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/activity_entry_notes_label_text_view"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_marginTop="@dimen/general_margin"
+                android:autoLink="web"
                 android:background="@color/primary_light"
                 android:clickable="true"
-                android:hint="@string/tap_to_add_note"
-                android:maxLines="5"
+                android:hint="@string/hint_tap_to_add_a_note"
                 android:padding="@dimen/general_margin"
-                android:scrollbars="vertical"
+                android:textColorLink="@color/primary_text"
                 android:textSize="@dimen/edit_notes_text_size" />
 
         </RelativeLayout>

@@ -3,7 +3,6 @@ package com.id11236662.gokeigo.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,8 +218,6 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
         public void bind(Entry entry) {
 
-            Log.d(Constants.TAG, "EntryViewHolder.bind");
-
             // Save the entry.
 
             mEntry = entry;
@@ -229,7 +226,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
             mWordTextView.setText(entry.getWord());
             mReadingTextView.setText(entry.getReading());
-            mDefinitionTextView.setText(entry.getDefinition());
+            mDefinitionTextView.setText(entry.getDefinitionToShow());
 
             // Show common text view if is common, hide if not common.
 

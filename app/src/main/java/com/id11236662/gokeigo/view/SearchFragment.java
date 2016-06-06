@@ -50,6 +50,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     private RelativeLayout mSearchViewRelativeLayout;
     private SearchView mSearchView;
     private MenuItem mSearchViewActionMenuItem;
+    private SearchView mSearchViewAction;
     private CheckBox mIncludeRespectfulCheckbox;
     private CheckBox mIncludeHumbleCheckbox;
     private RelativeLayout mSearchResultsRelativeLayout;
@@ -151,17 +152,17 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Set OnClick listener on search view.
 
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchViewActionMenuItem);
-        searchView.setOnQueryTextListener(this);
+        mSearchViewAction = (SearchView) MenuItemCompat.getActionView(mSearchViewActionMenuItem);
+        mSearchViewAction.setOnQueryTextListener(this);
 
         // Enable a submit button on the search view.
 
-        searchView.setSubmitButtonEnabled(true);
+        mSearchViewAction.setSubmitButtonEnabled(true);
 
         // Set an arbitrary high number for the width of the search view so it expands properly on tablets.
         // Source: http://stackoverflow.com/a/34050959/1007496
 
-        searchView.setMaxWidth(Integer.MAX_VALUE);
+        mSearchViewAction.setMaxWidth(Integer.MAX_VALUE);
     }
 
     /**
@@ -208,6 +209,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     /**
      * Called when the query text is submitted by the user.
      * Call the API to search up possible entries with the query text.
+     * Save all submitted queries.
      *
      * @param query the new content of the query text field.
      * @return always true as the action is handled and overrides the default action.
@@ -215,14 +217,23 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+
         Activity activity = getActivity();
+
         if (isDeviceOnline(activity)) {
+
+            // If the device is connected to the Internet, search with the keigo level filters considered.
+
             boolean includeRespectful = mIncludeRespectfulCheckbox.isChecked();
             boolean includeHumble = mIncludeHumbleCheckbox.isChecked();
             new SearchJishoAsyncTask(includeRespectful, includeHumble, query).execute();
         } else {
+
+            // If the device is offline, notify the user.
+
             Toast.makeText(activity, R.string.message_no_network_available, Toast.LENGTH_SHORT).show();
         }
+
         return true;
     }
 
@@ -347,18 +358,18 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 mProgressDialog.dismiss();
             }
 
-            setVisibleSearchResults(true);
-
             if (data != null) {
 
                 // Show the data in the list.
 
                 mAdapter.animateTo(data);
 
+                setVisibleSearchResults(true);
+
                 // Show how many data were found.
 
                 int number = data.size();
-                Locale currentLocale = getResources().getConfiguration().locale; // TODO: get from settings.
+                Locale currentLocale = getResources().getConfiguration().locale;
                 String results = String.format(currentLocale, getString(R.string.message_entries_found_for), mQuery) +
                         ": " + String.format(currentLocale, getString(R.string.message_number_of_entries), number);
                 mResultsTextView.setText(results);
