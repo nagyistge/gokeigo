@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +21,12 @@ import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.Speaker;
+import com.klinker.android.link_builder.Link;
+import com.klinker.android.link_builder.LinkBuilder;
 import com.raizlabs.android.dbflow.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,10 +64,11 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         assert mStarImageSwitcher != null;
         mStarImageSwitcher.setOnClickListener(this);
 
-        // Add image views to the image switcher. Show unstarred first and starred second.
+        // Add image views to the image switcher.
+        // Show unstarred first and starred second.
 
         Context context = getApplicationContext();
-        ImageView unstarredImageView = new ImageView(getApplicationContext());
+        ImageView unstarredImageView = new ImageView(context);
         unstarredImageView.setImageResource(R.drawable.ic_star_border_light_brown_48dp);
         mStarImageSwitcher.addView(unstarredImageView);
 
@@ -143,10 +150,47 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
                 mStarImageSwitcher.showNext();
             }
 
+            // Highlight any 'respectful' and 'humble' tagged text and italicise them.
+
+            LinkBuilder.on(blurbTextView)
+                    .addLinks(getKeigoTagsAsText())
+                    .build();
+
             // Make the title of the activity be the selected entry's word and reading.
 
             setTitle(mEntry.getWordAndReading());
         }
+    }
+
+    private List<Link> getKeigoTagsAsText() {
+        List<Link> links = new ArrayList<>();
+
+        // For every match to the value of ENTRY_TAG_RESPECTFUL, make it be in the primary text color
+        // and not underlined as it's underlined by default.
+
+        Link respectfulTagAsText = new Link(Constants.ENTRY_TAG_RESPECTFUL);
+        respectfulTagAsText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.respectful_level));
+        respectfulTagAsText.setUnderlined(false);
+
+        // For every match to the value of ENTRY_TAG_HUMBLE, make it be in the primary text color
+        // and not underlined as it's underlined by default.
+
+        Link humbleTagAsText = new Link(Constants.ENTRY_TAG_HUMBLE);
+        humbleTagAsText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.humble_level));
+        humbleTagAsText.setUnderlined(false);
+
+        // Add the match patterns to the list.
+
+        links.add(respectfulTagAsText);
+        links.add(humbleTagAsText);
+
+        return links;
+    }
+
+    private List<Link> getFoundHyperlinks() {
+        List<Link> links = new ArrayList<>();
+        // TODO
+        return links;
     }
 
     /**
@@ -185,9 +229,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
                 mStarImageSwitcher.showNext();
 
-                // "Switch on/off" the IsStarrred value.
+                // "Switch on/off" the IsStarrred state.
 
-                mEntry.switchIsStarredValue();
+                mEntry.switchIsStarredState();
                 break;
 
             case R.id.activity_entry_text_to_speech_image_view:
@@ -260,7 +304,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
         String notes = mNotesTextView.getText().toString();
         mEntry.setNotes(notes);
-        mEntryManager.updateEntry(mEntry);
+        mEntryManager.saveEntry(mEntry);
 
         super.onBackPressed();
     }

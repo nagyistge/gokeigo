@@ -237,7 +237,7 @@ public class Entry extends BaseModel implements Parcelable {
         isStarred = starred;
     }
 
-    public void switchIsStarredValue() {
+    public void switchIsStarredState() {
         isStarred = !isStarred;
     }
 

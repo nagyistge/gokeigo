@@ -7,12 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.EntryManager;
+import com.id11236662.gokeigo.util.Constants;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +46,10 @@ public class HistoryFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_history_recycler_view);
 
+        // Add ItemDecoration to recycler view. // TODO: Move the DividerItemDecoration elsewhere if reused a lot.
+
+        mRecyclerView.addItemDecoration(new DataAdapter.DividerItemDecoration(getActivity()));
+
         return view;
     }
 
@@ -62,5 +68,11 @@ public class HistoryFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
         mAdapter = new EntryAdapter(mEntryManager.getPreviouslyAccessedEntries(), R.layout.item_entry);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(Constants.TAG, "HistoryFragment.onResume");
+        super.onResume();
     }
 }

@@ -37,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/general_margin"
                 android:layout_marginRight="@dimen/general_margin"
-                android:text="@string/text_respectful" />
+                android:text="@string/text_respectful"
+                android:textColor="@color/respectful_level" />
 
             <TextView
                 android:id="@+id/item_data_humble_level_text_view"
@@ -45,7 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/item_data_respectful_level_text_view"
                 android:layout_toRightOf="@id/item_data_respectful_level_text_view"
-                android:text="@string/text_humble" />
+                android:text="@string/text_humble"
+                android:textColor="@color/humble_level" />
 
         </RelativeLayout>
 

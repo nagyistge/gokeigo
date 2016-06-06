@@ -44,6 +44,7 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/text_include_respectful"
+                android:textColor="@color/respectful_level"
                 android:textSize="@dimen/search_checkbox_text_size" />
 
             <CheckBox
@@ -53,6 +54,7 @@
                 android:layout_marginTop="@dimen/search_margin"
                 android:checked="true"
                 android:text="@string/text_include_humble"
+                android:textColor="@color/humble_level"
                 android:textSize="@dimen/search_checkbox_text_size" />
 
             <Button

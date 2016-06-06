@@ -73,7 +73,7 @@ public class EntryManager {
 
             // Update previously saved entry and return it.
 
-            updateEntry(previouslySavedEntry);
+            saveEntry(previouslySavedEntry);
             return previouslySavedEntry;
         }
     }
@@ -87,7 +87,7 @@ public class EntryManager {
         entry.save();
     }
 
-    public void updateEntry(Entry entry) {
+    public void saveEntry(Entry entry) {
         entry.save();
     }
 

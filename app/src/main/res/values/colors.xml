@@ -9,4 +9,6 @@
     <color name="secondary_text">#727272</color>
     <color name="text_or_icons">#FFFFFF</color>
     <color name="common_status">#086e08</color>
+    <color name="respectful_level">#1a237e</color>
+    <color name="humble_level">#b71c1c</color>
 </resources>

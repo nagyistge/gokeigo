@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:id="@+id/item_entry_left_top_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
@@ -37,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/general_margin"
                 android:layout_marginRight="@dimen/general_margin"
-                android:text="@string/text_respectful" />
+                android:text="@string/text_respectful"
+                android:textColor="@color/respectful_level" />
 
             <TextView
                 android:id="@+id/item_entry_humble_level_text_view"
@@ -45,7 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@id/item_entry_respectful_level_text_view"
                 android:layout_toRightOf="@id/item_entry_respectful_level_text_view"
-                android:text="@string/text_humble" />
+                android:text="@string/text_humble"
+                android:textColor="@color/humble_level" />
 
         </RelativeLayout>
 
@@ -66,7 +68,7 @@
 
     <TextView
         android:id="@+id/item_entry_definition_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_entry_left_top_layout"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
@@ -99,5 +101,14 @@
         android:layout_marginTop="@dimen/general_margin"
         android:text="@string/text_common_word"
         android:textColor="@color/common_status" />
+
+    <ImageSwitcher
+        android:id="@+id/item_entry_star_image_switcher"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/item_entry_common_status_text_view"
+        android:layout_marginTop="@dimen/general_margin" />
 
 </RelativeLayout>

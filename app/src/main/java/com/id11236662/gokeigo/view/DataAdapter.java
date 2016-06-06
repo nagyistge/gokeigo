@@ -142,7 +142,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
      * @param position index in the list
      */
 
-    public void removeItem(int position) {
+    private void removeItem(int position) {
         mData.remove(position);
         notifyItemRemoved(position);
     }
@@ -154,7 +154,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
      * @param position index in the list
      */
 
-    public void addItem(int position, Data data) {
+    private void addItem(int position, Data data) {
         mData.add(position, data);
         notifyItemInserted(position);
     }
@@ -167,7 +167,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
      * @param toPosition   new index in the list
      */
 
-    public void moveItem(int fromPosition, int toPosition) {
+    private void moveItem(int fromPosition, int toPosition) {
         final Data data = mData.remove(fromPosition);
         mData.add(toPosition, data);
         notifyItemMoved(fromPosition, toPosition);

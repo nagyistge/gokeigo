@@ -7,11 +7,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageSwitcher;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.Entry;
+import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
 
 import java.util.List;
@@ -69,6 +72,107 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     }
 
     /**
+     * Removes, adds and moves around Views so they correspond to the objects in the list.
+     * The order is important to keep track of indexes.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param filteredEntry list of objects that have already been filtered
+     */
+
+    public void animateTo(List<Entry> filteredEntry) {
+        applyAndAnimateRemovals(filteredEntry);
+        applyAndAnimateAdditions(filteredEntry);
+        applyAndAnimateMovedItems(filteredEntry);
+    }
+
+    /**
+     * Removes the View if its object IS NOT in the filtered list.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param filteredEntry list of objects that have already been filtered
+     */
+
+    private void applyAndAnimateRemovals(List<Entry> filteredEntry) {
+        for (int i = mEntries.size() - 1; i >= 0; i--) {
+            final Entry data = mEntries.get(i);
+            if (!filteredEntry.contains(data)) {
+                removeItem(i);
+            }
+        }
+    }
+
+    /**
+     * Adds the View if its object IS in the filtered list.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param filteredEntry list of objects that have already been filtered
+     */
+
+    private void applyAndAnimateAdditions(List<Entry> filteredEntry) {
+        for (int i = 0, count = filteredEntry.size(); i < count; i++) {
+            final Entry data = filteredEntry.get(i);
+            if (!mEntries.contains(data)) {
+                addItem(i, data);
+            }
+        }
+    }
+
+    /**
+     * Reorders the Views so they correspond with the originally ordered objects.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param filteredEntry list of objects that have already been filtered
+     */
+
+    private void applyAndAnimateMovedItems(List<Entry> filteredEntry) {
+        for (int toPosition = filteredEntry.size() - 1; toPosition >= 0; toPosition--) {
+            final Entry data = filteredEntry.get(toPosition);
+            final int fromPosition = mEntries.indexOf(data);
+            if (fromPosition >= 0 && fromPosition != toPosition) {
+                moveItem(fromPosition, toPosition);
+            }
+        }
+    }
+
+    /**
+     * Removes the item from the list and notifies the Recycler View.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param position index in the list
+     */
+
+    private void removeItem(int position) {
+        mEntries.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    /**
+     * Adds the item from the list and notifies the Recycler View.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param position index in the list
+     */
+
+    private void addItem(int position, Entry data) {
+        mEntries.add(position, data);
+        notifyItemInserted(position);
+    }
+
+    /**
+     * Reorders the item in the list.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param fromPosition old index in the list
+     * @param toPosition   new index in the list
+     */
+
+    private void moveItem(int fromPosition, int toPosition) {
+        final Entry data = mEntries.remove(fromPosition);
+        mEntries.add(toPosition, data);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    /**
      * This ViewHolder sets the GUI elements of a row with the values of the Entry-type object.
      * Ensure it is static to avoid memory problems if more than one EntryViewHolder is created.
      */
@@ -80,6 +184,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         private final TextView mCommonStatusTextView;
         private final TextView mRespectfulLevelTextView;
         private final TextView mHumbleLevelTextView;
+        private final ImageSwitcher mStarImageSwitcher;
         private Entry mEntry = null;
 
         public EntryViewHolder(final View itemView) {
@@ -94,6 +199,43 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             mRespectfulLevelTextView = (TextView) itemView.findViewById(R.id.item_entry_respectful_level_text_view);
             mHumbleLevelTextView = (TextView) itemView.findViewById(R.id.item_entry_humble_level_text_view);
 
+            // Initialise the image switcher field and set OnClickListener.
+
+            mStarImageSwitcher = (ImageSwitcher) itemView.findViewById(R.id.item_entry_star_image_switcher);
+            assert mStarImageSwitcher != null;
+            mStarImageSwitcher.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (mEntry != null) {
+
+                        // Switch to the next image (unstarred or starred).
+
+                        mStarImageSwitcher.showNext();
+
+                        // "Switch on/off" the IsStarrred state.
+
+                        mEntry.switchIsStarredState();
+
+                        // Save the changed state.
+
+                        EntryManager.getInstance().saveEntry(mEntry);
+                    }
+                }
+            });
+
+            // Add image views to the image switcher.
+            // Show unstarred first and starred second.
+
+            Context context = itemView.getContext();
+            ImageView unstarredImageView = new ImageView(context);
+            unstarredImageView.setImageResource(R.drawable.ic_star_border_light_brown_48dp);
+            mStarImageSwitcher.addView(unstarredImageView);
+
+            ImageView starredImageView = new ImageView(context);
+            starredImageView.setImageResource(R.drawable.ic_star_light_brown_48dp);
+            mStarImageSwitcher.addView(starredImageView);
+
             // Set listener to the row.
 
             RelativeLayout row = (RelativeLayout) itemView.findViewById(R.id.item_entry);
@@ -101,6 +243,10 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
                 @Override
                 public void onClick(View v) {
                     if (mEntry != null) {
+
+                        // Start the EntryActivity with an intent that contains the selected Entry row
+                        // as a parcelable Entry.
+
                         Context context = itemView.getContext();
                         Intent intent = new Intent(context, EntryActivity.class);
                         intent.putExtra(Constants.INTENT_SELECTED_ENTRY, mEntry);
@@ -117,6 +263,8 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
          */
 
         public void bind(Entry entry) {
+
+            Log.d(Constants.TAG, "EntryViewHolder.onBind");
 
             // Save the entry.
 
@@ -150,6 +298,13 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
                 mHumbleLevelTextView.setVisibility(View.VISIBLE);
             } else {
                 mHumbleLevelTextView.setVisibility(View.GONE);
+            }
+
+            // Show starred if it's been starred, show the next image which is a starred image.
+
+            if (mEntry.getIsStarred()) {
+                Log.d(Constants.TAG, "EntryViewHolder.onBind - word: " + mEntry.getWord() + " - showNext()");
+                mStarImageSwitcher.showNext();
             }
         }
     }
