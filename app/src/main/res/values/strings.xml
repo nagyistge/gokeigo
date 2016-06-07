@@ -46,6 +46,8 @@
     <string name="text_other_forms">Other forms</string>
     <string name="text_definition">Definition</string>
     <string name="text_notes">Notes</string>
-    <string name="text_go">GO</string>
+    <string name="text_go" translatable="false">GO</string>
     <string name="text_example_sentences">Example sentences</string>
+    <string name="content_description_unstarred_image_view">Unstarred</string>
+    <string name="content_description_starred_image_view">Starred</string>
 </resources>

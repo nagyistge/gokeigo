@@ -3,4 +3,23 @@
     <string name="app_name">ご敬語</string>
     <string name="message_entries_found_for">「%s」の該当件数</string> <!-- TODO: translate this later-->
     <string name="message_number_of_entries">%d件</string>
+    <string name="action_share"></string>
+    <string name="app_icon">アプリのアイコン</string>
+    <string name="action_search">検索</string>
+    <string name="text_home">ご敬語をお調べになる</string>
+    <string name="text_include_humble">謙譲語（下）</string>
+    <string name="text_include_respectful">尊敬語（上）</string>
+    <string name="text_notes">ノート</string>
+    <string name="text_other_forms"></string>
+    <string name="title_activity_entry">エントリー</string>
+    <string name="title_activity_notes_for">「%s」のノート</string>
+    <string name="title_notes">ノートリスト</string>
+    <string name="text_humble">下</string>
+    <string name="text_respectful">上</string>
+    <string name="text_common_word">常用語</string>
+    <string name="text_example_sentences"></string>
+    <string name="title_search_results">検索結果</string>
+    <string name="title_starred"></string>
+    <string name="message_searching">検査している</string>
+    <string name="pref_language">言語</string>
 </resources>

@@ -233,7 +233,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             if (entry.getIsCommon()) {
                 mCommonStatusTextView.setVisibility(View.VISIBLE);
             } else {
-                mCommonStatusTextView.setVisibility(View.GONE);
+                mCommonStatusTextView.setVisibility(View.INVISIBLE);
             }
 
             // Show the appropriate text view depending on the keigo level.

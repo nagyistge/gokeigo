@@ -235,12 +235,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
             mReadingTextView.setText(data.getReading());
             mDefinitionTextView.setText(data.getDefinition());
 
-            // Show common text view if is common, hide if not common.
+            // Show common text view if is common, hide  if not common.
 
             if (data.getIsCommon()) {
                 mCommonStatusTextView.setVisibility(View.VISIBLE);
             } else {
-                mCommonStatusTextView.setVisibility(View.GONE);
+                mCommonStatusTextView.setVisibility(View.INVISIBLE);
             }
 
             // Show the appropriate text view depending on the keigo level.
