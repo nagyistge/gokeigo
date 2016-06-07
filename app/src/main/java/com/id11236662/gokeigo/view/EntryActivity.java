@@ -2,14 +2,19 @@ package com.id11236662.gokeigo.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,13 +33,14 @@ import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EntryManager mEntryManager = EntryManager.getInstance();
-    private Entry mEntry;
     private static final int SAVE_ENTRY_NOTE = 1;
     private static final int CHECK_CODE = 2;
+    private EntryManager mEntryManager = EntryManager.getInstance();
+    private Entry mEntry;
     private FloatingActionButton mFab;
     private TextView mNotesTextView;
     private ImageSwitcher mStarImageSwitcher;
@@ -87,6 +93,34 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         // After setting up the views, set values to these views.
 
         bindEntryToViews();
+
+        // Change the language to Japanese if the setting is set so.
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        if (sharedPreferences.getBoolean(Constants.PREF_KEY_USE_JAPANESE, false)) {
+            // Source: http://stackoverflow.com/a/12954037/1007496
+
+            Resources resources = getResources();
+            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+//            Configuration configuration = resources.getConfiguration();
+//            configuration.locale = Locale.JAPANESE;
+//            resources.updateConfiguration(configuration, displayMetrics);
+//            Intent refresh = new Intent(this, EntryActivity.class);
+//            finish();
+//            startActivity(refresh);
+
+            String lang = Locale.JAPANESE.getDisplayLanguage();
+            Resources res = getResources();
+            DisplayMetrics dm = res.getDisplayMetrics();
+            Configuration conf = res.getConfiguration();
+            if (!conf.locale.getLanguage().equals(lang)) {
+                conf.locale = new Locale(lang);
+                res.updateConfiguration(conf, dm);
+                Intent refresh = new Intent(this, EntryActivity.class);
+                startActivity(refresh);
+                finish();
+            }
+        }
     }
 
     /**
@@ -366,7 +400,10 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
         // Destroy the TTS service too.
 
-        mSpeaker.destroy();
+        if (mSpeaker != null) {
+            mSpeaker.destroy();
+        }
+
         super.onDestroy();
     }
 }

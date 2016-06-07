@@ -5,10 +5,9 @@
         android:title="@string/pref_language">
 
         <SwitchPreference
-            android:defaultValue="true"
-            android:key="pref_key_language_interface"
-            android:summary="@string/pref_summary_language_interface"
-            android:title="@string/pref_title_language_interface" />
+            android:defaultValue="false"
+            android:key="pref_key_use_japanese"
+            android:title="@string/pref_title_use_japanese" />
 
     </PreferenceCategory>
     <PreferenceCategory
@@ -16,8 +15,8 @@
         android:title="@string/pref_history">
 
         <Preference
-            android:key="pref_key_history_clear"
-            android:title="@string/pref_title_history_clear" />
+            android:key="pref_key_clear_history"
+            android:title="@string/pref_title_clear_history" />
 
     </PreferenceCategory>
 </PreferenceScreen>

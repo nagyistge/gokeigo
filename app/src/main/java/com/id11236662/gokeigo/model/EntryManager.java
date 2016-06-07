@@ -1,9 +1,18 @@
 package com.id11236662.gokeigo.model;
 
+import android.util.Log;
+
+import com.id11236662.gokeigo.util.Constants;
+import com.id11236662.gokeigo.util.JishoClient;
+import com.id11236662.gokeigo.util.JishoService;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
 
 /**
  * This singleton class manages CRUD operations in relation to Entries
@@ -27,10 +36,10 @@ public class EntryManager {
     }
 
     /**
-     * @return a list of Words from the DB via lazy loading
+     * @return a list of saved Entries from the DB via lazy loading
      */
 
-    private List<Entry> getEntries() {
+    private List<Entry> getSavedEntries() {
         if (mEntries == null) {
 
             // TODO: Make the transaction be Async
@@ -38,6 +47,57 @@ public class EntryManager {
             mEntries = SQLite.select().from(Entry.class).queryList();
         }
         return mEntries;
+    }
+
+    /**
+     * Call the API for a list of entries by supplying a keyword for the URI query and keigo level filters.
+     * Execute search process.
+     *
+     * @param includeRespectful if true, include respectful-related entries. If false, exclude respectful-related entries.
+     * @param includeHumble if true, include humble-related entries. If false, exclude humble-related entries.
+     * @param query the search keyword.
+     * @return list of data retrieved from the Jisho web service. If null, there's been an exception.
+     */
+
+    public List<Data> searchData(boolean includeRespectful, boolean includeHumble, String query) {
+        // If none of the options is checked, don't bother searching and return 0 results.
+
+        List<Data> results = new ArrayList<>();
+
+        // Create client to access jisho's web service.
+
+        JishoService jishoService = JishoClient.getClient().create(JishoService.class);
+
+        // If "Include Respectful" option has been checked, grab respectful-related entries.
+
+        if (includeRespectful) {
+            Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_RESPECTFUL + query);
+            try {
+                results.addAll(call.execute().body().getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        // If "Include Humble" option has been checked, grab humble-related entries.
+
+        if (includeHumble) {
+            Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_HUMBLE + query);
+            try {
+                results.addAll(call.execute().body().getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        Log.d(Constants.TAG, "EntryManager.searchData.size(): " + results.size());
+        return results;
+    }
+
+    public void clearHistory() {
+        // TODO: clear history
     }
 
     /**
@@ -51,7 +111,7 @@ public class EntryManager {
 
         // Entries are unique with their word and reading combination. That is their ID. JSON data provides no unique key.
 
-        for (Entry savedEntry : getEntries()) {
+        for (Entry savedEntry : getSavedEntries()) {
             if (savedEntry.getWord().equals(entry.getWord()) && savedEntry.getReading().equals(entry.getReading())) {
                 previouslySavedEntry = savedEntry;
                 break;
@@ -90,7 +150,7 @@ public class EntryManager {
     private void replaceAndSaveEntry(Entry oldEntry, Entry newEntry) {
 
         // Remove entry from the list and the DB.
-        getEntries().remove(oldEntry);
+        getSavedEntries().remove(oldEntry);
         oldEntry.delete();
 
         insertAndSaveEntry(newEntry);
@@ -100,7 +160,7 @@ public class EntryManager {
 
         // Add entry to the list, and then the DB.
 
-        getEntries().add(entry);
+        getSavedEntries().add(entry);
         entry.insert();
         entry.save();
     }
@@ -111,11 +171,11 @@ public class EntryManager {
 
     public List<Entry> getPreviouslyAccessedEntries() {
         // TODO: display them in order.
-        for (Entry entry : getEntries()) {
+        for (Entry entry : getSavedEntries()) {
             // TODO: Check if datetime can be null
             Date date = entry.getLastAccessedDate();
         }
 
-        return getEntries();
+        return getSavedEntries();
     }
 }

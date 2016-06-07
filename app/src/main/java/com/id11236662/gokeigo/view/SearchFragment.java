@@ -14,6 +14,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,17 +29,12 @@ import android.widget.Toast;
 
 import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.Data;
-import com.id11236662.gokeigo.model.DataResponse;
+import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
-import com.id11236662.gokeigo.util.JishoClient;
-import com.id11236662.gokeigo.util.JishoService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import retrofit2.Call;
 
 /**
  * This fragment displays a Recycler View list.
@@ -48,9 +44,9 @@ import retrofit2.Call;
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener {
 
     private RelativeLayout mSearchViewRelativeLayout;
-    private SearchView mSearchView;
+    private SearchView mSearchOnView;
+    private SearchView mSearchOnResults;
     private MenuItem mSearchViewActionMenuItem;
-    private SearchView mSearchViewAction;
     private CheckBox mIncludeRespectfulCheckbox;
     private CheckBox mIncludeHumbleCheckbox;
     private RelativeLayout mSearchResultsRelativeLayout;
@@ -60,6 +56,19 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     public SearchFragment() {
         // Required empty public constructor.
+    }
+
+    /**
+     * Check if the device has any network connectivity
+     *
+     * @param activity to get the system's connectivity service from.
+     * @return true is there is network connectivity. False if there isn't.
+     */
+
+    private static boolean isDeviceOnline(Activity activity) {
+        ConnectivityManager mConnectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
     }
 
     /**
@@ -86,9 +95,9 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Initialise the search view field and set OnQueryTextListener and OnClickListener to it.
 
-        mSearchView = (SearchView) view.findViewById(R.id.fragment_search_view);
-        mSearchView.setOnQueryTextListener(this);
-        mSearchView.setOnClickListener(this);
+        mSearchOnView = (SearchView) view.findViewById(R.id.fragment_search_view);
+        mSearchOnView.setOnQueryTextListener(this);
+        mSearchOnView.setOnClickListener(this);
 
         // Set OnClickListener to the GO button.
 
@@ -146,23 +155,19 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         mSearchViewActionMenuItem = menu.findItem(R.id.action_search);
 
-        // Hide the layout that contains views which display the search results.
-
-        setVisibleSearchResults(false);
-
         // Set OnClick listener on search view.
 
-        mSearchViewAction = (SearchView) MenuItemCompat.getActionView(mSearchViewActionMenuItem);
-        mSearchViewAction.setOnQueryTextListener(this);
-
-        // Enable a submit button on the search view.
-
-        mSearchViewAction.setSubmitButtonEnabled(true);
+        mSearchOnResults = (SearchView) MenuItemCompat.getActionView(mSearchViewActionMenuItem);
+        mSearchOnResults.setOnQueryTextListener(this);
 
         // Set an arbitrary high number for the width of the search view so it expands properly on tablets.
         // Source: http://stackoverflow.com/a/34050959/1007496
 
-        mSearchViewAction.setMaxWidth(Integer.MAX_VALUE);
+        mSearchOnResults.setMaxWidth(Integer.MAX_VALUE);
+
+        // Hide the layout that contains views which display the search results.
+
+        setVisibleSearchResults(false);
     }
 
     /**
@@ -175,11 +180,23 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     private void setVisibleSearchResults(boolean isVisible) {
 
-        // Set visibilty states to the views.
+        // Set visibility states to the views.
 
         mSearchViewActionMenuItem.setVisible(isVisible);
         mSearchResultsRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         mSearchViewRelativeLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
+        // If showing the search result screen, persist the search query by passing the query from
+        // the search on the search view screen to the search on the search result screen.
+
+        if (isVisible) {
+            mSearchViewActionMenuItem.expandActionView();
+            mSearchOnResults.setQuery(mSearchOnView.getQuery(), false);
+
+            // Clear the focus after expanding and setting the query to get rid of the keyboard.
+
+            mSearchOnResults.clearFocus();
+        }
 
         // Set title of the activity.
 
@@ -222,7 +239,8 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         if (isDeviceOnline(activity)) {
 
-            // If the device is connected to the Internet, search with the keigo level filters considered.
+            // If the device is connected to the Internet, search with the keigo level filters
+            // considered in another thread.
 
             boolean includeRespectful = mIncludeRespectfulCheckbox.isChecked();
             boolean includeHumble = mIncludeHumbleCheckbox.isChecked();
@@ -231,21 +249,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
             // If the device is offline, notify the user.
 
-            Toast.makeText(activity, R.string.message_no_network_available, Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.message_no_connection, Toast.LENGTH_SHORT).show();
         }
 
         return true;
-    }
-
-    /**
-     * Check if the device has any network connectivity
-     * @param activity to get the system's connectivity service from.
-     * @return true is there is network connectivity. False if there is none.
-     */
-    private static boolean isDeviceOnline(Activity activity) {
-        ConnectivityManager mConnectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
     }
 
     /**
@@ -259,15 +266,15 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         switch (v.getId()) {
             case R.id.fragment_search_view:
 
-                // Expands the search view no matter where you click it.
+                // Expand the search view no matter where you click it.
 
-                mSearchView.onActionViewExpanded();
+                mSearchOnView.onActionViewExpanded();
                 break;
             case R.id.fragment_search_go_button:
 
                 // Submit the query in the main search view.
 
-                mSearchView.setQuery(mSearchView.getQuery(), true);
+                mSearchOnView.setQuery(mSearchOnView.getQuery(), true);
                 break;
         }
     }
@@ -302,52 +309,21 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         }
 
         /**
-         * Call the API for a list of entries by supplying a keyword for the URI query.
-         * Execute search process.
+         * Use the entry manager singleton to fetch entries relating to the search query.
          *
-         * @param params Keyword for the URI query.
-         * @return list of entries retrieved from the API. If null, there's been an exception.
+         * @param params not used
+         * @return list of entries retrieved from the entry manager singleton. If null, there's been an exception.
          */
 
         @Override
         protected List<Data> doInBackground(Void... params) {
 
-            // If none of the options is checked, don't bother searching and return 0 results.
-
-            List<Data> results = new ArrayList<>();
-
-            // Create client to access jisho's web service.
-
-            JishoService jishoService = JishoClient.getClient().create(JishoService.class);
-
-            // If "Include Respectful" option has been checked, grab respectful-related entries.
-
-            if (mIncludeRespectful) {
-                Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_RESPECTFUL + mQuery);
-                try {
-                    results.addAll(call.execute().body().getData());
-                } catch (IOException e) {
-                    return null;
-                }
-            }
-
-            // If "Include Humble" option has been checked, grab humble-related entries.
-
-            if (mIncludeHumble) {
-                Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_HUMBLE + mQuery);
-                try {
-                    results.addAll(call.execute().body().getData());
-                } catch (IOException e) {
-                    return null;
-                }
-            }
-
-            return results;
+            return EntryManager.getInstance().searchData(mIncludeRespectful, mIncludeHumble, mQuery);
         }
 
         /**
          * Dismiss the progress dialogue after execution. Show the data in the list and how
-         * many there are.
+         * many there are. If something's wrong with the result, show 'cannot load results' message.
          *
          * @param data list of data returned by doInBackground()
          */
@@ -359,26 +335,29 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             }
 
             if (data != null) {
+                Log.d(Constants.TAG, "AsyncTask.onPostExecute - data is not null");
 
                 // Show the data in the list.
 
                 mAdapter.animateTo(data);
 
-                setVisibleSearchResults(true);
-
                 // Show how many data were found.
 
                 int number = data.size();
                 Locale currentLocale = getResources().getConfiguration().locale;
-                String results = String.format(currentLocale, getString(R.string.message_entries_found_for), mQuery) +
-                        ": " + String.format(currentLocale, getString(R.string.message_number_of_entries), number);
+                String results = String.format(currentLocale, getString(R.string.message_number_of_entries), number);
                 mResultsTextView.setText(results);
             } else {
+                Log.d(Constants.TAG, "AsyncTask.onPostExecute - data is null");
 
-                // If data is null, it's because there's an exception in calling the server.
+                // If data is null, something's wrong with the data so it cannot be loaded.
 
-                mResultsTextView.setText(R.string.message_search_exception);
+                mResultsTextView.setText(R.string.message_cannot_load_results);
             }
+
+            // Show the search result-related views.
+
+            setVisibleSearchResults(true);
         }
     }
 }

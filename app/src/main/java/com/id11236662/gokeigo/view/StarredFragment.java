@@ -31,7 +31,7 @@ public class StarredFragment extends Fragment {
 
         // Set title of the activity.
 
-        CharSequence title = getString(R.string.title_starred);
+        CharSequence title = getString(R.string.title_saved_entries);
         getActivity().setTitle(title);
 
         return view;

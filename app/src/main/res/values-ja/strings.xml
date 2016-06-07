@@ -1,25 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ご敬語</string>
-    <string name="message_entries_found_for">「%s」の該当件数</string> <!-- TODO: translate this later-->
-    <string name="message_number_of_entries">%d件</string>
-    <string name="action_share"></string>
-    <string name="app_icon">アプリのアイコン</string>
-    <string name="action_search">検索</string>
-    <string name="text_home">ご敬語をお調べになる</string>
-    <string name="text_include_humble">謙譲語（下）</string>
-    <string name="text_include_respectful">尊敬語（上）</string>
-    <string name="text_notes">ノート</string>
-    <string name="text_other_forms"></string>
     <string name="title_activity_entry">エントリー</string>
-    <string name="title_activity_notes_for">「%s」のノート</string>
-    <string name="title_notes">ノートリスト</string>
-    <string name="text_humble">下</string>
-    <string name="text_respectful">上</string>
-    <string name="text_common_word">常用語</string>
-    <string name="text_example_sentences"></string>
+    <string name="title_activity_settings">設定</string>
+    <string name="title_activity_notes_for">「%s」のメモ</string>
     <string name="title_search_results">検索結果</string>
-    <string name="title_starred"></string>
-    <string name="message_searching">検査している</string>
+    <string name="title_history">履歴</string>
+    <string name="title_notes">メモ</string>
+
+    <string name="app_icon">アプリのアイコン</string>
+    <string name="navigation_settings">設定</string>
+    <string name="navigation_notes">メモ</string>
+    <string name="navigation_home">ホーム</string>
+    <string name="navigation_history">履歴</string>
+    <string name="navigation_saved_entries">保存したエントリー</string>
+    <string name="navigation_drawer_close">ナビゲーションドロワーを閉じる</string>
+    <string name="navigation_drawer_open">ナビゲーションドロワーを開く</string>
+    <string name="action_search">検索</string>
+    <string name="action_share">共有</string>
+
     <string name="pref_language">言語</string>
+    <string name="pref_title_use_japanese">日本語を使う</string>
+    <string name="pref_history">履歴</string>
+    <string name="pref_title_clear_history">履歴を消す</string>
+
+    <string name="message_searching">検査しています</string>
+    <string name="message_number_of_entries">%d件</string>
+    <string name="message_cannot_load_results">サーバに接続できません。ネットワーク環境をご確認ください。</string>
+    <string name="message_no_connection">オフラインです</string>
+
+    <string name="hint_tap_to_add_a_note">タッチしてメモする</string>
+    <string name="text_home">敬語表現を調べる</string>
+    <string name="text_include_respectful">尊敬語（上）</string>
+    <string name="text_include_humble">謙譲語（下）</string>
+    <string name="text_common_word">常用語</string>
+    <string name="text_respectful">上</string>
+    <string name="text_humble">下</string>
+    <string name="text_other_forms">他にも言葉</string>
+    <string name="text_definition">意味</string>
+    <string name="text_notes">メモ</string>
+    <string name="text_example_sentences">例文</string>
+    <string name="title_saved_entries">保存したエントリー</string>
+    <string name="content_description_saved_image_view">保存済み</string>
+    <string name="content_description_save_image_view">保存</string>
 </resources>

@@ -6,7 +6,7 @@
     <string name="title_search_results">Search results</string>
     <string name="title_history">History</string>
     <string name="title_notes">Notes</string>
-    <string name="title_starred">Starred</string>
+    <string name="title_saved_entries">Saved entries</string>
 
     <!-- Strings related to the Navigation Drawer and Toolbar-->
     <string name="app_icon">Application icon</string>
@@ -14,7 +14,7 @@
     <string name="navigation_notes">Notes</string>
     <string name="navigation_home">Home</string>
     <string name="navigation_history">History</string>
-    <string name="navigation_starred">Starred</string>
+    <string name="navigation_saved_entries">Saved entries</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_search">Search</string>
@@ -22,20 +22,18 @@
 
     <!-- Strings related to Settings -->
     <string name="pref_language">Language</string>
-    <string name="pref_title_language_interface">Interface language</string>
-    <string name="pref_summary_language_interface">Show Japanese on the interface</string>
+    <string name="pref_title_use_japanese">Use Japanese</string>
     <string name="pref_history">History</string>
-    <string name="pref_title_history_clear">Clear history</string>
+    <string name="pref_title_clear_history">Clear history</string>
 
     <!-- Messages -->
     <string name="message_searching">Searching</string>
-    <string name="message_entries_found_for">Entries found for \'%s\'</string>
-    <string name="message_number_of_entries">%d</string>
-    <string name="message_search_exception">No network available or the server is currently down.</string>
-    <string name="message_no_network_available">No network available</string>
+    <string name="message_entries_found_for">Entries for \'%s\'</string>
+    <string name="message_number_of_entries">%d results</string>
+    <string name="message_cannot_load_results">Can\'t load search results</string>
+    <string name="message_no_connection">No connection</string>
 
     <!-- Texts & Hints -->
-    <string name="hint_notes">Your notes about the entry</string>
     <string name="hint_tap_to_add_a_note">Tap to add a note</string>
     <string name="text_home">Search your keigo</string>
     <string name="text_include_respectful">Respectful （上）</string>
@@ -48,6 +46,6 @@
     <string name="text_notes">Notes</string>
     <string name="text_go" translatable="false">GO</string>
     <string name="text_example_sentences">Example sentences</string>
-    <string name="content_description_unstarred_image_view">Unstarred</string>
-    <string name="content_description_starred_image_view">Starred</string>
+    <string name="content_description_save_image_view">Save</string>
+    <string name="content_description_saved_image_view">Saved</string>
 </resources>

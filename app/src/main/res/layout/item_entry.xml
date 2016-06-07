@@ -97,7 +97,7 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/general_margin"
-            android:contentDescription="@string/content_description_unstarred_image_view"
+            android:contentDescription="@string/content_description_save_image_view"
             android:src="@drawable/ic_star_border_light_brown_48dp" />
 
         <ImageView
@@ -109,7 +109,7 @@
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/general_margin"
-            android:contentDescription="@string/content_description_starred_image_view"
+            android:contentDescription="@string/content_description_saved_image_view"
             android:src="@drawable/ic_star_light_brown_48dp"
             android:visibility="gone" />
 
