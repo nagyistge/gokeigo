@@ -24,7 +24,7 @@ import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder> {
 
-    private List<Data> mData;
+    private final List<Data> mData;
 
     public DataAdapter(List<Data> data) {
         mData = new ArrayList<>(data);

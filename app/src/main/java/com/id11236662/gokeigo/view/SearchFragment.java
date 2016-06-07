@@ -286,10 +286,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     private class SearchJishoAsyncTask extends AsyncTask<Void, Void, List<Data>> {
 
+        private final boolean mIncludeRespectful;
+        private final boolean mIncludeHumble;
+        private final String mQuery;
         private ProgressDialog mProgressDialog;
-        private boolean mIncludeRespectful;
-        private boolean mIncludeHumble;
-        private String mQuery;
 
         public SearchJishoAsyncTask(boolean includeRespectful, boolean includeHumble, String query) {
             mIncludeRespectful = includeRespectful;

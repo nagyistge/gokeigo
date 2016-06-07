@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public class Speaker implements TextToSpeech.OnInitListener {
 
-    private TextToSpeech mTts;
+    private final TextToSpeech mTts;
     private boolean mIsReady = false;
 
     public Speaker(Context context) {

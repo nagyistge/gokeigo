@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ご敬語</string>
-    <string name="title_activity_entry">エントリー</string>
     <string name="title_activity_settings">設定</string>
     <string name="title_activity_notes_for">「%s」のメモ</string>
     <string name="title_search_results">検索結果</string>
     <string name="title_history">履歴</string>
     <string name="title_notes">メモ</string>
 
-    <string name="app_icon">アプリのアイコン</string>
     <string name="navigation_settings">設定</string>
     <string name="navigation_notes">メモ</string>
     <string name="navigation_home">ホーム</string>
@@ -17,7 +15,6 @@
     <string name="navigation_drawer_close">ナビゲーションドロワーを閉じる</string>
     <string name="navigation_drawer_open">ナビゲーションドロワーを開く</string>
     <string name="action_search">検索</string>
-    <string name="action_share">共有</string>
 
     <string name="pref_history">履歴</string>
     <string name="pref_title_clear_history">履歴を消す</string>

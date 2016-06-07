@@ -39,7 +39,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
     private static final int SAVE_ENTRY_NOTE = 1;
     private static final int CHECK_CODE = 2;
-    private EntryManager mEntryManager = EntryManager.getInstance();
+    private final EntryManager mEntryManager = EntryManager.getInstance();
     private Entry mEntry;
     private TextView mNotesTextView;
     private ImageSwitcher mStarImageSwitcher;

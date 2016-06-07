@@ -23,7 +23,7 @@ import com.id11236662.gokeigo.util.Constants;
 
 public class NotesFragment extends Fragment {
 
-    private EntryManager mEntryManager = EntryManager.getInstance();
+    private final EntryManager mEntryManager = EntryManager.getInstance();
     private RecyclerView mRecyclerView;
     private EntryAdapter mAdapter;
 
