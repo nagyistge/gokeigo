@@ -141,7 +141,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         FragmentActivity activity = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        mAdapter = new DataAdapter(new ArrayList<Data>(), R.layout.item_data);
+        mAdapter = new DataAdapter(new ArrayList<Data>());
         mRecyclerView.setAdapter(mAdapter);
     }
 

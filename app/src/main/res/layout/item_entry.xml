@@ -3,15 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_entry"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="110dp"
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:orientation="horizontal">
 
+    <TextView
+        android:id="@+id/item_entry_date_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/general_margin" />
+
     <RelativeLayout
         android:id="@+id/item_entry_left_top_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_entry_date_text_view">
 
         <TextView
             android:id="@+id/item_entry_word_text_view"
@@ -20,7 +29,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/general_margin"
-            android:textSize="17sp"
+            android:textSize="@dimen/word_text_size"
             android:textStyle="bold" />
 
         <RelativeLayout
@@ -82,7 +91,7 @@
 
     <RelativeLayout
         android:id="@+id/item_entry_star_relative_layout"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
@@ -120,11 +129,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_entry_left_top_layout"
+        android:layout_marginEnd="@dimen/star_width_estimation"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/star_width_estimation"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/general_margin"
-        android:layout_toLeftOf="@id/item_entry_star_relative_layout"
-        android:layout_toStartOf="@id/item_entry_star_relative_layout"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@color/secondary_text"
@@ -135,10 +144,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_entry_definition_text_view"
+        android:layout_marginEnd="@dimen/star_width_estimation"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/star_width_estimation"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/general_margin"
         android:ellipsize="end"
-        android:maxLines="1" />
+        android:maxLines="1"
+        android:textSize="@dimen/reading_text_size" />
 
 </RelativeLayout>

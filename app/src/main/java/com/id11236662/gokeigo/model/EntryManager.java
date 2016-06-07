@@ -1,14 +1,15 @@
 package com.id11236662.gokeigo.model;
 
-import android.util.Log;
-
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.JishoClient;
 import com.id11236662.gokeigo.util.JishoService;
+import com.raizlabs.android.dbflow.StringUtils;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -41,9 +42,6 @@ public class EntryManager {
 
     private List<Entry> getSavedEntries() {
         if (mEntries == null) {
-
-            // TODO: Make the transaction be Async
-
             mEntries = SQLite.select().from(Entry.class).queryList();
         }
         return mEntries;
@@ -54,8 +52,8 @@ public class EntryManager {
      * Execute search process.
      *
      * @param includeRespectful if true, include respectful-related entries. If false, exclude respectful-related entries.
-     * @param includeHumble if true, include humble-related entries. If false, exclude humble-related entries.
-     * @param query the search keyword.
+     * @param includeHumble     if true, include humble-related entries. If false, exclude humble-related entries.
+     * @param query             the search keyword.
      * @return list of data retrieved from the Jisho web service. If null, there's been an exception.
      */
 
@@ -92,15 +90,25 @@ public class EntryManager {
             }
         }
 
-        Log.d(Constants.TAG, "EntryManager.searchData.size(): " + results.size());
         return results;
     }
 
+    /**
+     * Clear history by erasing the last accessed date of every saved Entry.
+     * Don't delete all saved entries as they may have notes or have been marked with a star!
+     */
+
     public void clearHistory() {
-        // TODO: clear history
+        for (Entry savedEntry : getSavedEntries()) {
+            savedEntry.setLastAccessedDate(null);
+            savedEntry.save();
+        }
     }
 
     /**
+     * Like the method name says, return a previously saved entry if it's available else return
+     * the passed in entry. Add/update the last accessed date as today's date.
+     *
      * @param entry that could be in the list and/or DB already.
      * @return saved entry.
      */
@@ -141,11 +149,18 @@ public class EntryManager {
         } else {
 
             // Insert the new entry for the first time.
-            insertAndSaveEntry(entry);
+            addAndSaveEntry(entry);
         }
 
         return entry;
     }
+
+    /**
+     * Replace an old entry with a new entry. Easier than setting possible new values over to the old.
+     *
+     * @param oldEntry to delete from the list and DB
+     * @param newEntry to add to the list and DB
+     */
 
     private void replaceAndSaveEntry(Entry oldEntry, Entry newEntry) {
 
@@ -153,10 +168,16 @@ public class EntryManager {
         getSavedEntries().remove(oldEntry);
         oldEntry.delete();
 
-        insertAndSaveEntry(newEntry);
+        addAndSaveEntry(newEntry);
     }
 
-    private void insertAndSaveEntry(Entry entry) {
+    /**
+     * Add an entry to the list and DB and save it.
+     *
+     * @param entry to add to the list and DB
+     */
+
+    private void addAndSaveEntry(Entry entry) {
 
         // Add entry to the list, and then the DB.
 
@@ -165,17 +186,86 @@ public class EntryManager {
         entry.save();
     }
 
-    public void saveEntry(Entry entry) {
+    /**
+     * Set notes to an entry to save it.
+     *
+     * @param entry to be updated with the note
+     * @param notes to set to the entry
+     */
+
+    public void savesNotesOnEntry(Entry entry, String notes) {
+        entry.setNotes(notes);
         entry.save();
     }
 
+    public void switchStarredStateAndSaveEntry(Entry entry) {
+        entry.switchIsStarredState();
+        entry.save();
+    }
+
+    /**
+     * Filter through the saved entries and only return entries, with a last accessed date, in
+     * DESC order. The last accessed date may have been cleared via the Clear History setting.
+     *
+     * @return list of previously accessed entries that have not been cleared.
+     */
+
     public List<Entry> getPreviouslyAccessedEntries() {
-        // TODO: display them in order.
-        for (Entry entry : getSavedEntries()) {
-            // TODO: Check if datetime can be null
-            Date date = entry.getLastAccessedDate();
+        List<Entry> previouslyAccessedEntries = new ArrayList<>();
+
+        for (Entry savedEntry : getSavedEntries()) {
+            if (savedEntry.getLastAccessedDate() != null) {
+                previouslyAccessedEntries.add(savedEntry);
+            }
         }
 
-        return getSavedEntries();
+        // Sort the entries by date in desc order, e.g. 2016, 2015, 2014.
+
+        Collections.sort(previouslyAccessedEntries, new Comparator<Entry>() {
+            @Override
+            public int compare(Entry lhs, Entry rhs) {
+                Date lhsDate = lhs.getLastAccessedDate();
+                Date rhsDate = rhs.getLastAccessedDate();
+                return lhsDate.before(rhsDate) ? 1 : -1;
+            }
+        });
+
+        return previouslyAccessedEntries;
+    }
+
+    /**
+     * Filter through the saved entries and only return entries with non-blank notes.
+     *
+     * @return list of entries that have notes.
+     */
+
+    public List<Entry> getNoteAddedEntries() {
+        List<Entry> noteAddedEntries = new ArrayList<>();
+
+        for (Entry savedEntry : getSavedEntries()) {
+            if (StringUtils.isNotNullOrEmpty(savedEntry.getNotes())) {
+                noteAddedEntries.add(savedEntry);
+            }
+        }
+
+        return noteAddedEntries;
+    }
+
+    /**
+     * Filter through the saved entries and only return entries that have been marked with a star.
+     *
+     * @return list of entries that have been stared.
+     */
+
+    public List<Entry> getStarredEntries() {
+        List<Entry> starredEntry = new ArrayList<>();
+
+        for (Entry savedEntry : getSavedEntries()) {
+            if (savedEntry.getIsStarred()) {
+                starredEntry.add(savedEntry);
+            }
+        }
+
+        return starredEntry;
     }
 }

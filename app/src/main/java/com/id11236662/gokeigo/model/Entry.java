@@ -22,6 +22,17 @@ import java.util.List;
 @Table(database = GoKeigoDatabase.class, allFields = true)
 public class Entry extends BaseModel implements Parcelable {
 
+    public static final Creator<Entry> CREATOR = new Creator<Entry>() {
+        @Override
+        public Entry createFromParcel(Parcel in) {
+            return new Entry(in);
+        }
+
+        @Override
+        public Entry[] newArray(int size) {
+            return new Entry[size];
+        }
+    };
     @PrimaryKey(autoincrement = true)
     private long id;
     private boolean isCommon;
@@ -43,18 +54,6 @@ public class Entry extends BaseModel implements Parcelable {
 
     }
 
-    public static final Creator<Entry> CREATOR = new Creator<Entry>() {
-        @Override
-        public Entry createFromParcel(Parcel in) {
-            return new Entry(in);
-        }
-
-        @Override
-        public Entry[] newArray(int size) {
-            return new Entry[size];
-        }
-    };
-
     protected Entry(Parcel source) {
 
         // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
@@ -69,44 +68,6 @@ public class Entry extends BaseModel implements Parcelable {
         isRespectful = TypeUtility.getBooleanFromInt(source.readInt());
         isHumble = TypeUtility.getBooleanFromInt(source.readInt());
         definition = source.readString();
-    }
-
-    /**
-     * Flatten this object in to a Parcel.
-     *
-     * @param dest  The Parcel in which the object should be written.
-     * @param flags Additional flags about how the object should be written.
-     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
-     */
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-
-        // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
-        // Source: https://code.google.com/p/android/issues/detail?id=5973
-
-        dest.writeInt(TypeUtility.getIntFromBoolean(isCommon));
-        dest.writeString(word);
-        dest.writeString(reading);
-        dest.writeString(wordAndReading);
-        dest.writeString(blurb);
-        dest.writeString(otherForms);
-        dest.writeInt(TypeUtility.getIntFromBoolean(isRespectful));
-        dest.writeInt(TypeUtility.getIntFromBoolean(isHumble));
-        dest.writeString(definition);
-    }
-
-    /**
-     * Describe the kinds of special objects contained in this Parcelable's
-     * marshalled representation.
-     *
-     * @return a bitmask indicating the set of special object types marshalled
-     * by the Parcelable.
-     */
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static Entry parse(Data data) {
@@ -169,6 +130,44 @@ public class Entry extends BaseModel implements Parcelable {
         entry.setIsHumble(data.getIsHumble());
         entry.setDefinition(data.getDefinition());
         return entry;
+    }
+
+    /**
+     * Flatten this object in to a Parcel.
+     *
+     * @param dest  The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        // There is a long-term bug where a single boolean cannot be written nor read in a Parcel...
+        // Source: https://code.google.com/p/android/issues/detail?id=5973
+
+        dest.writeInt(TypeUtility.getIntFromBoolean(isCommon));
+        dest.writeString(word);
+        dest.writeString(reading);
+        dest.writeString(wordAndReading);
+        dest.writeString(blurb);
+        dest.writeString(otherForms);
+        dest.writeInt(TypeUtility.getIntFromBoolean(isRespectful));
+        dest.writeInt(TypeUtility.getIntFromBoolean(isHumble));
+        dest.writeString(definition);
+    }
+
+    /**
+     * Describe the kinds of special objects contained in this Parcelable's
+     * marshalled representation.
+     *
+     * @return a bitmask indicating the set of special object types marshalled
+     * by the Parcelable.
+     */
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public long getId() {
@@ -255,16 +254,16 @@ public class Entry extends BaseModel implements Parcelable {
         return lastAccessedDate;
     }
 
+    public void setLastAccessedDate(Date lastAccessedDate) {
+        this.lastAccessedDate = lastAccessedDate;
+    }
+
     public boolean getIsRespectful() {
         return isRespectful;
     }
 
     public void setIsRespectful(boolean respectful) {
         isRespectful = respectful;
-    }
-
-    public void setLastAccessedDate(Date lastAccessedDate) {
-        this.lastAccessedDate = lastAccessedDate;
     }
 
     public boolean getIsHumble() {
@@ -277,6 +276,10 @@ public class Entry extends BaseModel implements Parcelable {
 
     public String getDefinition() {
         return definition;
+    }
+
+    public void setDefinition(String definition) {
+        this.definition = definition;
     }
 
     /**
@@ -293,9 +296,9 @@ public class Entry extends BaseModel implements Parcelable {
         return getBlurb();
     }
 
-    public void setDefinition(String definition) {
-        this.definition = definition;
-    }
+    /**
+     * @return dynamic link to the jisho.org website. To the entry page that includes example sentences.
+     */
 
     public String getUriToExampleSentences() {
         return Constants.URL_BASE_EXAMPLE_SENTENCES + getWord();

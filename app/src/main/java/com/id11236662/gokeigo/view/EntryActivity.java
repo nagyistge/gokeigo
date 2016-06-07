@@ -2,19 +2,13 @@ package com.id11236662.gokeigo.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +27,10 @@ import com.raizlabs.android.dbflow.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
+/**
+ * TODO: JavaDOC comment
+ */
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -41,7 +38,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     private static final int CHECK_CODE = 2;
     private EntryManager mEntryManager = EntryManager.getInstance();
     private Entry mEntry;
-    private FloatingActionButton mFab;
     private TextView mNotesTextView;
     private ImageSwitcher mStarImageSwitcher;
     private Speaker mSpeaker;
@@ -58,12 +54,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        // Initialise fab field and set OnClickListener.
-
-        mFab = (FloatingActionButton) findViewById(R.id.activity_entry_notes_fab);
-        assert mFab != null;
-        mFab.setOnClickListener(this);
 
         // Initialise the image switcher field and set OnClickListener.
 
@@ -93,34 +83,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         // After setting up the views, set values to these views.
 
         bindEntryToViews();
-
-        // Change the language to Japanese if the setting is set so.
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        if (sharedPreferences.getBoolean(Constants.PREF_KEY_USE_JAPANESE, false)) {
-            // Source: http://stackoverflow.com/a/12954037/1007496
-
-            Resources resources = getResources();
-            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-//            Configuration configuration = resources.getConfiguration();
-//            configuration.locale = Locale.JAPANESE;
-//            resources.updateConfiguration(configuration, displayMetrics);
-//            Intent refresh = new Intent(this, EntryActivity.class);
-//            finish();
-//            startActivity(refresh);
-
-            String lang = Locale.JAPANESE.getDisplayLanguage();
-            Resources res = getResources();
-            DisplayMetrics dm = res.getDisplayMetrics();
-            Configuration conf = res.getConfiguration();
-            if (!conf.locale.getLanguage().equals(lang)) {
-                conf.locale = new Locale(lang);
-                res.updateConfiguration(conf, dm);
-                Intent refresh = new Intent(this, EntryActivity.class);
-                startActivity(refresh);
-                finish();
-            }
-        }
     }
 
     /**
@@ -273,13 +235,6 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         Log.d(Constants.TAG, "EntryActivity.onClick");
         switch (v.getId()) {
-            case R.id.activity_entry_notes_fab:
-                Log.d(Constants.TAG, "EntryActivity.onClick - activity_entry_notes_fab");
-
-                // TODO: share the entry. include ankidroid option
-
-
-                break;
 
             case R.id.activity_entry_notes_text_view:
                 Log.d(Constants.TAG, "EntryActivity.onClick - activity_entry_notes_link_consumable_text_view");
@@ -301,9 +256,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
                 mStarImageSwitcher.showNext();
 
-                // "Switch on/off" the IsStarrred state.
+                // "Switch on/off" the IsStarrred state and save.
 
-                mEntry.switchIsStarredState();
+                mEntryManager.switchStarredStateAndSaveEntry(mEntry);
                 break;
 
             case R.id.activity_entry_text_to_speech_image_view:
@@ -370,13 +325,11 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        Log.d(Constants.TAG, "EntryActivity.onBackPressed - IsStarred: " + (mEntry.getIsStarred() ? "true" : "false"));
 
-        // Update mEntry object with the note and save the entry to the DB, before going back Home.
+        // Save the note on the binded entry before going back Home.
 
         String notes = mNotesTextView.getText().toString();
-        mEntry.setNotes(notes);
-        mEntryManager.saveEntry(mEntry);
+        mEntryManager.savesNotesOnEntry(mEntry, notes);
 
         super.onBackPressed();
     }

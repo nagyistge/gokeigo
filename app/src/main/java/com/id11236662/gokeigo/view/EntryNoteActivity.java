@@ -13,6 +13,10 @@ import com.id11236662.gokeigo.util.Constants;
 
 import java.util.Locale;
 
+/**
+ * TODO: JavaDOC comment
+ */
+
 public class EntryNoteActivity extends AppCompatActivity {
 
     private EditText mNotesEditText;
@@ -39,7 +43,7 @@ public class EntryNoteActivity extends AppCompatActivity {
 
         // Set the title of the notes activity with the word and reading of the entry.
 
-        Locale currentLocale = getResources().getConfiguration().locale; // TODO: get from settings.
+        Locale currentLocale = getResources().getConfiguration().locale;
         String wordAndReading = getIntent().getStringExtra(Constants.INTENT_ENTRY_WORD_AND_READING);
         String title = String.format(currentLocale, getString(R.string.title_activity_notes_for), wordAndReading);
         setTitle(title);

@@ -21,4 +21,10 @@ public class GoKeigoApplication extends Application {
         FlowManager.init(new FlowConfig.Builder(this)
                 .openDatabasesOnInit(true).build());
     }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        FlowManager.destroy();
+    }
 }

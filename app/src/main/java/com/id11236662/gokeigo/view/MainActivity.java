@@ -13,6 +13,10 @@ import android.view.MenuItem;
 
 import com.id11236662.gokeigo.R;
 
+/**
+ * The main activity; the activity that will be launched. It implements the Navigation Drawer.
+ */
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 

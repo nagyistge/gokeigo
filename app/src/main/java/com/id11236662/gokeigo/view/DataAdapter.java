@@ -28,11 +28,9 @@ import java.util.List;
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder> {
 
     private List<Data> mData;
-    private int mRowLayoutId;
 
-    public DataAdapter(List<Data> data, int rowLayoutId) {
+    public DataAdapter(List<Data> data) {
         mData = new ArrayList<>(data);
-        mRowLayoutId = rowLayoutId;
     }
 
     /**
@@ -43,8 +41,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
 
     @Override
     public DataViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        // Inflate the row of the recycler view with the item xml.
+
+        int mRowLayoutId = R.layout.item_data;
         final View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(mRowLayoutId, parent, false);
+
         return new DataViewHolder(itemView);
     }
 

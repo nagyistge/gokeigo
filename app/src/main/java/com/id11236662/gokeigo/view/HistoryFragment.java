@@ -17,8 +17,9 @@ import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
 
 /**
- * A simple {@link Fragment} subclass.
+ * TODO: JavaDOC comment
  */
+
 public class HistoryFragment extends Fragment {
 
     private EntryManager mEntryManager = EntryManager.getInstance();
@@ -26,12 +27,15 @@ public class HistoryFragment extends Fragment {
     private EntryAdapter mAdapter;
 
     public HistoryFragment() {
+
         // Required empty public constructor
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_history, container, false);
@@ -62,11 +66,11 @@ public class HistoryFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Setup Recycler View and an adapter for it.
+        // Setup Recycler View and an adapter for it. Do show dates; don't show the notes.
 
         FragmentActivity activity = getActivity();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        mAdapter = new EntryAdapter(mEntryManager.getPreviouslyAccessedEntries(), R.layout.item_entry);
+        mAdapter = new EntryAdapter(mEntryManager.getPreviouslyAccessedEntries(), true, false);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -75,10 +79,11 @@ public class HistoryFragment extends Fragment {
         Log.d(Constants.TAG, "HistoryFragment.onResume");
         super.onResume();
 
-        // There's a change the entries got edited upon return, such as the star states.
+        // There's a chance the entries got edited upon return, such as the star states.
         // Refresh the recycler view.
 
         mAdapter.notifyDataSetChanged();
         mRecyclerView.invalidate();
+        mRecyclerView.requestLayout();
     }
 }

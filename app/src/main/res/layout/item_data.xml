@@ -20,7 +20,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginTop="@dimen/general_margin"
-            android:textSize="17sp"
+            android:textSize="@dimen/word_text_size"
             android:textStyle="bold" />
 
         <RelativeLayout

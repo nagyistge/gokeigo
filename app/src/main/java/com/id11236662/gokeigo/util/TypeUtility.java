@@ -1,6 +1,6 @@
 package com.id11236662.gokeigo.util;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class TypeUtility {
     }
 
     public static String getDate(Date date) {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        DateFormat formatter = DateFormat.getDateTimeInstance();
         return formatter.format(date);
     }
 

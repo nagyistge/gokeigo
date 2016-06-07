@@ -14,6 +14,7 @@ import com.id11236662.gokeigo.R;
 import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
+import com.id11236662.gokeigo.util.TypeUtility;
 
 import java.util.List;
 
@@ -23,12 +24,14 @@ import java.util.List;
  */
 public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHolder> {
 
-    private List<Entry> mEntries;
-    private int mRowLayoutId;
+    private final List<Entry> mEntries;
+    private final boolean mShowNotes;
+    private final boolean mShowDate;
 
-    public EntryAdapter(List<Entry> entries, int rowLayoutId) {
+    public EntryAdapter(List<Entry> entries, boolean showDate, boolean showNotes) {
         mEntries = entries;
-        mRowLayoutId = rowLayoutId;
+        mShowDate = showDate;
+        mShowNotes = showNotes;
     }
 
     /**
@@ -39,8 +42,13 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
     @Override
     public EntryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        // Inflate the row of the recycler view with the item xml.
+
+        int mRowLayoutId = R.layout.item_entry;
         final View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(mRowLayoutId, parent, false);
+
         return new EntryViewHolder(itemView);
     }
 
@@ -54,7 +62,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     @Override
     public void onBindViewHolder(EntryViewHolder holder, int position) {
         final Entry entry = mEntries.get(position);
-        holder.bind(entry);
+        holder.bind(entry, mShowDate, mShowNotes);
     }
 
     /**
@@ -69,112 +77,12 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     }
 
     /**
-     * Removes, adds and moves around Views so they correspond to the objects in the list.
-     * The order is important to keep track of indexes.
-     * Source: http://stackoverflow.com/a/30429439/1007496
-     *
-     * @param filteredEntry list of objects that have already been filtered
-     */
-
-    public void animateTo(List<Entry> filteredEntry) {
-        applyAndAnimateRemovals(filteredEntry);
-        applyAndAnimateAdditions(filteredEntry);
-        applyAndAnimateMovedItems(filteredEntry);
-    }
-
-    /**
-     * Removes the View if its object IS NOT in the filtered list.
-     * Source: http://stackoverflow.com/a/30429439/1007496
-     *
-     * @param filteredEntry list of objects that have already been filtered
-     */
-
-    private void applyAndAnimateRemovals(List<Entry> filteredEntry) {
-        for (int i = mEntries.size() - 1; i >= 0; i--) {
-            final Entry data = mEntries.get(i);
-            if (!filteredEntry.contains(data)) {
-                removeItem(i);
-            }
-        }
-    }
-
-    /**
-     * Adds the View if its object IS in the filtered list.
-     * Source: http://stackoverflow.com/a/30429439/1007496
-     *
-     * @param filteredEntry list of objects that have already been filtered
-     */
-
-    private void applyAndAnimateAdditions(List<Entry> filteredEntry) {
-        for (int i = 0, count = filteredEntry.size(); i < count; i++) {
-            final Entry data = filteredEntry.get(i);
-            if (!mEntries.contains(data)) {
-                addItem(i, data);
-            }
-        }
-    }
-
-    /**
-     * Reorders the Views so they correspond with the originally ordered objects.
-     * Source: http://stackoverflow.com/a/30429439/1007496
-     *
-     * @param filteredEntry list of objects that have already been filtered
-     */
-
-    private void applyAndAnimateMovedItems(List<Entry> filteredEntry) {
-        for (int toPosition = filteredEntry.size() - 1; toPosition >= 0; toPosition--) {
-            final Entry data = filteredEntry.get(toPosition);
-            final int fromPosition = mEntries.indexOf(data);
-            if (fromPosition >= 0 && fromPosition != toPosition) {
-                moveItem(fromPosition, toPosition);
-            }
-        }
-    }
-
-    /**
-     * Removes the item from the list and notifies the Recycler View.
-     * Source: http://stackoverflow.com/a/30429439/1007496
-     *
-     * @param position index in the list
-     */
-
-    private void removeItem(int position) {
-        mEntries.remove(position);
-        notifyItemRemoved(position);
-    }
-
-    /**
-     * Adds the item from the list and notifies the Recycler View.
-     * Source: http://stackoverflow.com/a/30429439/1007496
-     *
-     * @param position index in the list
-     */
-
-    private void addItem(int position, Entry data) {
-        mEntries.add(position, data);
-        notifyItemInserted(position);
-    }
-
-    /**
-     * Reorders the item in the list.
-     * Source: http://stackoverflow.com/a/30429439/1007496
-     *
-     * @param fromPosition old index in the list
-     * @param toPosition   new index in the list
-     */
-
-    private void moveItem(int fromPosition, int toPosition) {
-        final Entry data = mEntries.remove(fromPosition);
-        mEntries.add(toPosition, data);
-        notifyItemMoved(fromPosition, toPosition);
-    }
-
-    /**
      * This ViewHolder sets the GUI elements of a row with the values of the Entry-type object.
      * Ensure it is static to avoid memory problems if more than one EntryViewHolder is created.
      */
     public static class EntryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private final TextView mDateTextView;
         private final TextView mWordTextView;
         private final TextView mReadingTextView;
         private final TextView mDefinitionTextView;
@@ -183,6 +91,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         private final TextView mHumbleLevelTextView;
         private final ImageView mStarredImageView;
         private final ImageView mUnstarredImageView;
+        private final TextView mNotesTextView;
         private Entry mEntry = null;
 
         public EntryViewHolder(final View itemView) {
@@ -190,12 +99,14 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
             // Initialise all the GUI elements from the xml layout of the one row.
 
+            mDateTextView = (TextView) itemView.findViewById(R.id.item_entry_date_text_view);
             mWordTextView = (TextView) itemView.findViewById(R.id.item_entry_word_text_view);
             mReadingTextView = (TextView) itemView.findViewById(R.id.item_entry_reading_text_view);
             mDefinitionTextView = (TextView) itemView.findViewById(R.id.item_entry_definition_text_view);
             mCommonStatusTextView = (TextView) itemView.findViewById(R.id.item_entry_common_status_text_view);
             mRespectfulLevelTextView = (TextView) itemView.findViewById(R.id.item_entry_respectful_level_text_view);
             mHumbleLevelTextView = (TextView) itemView.findViewById(R.id.item_entry_humble_level_text_view);
+            mNotesTextView = (TextView) itemView.findViewById(R.id.item_entry_notes_text_view);
 
             // Initialise the imageview fields and set OnClickListener on them.
 
@@ -216,7 +127,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
          * @param entry the object to bind to a View
          */
 
-        public void bind(Entry entry) {
+        public void bind(Entry entry, boolean showDate, boolean showNotes) {
 
             // Save the entry.
 
@@ -255,6 +166,21 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             // Set visibility of the star related image views depending on starred state of entry.
 
             setVisibleStarImage(mEntry.getIsStarred());
+
+            // If should show date, set the date value to the text view. Else, hide.
+            if (showDate) {
+                mDateTextView.setText(TypeUtility.getDate(entry.getLastAccessedDate()));
+            } else {
+                mDateTextView.setVisibility(View.GONE);
+            }
+
+            // If should show notes, set the notes value to the text view. Else, hide.
+
+            if (showNotes) {
+                mNotesTextView.setText(entry.getNotes());
+            } else {
+                mNotesTextView.setVisibility(View.GONE);
+            }
         }
 
         /**
@@ -287,8 +213,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
                         // Switch the starred state of the entry and save it.
 
-                        mEntry.switchIsStarredState();
-                        EntryManager.getInstance().saveEntry(mEntry);
+                        EntryManager.getInstance().switchStarredStateAndSaveEntry(mEntry);
 
                         // Since the starred image was clickable, hide it and replace it with the unstarred image.
 
@@ -303,8 +228,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
                         // Switch the starred state of the entry and save it.
 
-                        mEntry.switchIsStarredState();
-                        EntryManager.getInstance().saveEntry(mEntry);
+                        EntryManager.getInstance().switchStarredStateAndSaveEntry(mEntry);
 
                         // Since the unstarred image was clickable, hide it and replace it with the starred image.
 
