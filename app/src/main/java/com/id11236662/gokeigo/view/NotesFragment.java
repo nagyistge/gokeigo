@@ -17,7 +17,8 @@ import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
 
 /**
- * TODO: JavaDOC comment
+ * This fragment displays a Recycler View list.
+ * Shows a list of entries that have non-blank notes.
  */
 
 public class NotesFragment extends Fragment {
@@ -49,9 +50,9 @@ public class NotesFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_notes_recycler_view);
 
-        // Add ItemDecoration to recycler view. // TODO: Move the DividerItemDecoration elsewhere if reused a lot.
+        // Add ItemDecoration to recycler view.
 
-        mRecyclerView.addItemDecoration(new DataAdapter.DividerItemDecoration(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
 
         return view;
     }
@@ -79,7 +80,7 @@ public class NotesFragment extends Fragment {
         super.onResume();
 
         // There's a chance the entries got edited upon return, such as the star states and note text.
-        // Refresh the recycler view.
+        // Refresh the recycler view. It worked before, but not anymore. :(
 
         mAdapter.notifyDataSetChanged();
         mRecyclerView.invalidate();

@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.config.FlowManager;
  * This class initialises the FlowManager for FBFlow so it can read assets, observe content
  * and generate ContentProvider.
  */
+
 public class GoKeigoApplication extends Application {
 
     @Override

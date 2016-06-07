@@ -187,7 +187,7 @@ public class EntryManager {
     }
 
     /**
-     * Set notes to an entry to save it.
+     * Set notes to an entry and save it.
      *
      * @param entry to be updated with the note
      * @param notes to set to the entry
@@ -197,6 +197,12 @@ public class EntryManager {
         entry.setNotes(notes);
         entry.save();
     }
+
+    /**
+     * Switch star state of an entry and save it.
+     *
+     * @param entry to have its star state switched.
+     */
 
     public void switchStarredStateAndSaveEntry(Entry entry) {
         entry.switchIsStarredState();

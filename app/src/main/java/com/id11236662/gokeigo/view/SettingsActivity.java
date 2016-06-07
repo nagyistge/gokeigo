@@ -81,8 +81,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
                 case Constants.PREF_KEY_CLEAR_HISTORY:
 
-                    // TODO: Yes / No confirmation.
-
                     EntryManager.getInstance().clearHistory();
                     break;
             }

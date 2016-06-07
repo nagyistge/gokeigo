@@ -119,7 +119,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Add ItemDecoration to recycler view.
 
-        mRecyclerView.addItemDecoration(new DataAdapter.DividerItemDecoration(getActivity()));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity()));
 
         return view;
     }

@@ -26,6 +26,7 @@ public class Speaker implements TextToSpeech.OnInitListener {
      *
      * @param status {@link TextToSpeech#SUCCESS} or {@link TextToSpeech#ERROR}.
      */
+
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
@@ -46,6 +47,7 @@ public class Speaker implements TextToSpeech.OnInitListener {
         // Speak only if the TTS is ready and the user has allowed speech.
 
         if (mIsReady) {
+            //noinspection deprecation
             mTts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
     }

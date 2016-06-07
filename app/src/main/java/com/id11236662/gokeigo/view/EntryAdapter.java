@@ -16,6 +16,7 @@ import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.TypeUtility;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -169,7 +170,10 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
 
             // If should show date, set the date value to the text view. Else, hide.
             if (showDate) {
-                mDateTextView.setText(TypeUtility.getDate(entry.getLastAccessedDate()));
+                Date date = entry.getLastAccessedDate();
+                if (date != null) {
+                    mDateTextView.setText(TypeUtility.getDate(date));
+                }
             } else {
                 mDateTextView.setVisibility(View.GONE);
             }

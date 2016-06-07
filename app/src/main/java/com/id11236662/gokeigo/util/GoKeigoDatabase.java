@@ -1,7 +1,5 @@
 package com.id11236662.gokeigo.util;
 
-import android.util.Log;
-
 import com.id11236662.gokeigo.model.Entry;
 import com.raizlabs.android.dbflow.annotation.Database;
 import com.raizlabs.android.dbflow.annotation.Migration;
@@ -11,6 +9,7 @@ import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration;
 /**
  * This class aids DBFlow in generating a database
  */
+
 @Database(name = GoKeigoDatabase.NAME, version = GoKeigoDatabase.VERSION)
 public class GoKeigoDatabase {
 
@@ -28,7 +27,6 @@ public class GoKeigoDatabase {
 
         @Override
         public void onPreMigrate() {
-            Log.d(Constants.TAG, "Migration0.onPreMigrate");
             addColumn(SQLiteType.TEXT, "definition");
         }
     }

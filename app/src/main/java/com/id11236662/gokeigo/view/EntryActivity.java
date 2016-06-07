@@ -29,7 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO: JavaDOC comment
+ * This activity shows the contents of an entry. Entry can have a word, reading, and definitions.
+ * TTS implemention on the word is included. Entry can be starred on this activity.
+ * Entry has a hyperlink to a website that contains example sentences.
+ * And notes can be added.
  */
 
 public class EntryActivity extends AppCompatActivity implements View.OnClickListener {
@@ -231,9 +234,9 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
      *
      * @param v The view that was clicked.
      */
+
     @Override
     public void onClick(View v) {
-        Log.d(Constants.TAG, "EntryActivity.onClick");
         switch (v.getId()) {
 
             case R.id.activity_entry_notes_text_view:
@@ -326,7 +329,7 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onBackPressed() {
 
-        // Save the note on the binded entry before going back Home.
+        // Save the note on the binded entry before going Home.
 
         String notes = mNotesTextView.getText().toString();
         mEntryManager.savesNotesOnEntry(mEntry, notes);

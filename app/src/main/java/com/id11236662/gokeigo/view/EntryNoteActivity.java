@@ -14,9 +14,8 @@ import com.id11236662.gokeigo.util.Constants;
 import java.util.Locale;
 
 /**
- * TODO: JavaDOC comment
+ * This activity shows an editable text box. Allows editing of an entry note.
  */
-
 public class EntryNoteActivity extends AppCompatActivity {
 
     private EditText mNotesEditText;
