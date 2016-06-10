@@ -24,7 +24,7 @@
     <string name="message_cannot_load_results">サーバに接続できません。ネットワーク環境をご確認ください。</string>
     <string name="message_no_connection">オフラインです</string>
 
-    <string name="hint_tap_to_add_a_note">タッチしてメモする</string>
+    <string name="hint_tap_to_add_a_note">タッチしてメモを追加する</string>
     <string name="text_home">敬語表現を調べる</string>
     <string name="text_include_respectful">尊敬語（上）</string>
     <string name="text_include_humble">謙譲語（下）</string>

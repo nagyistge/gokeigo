@@ -170,6 +170,14 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         setVisibleSearchResults(false);
     }
 
+    @Override
+    public void onStop() {
+        // TODO: Figure out how to hide the action query screen when home is pressed ... else, if it's really too hard, just make a new activity omg
+        // Easier to go back to search results too! Yeah, just make a new activity
+        Log.d(Constants.TAG, "onStop");
+        super.onStop();
+    }
+
     /**
      * Set the visibility of the search action menu, the search results layout and the search view
      * layout. If the search view layout is visible, hide the search results layout and vice versa.
@@ -180,16 +188,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     private void setVisibleSearchResults(boolean isVisible) {
 
-        // Set visibility states to the views.
-
-        mSearchViewActionMenuItem.setVisible(isVisible);
-        mSearchResultsRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        mSearchViewRelativeLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-
-        // If showing the search result screen, persist the search query by passing the query from
+        // If still on the view screen, persist the search query by passing the query from
         // the search on the search view screen to the search on the search result screen.
 
-        if (isVisible) {
+        if (mSearchViewRelativeLayout.getVisibility() == View.VISIBLE) {
             mSearchViewActionMenuItem.expandActionView();
             mSearchOnResults.setQuery(mSearchOnView.getQuery(), false);
 
@@ -197,6 +199,12 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
             mSearchOnResults.clearFocus();
         }
+
+        // Set visibility states to the views.
+
+        mSearchViewActionMenuItem.setVisible(isVisible);
+        mSearchResultsRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        mSearchViewRelativeLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
 
         // Set title of the activity.
 
