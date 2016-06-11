@@ -96,10 +96,13 @@ public class EntryActivity extends AppCompatActivity implements View.OnClickList
         Entry selectedEntry = getIntent().getParcelableExtra(Constants.INTENT_SELECTED_ENTRY);
         if (selectedEntry != null) {
 
-            // Get a previously saved entry if there is. That way we can get previously saved notes or
-            // starred status. Save the entry for later use in the rest of the class.
+            // Bind the retrieved entry to the class field.
 
-            mEntry = mEntryManager.getPreviouslySavedEntryIfAvailableElseReturnPassedEntry(selectedEntry);
+            mEntry = selectedEntry;
+
+            // Update the last accessed date of the entry.
+
+            mEntryManager.updateLastAccessedDate(mEntry);
 
             // Set values to all the text views with the parcelled entry!
 

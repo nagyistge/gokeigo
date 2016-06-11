@@ -21,38 +21,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.id11236662.gokeigo.R;
-import com.id11236662.gokeigo.model.Data;
+import com.id11236662.gokeigo.model.Entry;
 import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * This fragment displays a Recycler View list.
  * Has a search action on the toolbar, which has query functionality implemented on it.
  */
 
-public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener {
+public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
-    private RelativeLayout mSearchViewRelativeLayout;
-    private SearchView mSearchOnView;
-    private SearchView mSearchOnResults;
-    private MenuItem mSearchViewActionMenuItem;
-    private CheckBox mIncludeRespectfulCheckbox;
-    private CheckBox mIncludeHumbleCheckbox;
-    private RelativeLayout mSearchResultsRelativeLayout;
-    private TextView mResultsTextView;
     private RecyclerView mRecyclerView;
-    private DataAdapter mAdapter;
+    private EntryAdapter mAdapter;
 
     public SearchFragment() {
         // Required empty public constructor.
@@ -88,31 +74,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        // Initialise the relative layout fields.
-
-        mSearchViewRelativeLayout = (RelativeLayout) view.findViewById(R.id.fragment_search_view_relative_layout);
-        mSearchResultsRelativeLayout = (RelativeLayout) view.findViewById(R.id.fragment_search_results_relative_layout);
-
-        // Initialise the search view field and set OnQueryTextListener and OnClickListener to it.
-
-        mSearchOnView = (SearchView) view.findViewById(R.id.fragment_search_view);
-        mSearchOnView.setOnQueryTextListener(this);
-        mSearchOnView.setOnClickListener(this);
-
-        // Set OnClickListener to the GO button.
-
-        Button goButton = (Button) view.findViewById(R.id.fragment_search_go_button);
-        goButton.setOnClickListener(this);
-
-        // Initialise the check box fields.
-
-        mIncludeRespectfulCheckbox = (CheckBox) view.findViewById(R.id.fragment_search_include_respectful_check_box);
-        mIncludeHumbleCheckbox = (CheckBox) view.findViewById(R.id.fragment_search_include_humble_check_box);
-
-        // Initialise the text view field.
-
-        mResultsTextView = (TextView) view.findViewById(R.id.fragment_search_results_text_view);
-
         // Initialise the recycler view field.
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_search_recycler_view);
@@ -137,12 +98,29 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         setHasOptionsMenu(true);
 
-        // Setup Recycler View and an adapter for it.
+        // Set activity title.
 
         FragmentActivity activity = getActivity();
+        activity.setTitle(getString(R.string.app_name));
+
+        // Setup Recycler View and an adapter that fetches entries for it.
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        mAdapter = new DataAdapter(new ArrayList<Data>());
-        mRecyclerView.setAdapter(mAdapter);
+
+        // Try to fetch entries.
+
+        if (isDeviceOnline(activity)) {
+
+            // If the device is connected to the Internet, fetch the list of respectful and honourable words.
+
+            new FetchJishoEntriesAsyncTask().execute();
+
+        } else {
+
+            // If the device is offline, notify the user.
+
+            Toast.makeText(activity, R.string.message_no_connection, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -153,138 +131,50 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         // Initialise the menu item field, the one that contains the search view on the toolbar.
 
-        mSearchViewActionMenuItem = menu.findItem(R.id.action_search);
+        MenuItem mSearchViewActionMenuItem = menu.findItem(R.id.action_search);
 
-        // Set OnClick listener on search view.
+        // Set OnQueryTextListener listener on search view.
 
-        mSearchOnResults = (SearchView) MenuItemCompat.getActionView(mSearchViewActionMenuItem);
-        mSearchOnResults.setOnQueryTextListener(this);
+        SearchView mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchViewActionMenuItem);
+        mSearchView.setOnQueryTextListener(this);
 
         // Set an arbitrary high number for the width of the search view so it expands properly on tablets.
         // Source: http://stackoverflow.com/a/34050959/1007496
 
-        mSearchOnResults.setMaxWidth(Integer.MAX_VALUE);
-
-        // Hide the layout that contains views which display the search results.
-
-        setVisibleSearchResults(false);
-    }
-
-    @Override
-    public void onStop() {
-        // TODO: Figure out how to hide the action query screen when home is pressed ... else, if it's really too hard, just make a new activity omg
-        // Easier to go back to search results too! Yeah, just make a new activity
-        Log.d(Constants.TAG, "onStop");
-        super.onStop();
-    }
-
-    /**
-     * Set the visibility of the search action menu, the search results layout and the search view
-     * layout. If the search view layout is visible, hide the search results layout and vice versa.
-     * Also show the appropriate title.
-     *
-     * @param isVisible the visibility state of the Search Results related views.
-     */
-
-    private void setVisibleSearchResults(boolean isVisible) {
-
-        // If still on the view screen, persist the search query by passing the query from
-        // the search on the search view screen to the search on the search result screen.
-
-        if (mSearchViewRelativeLayout.getVisibility() == View.VISIBLE) {
-            mSearchViewActionMenuItem.expandActionView();
-            mSearchOnResults.setQuery(mSearchOnView.getQuery(), false);
-
-            // Clear the focus after expanding and setting the query to get rid of the keyboard.
-
-            mSearchOnResults.clearFocus();
-        }
-
-        // Set visibility states to the views.
-
-        mSearchViewActionMenuItem.setVisible(isVisible);
-        mSearchResultsRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        mSearchViewRelativeLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-
-        // Set title of the activity.
-
-        CharSequence title = isVisible ? getString(R.string.title_search_results) : getString(R.string.app_name);
-        getActivity().setTitle(title);
-
-        // Let the system explicitly know that the changed views have to be redrawn.
-
-        mSearchResultsRelativeLayout.invalidate();
-        mSearchResultsRelativeLayout.requestLayout();
-        mSearchViewRelativeLayout.invalidate();
-        mSearchViewRelativeLayout.requestLayout();
+        mSearchView.setMaxWidth(Integer.MAX_VALUE);
     }
 
     /**
      * Called when the query text is changed by the user.
      *
      * @param query the new content of the query text field.
-     * @return always false as the default action should be used.
+     * @return always true as the default action should not be used.
      */
 
     @Override
     public boolean onQueryTextChange(String query) {
-        return false;
-    }
+        Log.d(Constants.TAG, "onQueryTextChange");
 
-    /**
-     * Called when the query text is submitted by the user.
-     * Call the API to search up possible entries with the query text.
-     * Save all submitted queries.
-     *
-     * @param query the new content of the query text field.
-     * @return always true as the action is handled and overrides the default action.
-     */
+        final List<Entry> filteredEntryList = EntryManager.getInstance().filterEntries(query);
+        mAdapter.animateTo(filteredEntryList);
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
+        // Ensure user can always see all items when searching for something.
 
-        Activity activity = getActivity();
-
-        if (isDeviceOnline(activity)) {
-
-            // If the device is connected to the Internet, search with the keigo level filters
-            // considered in another thread.
-
-            boolean includeRespectful = mIncludeRespectfulCheckbox.isChecked();
-            boolean includeHumble = mIncludeHumbleCheckbox.isChecked();
-            new SearchJishoAsyncTask(includeRespectful, includeHumble, query).execute();
-        } else {
-
-            // If the device is offline, notify the user.
-
-            Toast.makeText(activity, R.string.message_no_connection, Toast.LENGTH_SHORT).show();
-        }
+        mRecyclerView.scrollToPosition(0);
 
         return true;
     }
 
     /**
-     * Called when a view has been clicked.
+     * Called when the query text is submitted by the user.
      *
-     * @param v The view that was clicked.
+     * @param query the new content of the query text field.
+     * @return always false as the default action should be used.
      */
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fragment_search_view:
-
-                // Expand the search view no matter where you click it.
-
-                mSearchOnView.onActionViewExpanded();
-                break;
-            case R.id.fragment_search_go_button:
-
-                // Submit the query in the main search view.
-
-                mSearchOnView.setQuery(mSearchOnView.getQuery(), true);
-                break;
-        }
+    public boolean onQueryTextSubmit(String query) {
+        return false;
     }
 
     /**
@@ -292,18 +182,9 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
      * on the recycler view.
      */
 
-    private class SearchJishoAsyncTask extends AsyncTask<Void, Void, List<Data>> {
+    private class FetchJishoEntriesAsyncTask extends AsyncTask<Void, Void, List<Entry>> {
 
-        private final boolean mIncludeRespectful;
-        private final boolean mIncludeHumble;
-        private final String mQuery;
         private ProgressDialog mProgressDialog;
-
-        public SearchJishoAsyncTask(boolean includeRespectful, boolean includeHumble, String query) {
-            mIncludeRespectful = includeRespectful;
-            mIncludeHumble = includeHumble;
-            mQuery = query;
-        }
 
         /**
          * Before executing new thread, show dialogue that the search process will soon execute.
@@ -312,7 +193,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         @Override
         protected void onPreExecute() {
             mProgressDialog = new ProgressDialog(getContext());
-            mProgressDialog.setMessage(getString(R.string.message_searching) + "...");
+            mProgressDialog.setMessage(getString(R.string.message_downloading) + "...");
             mProgressDialog.show();
         }
 
@@ -324,48 +205,28 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
          */
 
         @Override
-        protected List<Data> doInBackground(Void... params) {
+        protected List<Entry> doInBackground(Void... params) {
 
-            return EntryManager.getInstance().searchData(mIncludeRespectful, mIncludeHumble, mQuery);
+            return EntryManager.getInstance().fetchKeigoEntries();
         }
 
         /**
          * Dismiss the progress dialogue after execution. Show the data in the list and how
          * many there are. If something's wrong with the result, show 'cannot load results' message.
          *
-         * @param data list of data returned by doInBackground()
+         * @param entries list of data returned by doInBackground()
          */
 
         @Override
-        protected void onPostExecute(List<Data> data) {
+        protected void onPostExecute(List<Entry> entries) {
             if (mProgressDialog.isShowing()) {
                 mProgressDialog.dismiss();
             }
 
-            if (data != null) {
-                Log.d(Constants.TAG, "AsyncTask.onPostExecute - data is not null");
+            // Show the entries in the list adapter. and set the adapter to the view.
 
-                // Show the data in the list.
-
-                mAdapter.animateTo(data);
-
-                // Show how many data were found.
-
-                int number = data.size();
-                Locale currentLocale = getResources().getConfiguration().locale;
-                String results = String.format(currentLocale, getString(R.string.message_number_of_entries), number);
-                mResultsTextView.setText(results);
-            } else {
-                Log.d(Constants.TAG, "AsyncTask.onPostExecute - data is null");
-
-                // If data is null, something's wrong with the data so it cannot be loaded.
-
-                mResultsTextView.setText(R.string.message_cannot_load_results);
-            }
-
-            // Show the search result-related views.
-
-            setVisibleSearchResults(true);
+            mAdapter = new EntryAdapter(entries, false, false);
+            mRecyclerView.setAdapter(mAdapter);
         }
     }
 }

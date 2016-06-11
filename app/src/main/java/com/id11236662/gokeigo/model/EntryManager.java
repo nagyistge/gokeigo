@@ -1,5 +1,7 @@
 package com.id11236662.gokeigo.model;
 
+import android.util.Log;
+
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.JishoClient;
 import com.id11236662.gokeigo.util.JishoService;
@@ -47,128 +49,107 @@ public class EntryManager {
         return mEntries;
     }
 
-    /**
-     * Call the API for a list of entries by supplying a keyword for the URI query and keigo level filters.
-     * Execute search process.
-     *
-     * @param includeRespectful if true, include respectful-related entries. If false, exclude respectful-related entries.
-     * @param includeHumble     if true, include humble-related entries. If false, exclude humble-related entries.
-     * @param query             the search keyword.
-     * @return list of data retrieved from the Jisho web service. If null, there's been an exception.
-     */
-
-    public List<Data> searchData(boolean includeRespectful, boolean includeHumble, String query) {
-        // If none of the options is checked, don't bother searching and return 0 results.
-
-        List<Data> results = new ArrayList<>();
-
-        // Create client to access jisho's web service.
-
-        JishoService jishoService = JishoClient.getClient().create(JishoService.class);
-
-        // If "Include Respectful" option has been checked, grab respectful-related entries.
-
-        if (includeRespectful) {
-            Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_RESPECTFUL + query);
-            try {
-                results.addAll(call.execute().body().getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        // If "Include Humble" option has been checked, grab humble-related entries.
-
-        if (includeHumble) {
-            Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_PREFIX_HUMBLE + query);
-            try {
-                results.addAll(call.execute().body().getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        return results;
+    private boolean hasInitialised() {
+        return getSavedEntries().size() > 0;
     }
 
     /**
-     * Clear history by erasing the last accessed date of every saved Entry.
-     * Don't delete all saved entries as they may have notes or have been marked with a star!
+     * Call the API for a list of entries under the #hon tag and entries under the #hum tag, and save the list.
      */
+    public List<Entry> fetchKeigoEntries() {
 
-    public void clearHistory() {
-        for (Entry savedEntry : getSavedEntries()) {
-            savedEntry.setLastAccessedDate(null);
-            savedEntry.save();
+        if (!hasInitialised()) {
+
+            // Create client to access jisho's web service.
+
+            JishoService jishoService = JishoClient.getClient().create(JishoService.class);
+
+            List<Data> dataList = new ArrayList<>();
+
+            // Add data under the #hon tag to the data list.
+
+            Call<DataResponse> call = jishoService.getData(Constants.KEYWORD_RESPECTFUL_TAG);
+            try {
+                dataList.addAll(call.execute().body().getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Add data under the #hum tag to the data list.
+
+            call = jishoService.getData(Constants.KEYWORD_HUMBLE_TAG);
+            try {
+                dataList.addAll(call.execute().body().getData());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Parse each element in the data list into an Entry-type, save the Entry and put the Entry
+            // in the class's entry list.
+
+            for (Data data : dataList) {
+                Entry entry = Entry.parse(data);
+
+                // Only add to the list if it hasn't been added before to avoid any possible duplicates.
+
+                if (!contains(entry)) {
+                    addAndSaveEntry(entry);
+                }
+            }
+
+            // TODO: Add entries from a dedicated class that contain keigo words if not in the results. Also make sure it's not in the list before adding.
+            // These text files have words like ご覧になる.
         }
+
+        Log.d(Constants.TAG, "EntryManager.fetchKeigoEntries() - getSavedEntries().size: " + getSavedEntries().size());
+        return getSavedEntries();
     }
 
     /**
-     * Like the method name says, return a previously saved entry if it's available else return
-     * the passed in entry. Add/update the last accessed date as today's date.
+     * Returns if the passed entry has been saved.
      *
-     * @param entry that could be in the list and/or DB already.
-     * @return saved entry.
+     * @param entry to check if it's been saved.
+     * @return true if it has been saved already. Otherwise, false.
      */
 
-    public Entry getPreviouslySavedEntryIfAvailableElseReturnPassedEntry(Entry entry) {
-
-        Entry previouslySavedEntry = null;
-
-        // Entries are unique with their word and reading combination. That is their ID. JSON data provides no unique key.
-
+    private boolean contains(Entry entry) {
+        boolean result = false;
         for (Entry savedEntry : getSavedEntries()) {
+
+            // Entries are unique with their word and reading combination. That is their ID. JSON data provides no unique key.
+
             if (savedEntry.getWord().equals(entry.getWord()) && savedEntry.getReading().equals(entry.getReading())) {
-                previouslySavedEntry = savedEntry;
+                Log.d(Constants.TAG, "EntryManager.contains() - duplicate: " + savedEntry.getWord());
+                result = true;
                 break;
             }
         }
 
-        // Set current date to be the last accessed date.
-
-        Date currentDate = new Date();
-        entry.setLastAccessedDate(currentDate);
-
-        if (previouslySavedEntry != null) {
-
-            // Update entry's notes and starred state with information from previously saved entry.
-            // Reasons:
-            // - If the jisho.org API has updated the blurb-related attributes of the entry
-            //   since it's been last saved; we want to save the latest information.
-            // - If we add another column to Entry, this is our chance populate the new column
-            //   on previously saved entries.
-
-            entry.setIsStarred(previouslySavedEntry.getIsStarred());
-            entry.setNotes(previouslySavedEntry.getNotes());
-
-            // Replace saved entry with new entry.
-
-            replaceAndSaveEntry(previouslySavedEntry, entry);
-        } else {
-
-            // Insert the new entry for the first time.
-            addAndSaveEntry(entry);
-        }
-
-        return entry;
+        return result;
     }
 
     /**
-     * Replace an old entry with a new entry. Easier than setting possible new values over to the old.
+     * Generate a list of entries that match the keyword.
      *
-     * @param oldEntry to delete from the list and DB
-     * @param newEntry to add to the list and DB
+     * @param keyword to match with the word, reading and definition of entries.
+     * @return a list of entries that match the query
      */
 
-    private void replaceAndSaveEntry(Entry oldEntry, Entry newEntry) {
+    public List<Entry> filterEntries(String keyword) {
+        keyword = keyword.toLowerCase();
 
-        // Remove entry from the list and the DB.
-        getSavedEntries().remove(oldEntry);
-        oldEntry.delete();
+        final List<Entry> filteredEntryList = new ArrayList<>();
+        for (Entry entry : getSavedEntries()) {
+            final String word = entry.getWord();
+            final String reading = entry.getReading();
+            final String definition = entry.getDefinition().toLowerCase();
 
-        addAndSaveEntry(newEntry);
+            if (word.contains(keyword) || reading.contains(keyword) || definition.contains(keyword)) {
+                filteredEntryList.add(entry);
+            }
+        }
+        Log.d(Constants.TAG, "EntryManager.filterEntries() - filteredEntryList.size: " + filteredEntryList.size());
+        return filteredEntryList;
     }
 
     /**
@@ -187,6 +168,34 @@ public class EntryManager {
     }
 
     /**
+     * Clear history by erasing the last accessed date of every saved Entry.
+     * Don't delete all saved entries as they may have notes or have been marked with a star!
+     */
+
+    public void clearHistory() {
+        for (Entry savedEntry : getSavedEntries()) {
+            savedEntry.setLastAccessedDate(null);
+            savedEntry.save();
+        }
+    }
+
+    /**
+     * Update or set the last accessed date of the entry, and save it.
+     *
+     * @param entry to update the last accessed date on.
+     */
+
+    public void updateLastAccessedDate(Entry entry) {
+        entry = getSavedEntry(entry);
+
+        // Set current date to be the last accessed date.
+
+        Date currentDate = new Date();
+        entry.setLastAccessedDate(currentDate);
+        entry.save();
+    }
+
+    /**
      * Set notes to an entry and save it.
      *
      * @param entry to be updated with the note
@@ -194,6 +203,7 @@ public class EntryManager {
      */
 
     public void savesNotesOnEntry(Entry entry, String notes) {
+        entry = getSavedEntry(entry);
         entry.setNotes(notes);
         entry.save();
     }
@@ -205,8 +215,34 @@ public class EntryManager {
      */
 
     public void switchStarredStateAndSaveEntry(Entry entry) {
+        entry = getSavedEntry(entry);
         entry.switchIsStarredState();
         entry.save();
+    }
+
+    /**
+     * Return the entry that's in this class's list. If the passed entry is from the search view,
+     * where the entry address is different to the address of the matched entry in the list,
+     * get the matched entry to correctly persist the entry.
+     *
+     * @param entry that could be on the search screen and using a different address than the entry in this class's list.
+     * @return saved entry.
+     */
+
+    private Entry getSavedEntry(Entry entry) {
+
+        Entry previouslySavedEntry = entry;
+
+        // Entries are unique with their word and reading combination. That is their ID. JSON data provides no unique key.
+
+        for (Entry savedEntry : getSavedEntries()) {
+            if (savedEntry.getWord().equals(entry.getWord()) && savedEntry.getReading().equals(entry.getReading())) {
+                previouslySavedEntry = savedEntry;
+                break;
+            }
+        }
+
+        return previouslySavedEntry;
     }
 
     /**
@@ -235,7 +271,7 @@ public class EntryManager {
                 return lhsDate.before(rhsDate) ? 1 : -1;
             }
         });
-
+        Log.d(Constants.TAG, "EntryManager.getPreviouslyAccessedEntries() - getSavedEntries().size: " + getSavedEntries().size());
         return previouslyAccessedEntries;
     }
 
@@ -253,7 +289,7 @@ public class EntryManager {
                 noteAddedEntries.add(savedEntry);
             }
         }
-
+        Log.d(Constants.TAG, "EntryManager.getNoteAddedEntries() - getSavedEntries().size: " + getSavedEntries().size());
         return noteAddedEntries;
     }
 
@@ -271,7 +307,7 @@ public class EntryManager {
                 starredEntry.add(savedEntry);
             }
         }
-
+        Log.d(Constants.TAG, "EntryManager.getStarredEntries() - getSavedEntries().size: " + getSavedEntries().size());
         return starredEntry;
     }
 }

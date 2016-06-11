@@ -2,6 +2,8 @@
   <dictionary name="knockycode">
     <words>
       <w>jisho</w>
+      <w>katakana</w>
+      <w>keigo</w>
     </words>
   </dictionary>
 </component>

@@ -16,6 +16,7 @@ import com.id11236662.gokeigo.model.EntryManager;
 import com.id11236662.gokeigo.util.Constants;
 import com.id11236662.gokeigo.util.TypeUtility;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,10 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     private final boolean mShowDate;
 
     public EntryAdapter(List<Entry> entries, boolean showDate, boolean showNotes) {
-        mEntries = entries;
+
+        // Make a copy to get new set of pointers to new memory so the filter!search can work properly.
+
+        mEntries = new ArrayList<>(entries);
         mShowDate = showDate;
         mShowNotes = showNotes;
     }
@@ -75,6 +79,107 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     @Override
     public int getItemCount() {
         return mEntries.size();
+    }
+
+    /**
+     * Removes, adds and moves around Views so they correspond to the objects in the list.
+     * The order is important to keep track of indexes.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param filteredEntries list of objects that have already been filtered
+     */
+
+    public void animateTo(List<Entry> filteredEntries) {
+        applyAndAnimateRemovals(filteredEntries);
+        applyAndAnimateAdditions(filteredEntries);
+        applyAndAnimateMovedItems(filteredEntries);
+    }
+
+    /**
+     * Removes the View if its object IS NOT in the filtered list.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param filteredEntries list of objects that have already been filtered
+     */
+
+    private void applyAndAnimateRemovals(List<Entry> filteredEntries) {
+        for (int i = mEntries.size() - 1; i >= 0; i--) {
+            final Entry entry = mEntries.get(i);
+            if (!filteredEntries.contains(entry)) {
+                removeItem(i);
+            }
+        }
+    }
+
+    /**
+     * Adds the View if its object IS in the filtered list.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param filteredEntries list of objects that have already been filtered
+     */
+
+    private void applyAndAnimateAdditions(List<Entry> filteredEntries) {
+        for (int i = 0, count = filteredEntries.size(); i < count; i++) {
+            final Entry entry = filteredEntries.get(i);
+            if (!mEntries.contains(entry)) {
+                addItem(i, entry);
+            }
+        }
+    }
+
+    /**
+     * Reorders the Views so they correspond with the originally ordered objects.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param filteredEntries list of objects that have already been filtered
+     */
+
+    private void applyAndAnimateMovedItems(List<Entry> filteredEntries) {
+        for (int toPosition = filteredEntries.size() - 1; toPosition >= 0; toPosition--) {
+            final Entry entry = filteredEntries.get(toPosition);
+            final int fromPosition = mEntries.indexOf(entry);
+            if (fromPosition >= 0 && fromPosition != toPosition) {
+                moveItem(fromPosition, toPosition);
+            }
+        }
+    }
+
+    /**
+     * Removes the item from the list and notifies the Recycler View.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param position index in the list
+     */
+
+    private void removeItem(int position) {
+        mEntries.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    /**
+     * Adds the item from the list and notifies the Recycler View.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param position index in the list
+     */
+
+    private void addItem(int position, Entry entry) {
+        mEntries.add(position, entry);
+        notifyItemInserted(position);
+    }
+
+    /**
+     * Reorders the item in the list.
+     * Source: http://stackoverflow.com/a/30429439/1007496
+     *
+     * @param fromPosition old index in the list
+     * @param toPosition   new index in the list
+     */
+
+    private void moveItem(int fromPosition, int toPosition) {
+        final Entry entry = mEntries.remove(fromPosition);
+        mEntries.add(toPosition, entry);
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     /**

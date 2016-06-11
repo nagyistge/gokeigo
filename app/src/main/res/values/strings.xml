@@ -22,7 +22,7 @@
     <string name="pref_title_clear_history">Clear history</string>
 
     <!-- Messages -->
-    <string name="message_searching">Searching</string>
+    <string name="message_downloading">Downloading</string>
     <string name="message_number_of_entries">%d results</string>
     <string name="message_cannot_load_results">Can\'t load search results</string>
     <string name="message_no_connection">No connection</string>
